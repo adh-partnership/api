@@ -1,0 +1,17 @@
+basePath: /v1
+host: api.denartcc.org
+info:
+  contact:
+    email: wm@denartcc.org
+    name: Daniel Hawton
+  description: Session Cookie
+  license:
+    name: Apache
+    url: https://github.com/kzdv/api2/blob/main/LICENSE
+  title: KZDV API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

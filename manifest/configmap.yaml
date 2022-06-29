@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  config.yaml: |
+    server:
+      port: 3000
+      host: 127.0.0.1
+    database:
+      host: {{.DB_HOST | default "mysql.mysql.svc.cluster.local"}}
+      port: 3306
+      user: {{.DB_USER | default "root"}}
+      password: {{.DB_PASSWORD | default "root"}}
+      database: {{.DB_DATABASE | default "zdv"}}
+      automigrate: true
+    redis:
+      address: {{.REDIS_HOST | default "redis.redis.svc.cluster.local:6379"}}
+      database: 0
+      password: {{.REDIS_PASSWORD | default "secret"}}
+      sentinel: {{.REDIS_SENTINEL | default false}}
+      master_name: {{.REDIS_MASTER_NAME | default "master"}}
+      # sentinel_addrs is an array that cannot be easily expressed in shell... use config map
+      sentinel_addrs:
+        - "{{.REDIS_SENTINEL_HOST | default "redis.redis.svc.cluster.local:26379"}}"
+    session:
+      cookie:
+        name: "zdv_session"
+        secret: "{{.SESSION_SECRET | default "secret"}}"
+        max_age: 604800
+        domain: ".denartcc.org"
+        path: "/"
+    oauth:
+      base_url: "https://auth.denartcc.org"
+      endpoints:
+        token: "/oauth/token"
+        user: "/v1/user"
+        authorize: "/oauth/authorize"
+      client_id: "{{.OAUTH_CLIENT_ID | default "zdv"}}"
+      client_secret: "{{.OAUTH_CLIENT_SECRET | default "zdv"}}"
+      my_base_url: "https://api.denartcc.org"
