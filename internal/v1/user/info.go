@@ -29,11 +29,11 @@ func getUser(c *gin.Context) {
 	if c.Param("cid") != "" {
 		user, err = database.FindUserByCID(c.Param("cid"))
 		if err != nil {
-			response.Respond(c, http.StatusInternalServerError, err)
+			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
 		if user == nil {
-			response.RespondMessage(c, http.StatusNotFound, "User not found")
+			response.RespondError(c, http.StatusNotFound, "User not found")
 			return
 		}
 	}

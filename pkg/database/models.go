@@ -45,6 +45,9 @@ func FindRole(name string) (*dbTypes.Role, error) {
 func FindUserByCID(cid string) (*dbTypes.User, error) {
 	user := &dbTypes.User{}
 	if err := DB.Preload(clause.Associations).Where(dbTypes.User{CID: atou(cid)}).First(user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -54,6 +57,9 @@ func FindUserByCID(cid string) (*dbTypes.User, error) {
 func FindRatingByShort(short string) (*dbTypes.Rating, error) {
 	rating := &dbTypes.Rating{}
 	if err := DB.Where(dbTypes.Rating{Short: short}).First(rating).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 

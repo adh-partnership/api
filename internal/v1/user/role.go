@@ -25,11 +25,11 @@ func getUserRoles(c *gin.Context) {
 	if c.Param("cid") != "" {
 		user, err = database.FindUserByCID(c.Param("cid"))
 		if err != nil {
-			response.Respond(c, http.StatusInternalServerError, err)
+			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
 		if user == nil {
-			response.RespondMessage(c, http.StatusNotFound, "User not found")
+			response.RespondError(c, http.StatusNotFound, "User not found")
 			return
 		}
 	}
@@ -58,42 +58,42 @@ func putUserRoles(c *gin.Context) {
 
 	user, err := database.FindUserByCID(c.Param("cid"))
 	if err != nil {
-		response.Respond(c, http.StatusInternalServerError, err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
 	if user == nil {
-		response.RespondMessage(c, http.StatusNotFound, "User not found")
+		response.RespondError(c, http.StatusNotFound, "User not found")
 		return
 	}
 
 	role := c.Param("role")
 
 	if _, ok := auth.Roles[role]; !ok {
-		response.RespondMessage(c, http.StatusNotFound, "Role not found")
+		response.RespondError(c, http.StatusNotFound, "Role not found")
 		return
 	}
 
 	if auth.HasRole(user, role) {
-		response.RespondMessage(c, http.StatusConflict, "Conflict")
+		response.RespondError(c, http.StatusConflict, "Conflict")
 		return
 	}
 
 	if !auth.HasRoleList(reqUser, auth.Roles[role].RolesCanAdd) {
-		response.RespondMessage(c, http.StatusForbidden, "Forbidden")
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 
 	dbrole, err := database.FindRole(role)
 	if err != nil {
 		log.Errorf("Error finding role %s: %s", role, err)
-		response.Respond(c, http.StatusInternalServerError, "Internal Server Error")
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
 	if err = database.AddRoleToUser(user, dbrole); err != nil {
 		log.Errorf("Error adding role %s to %d: %s", role, user.CID, err)
-		response.Respond(c, http.StatusInternalServerError, "Internal Server Error")
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
@@ -115,42 +115,42 @@ func deleteUserRoles(c *gin.Context) {
 
 	user, err := database.FindUserByCID(c.Param("cid"))
 	if err != nil {
-		response.Respond(c, http.StatusInternalServerError, err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
 	if user == nil {
-		response.RespondMessage(c, http.StatusNotFound, "User not found")
+		response.RespondError(c, http.StatusNotFound, "User not found")
 		return
 	}
 
 	role := c.Param("role")
 
 	if _, ok := auth.Roles[role]; !ok {
-		response.RespondMessage(c, http.StatusNotFound, "Role not found")
+		response.RespondError(c, http.StatusNotFound, "Role not found")
 		return
 	}
 
 	if !auth.HasRole(user, role) {
-		response.RespondMessage(c, http.StatusNotFound, "Role not found")
+		response.RespondError(c, http.StatusNotFound, "Role not found")
 		return
 	}
 
 	if !auth.HasRoleList(reqUser, auth.Roles[role].RolesCanAdd) {
-		response.RespondMessage(c, http.StatusForbidden, "Forbidden")
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 
 	dbrole, err := database.FindRole(role)
 	if err != nil {
 		log.Errorf("Error finding role %s: %s", role, err)
-		response.Respond(c, http.StatusInternalServerError, "Internal Server Error")
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
 	if err = database.RemoveRoleFromUser(user, dbrole); err != nil {
 		log.Errorf("Error removing role %s from %d: %s", role, user.CID, err)
-		response.Respond(c, http.StatusInternalServerError, "Internal Server Error")
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
