@@ -18,6 +18,12 @@ func routes(router *gin.RouterGroup) {
 	router.GET("/login/callback", getLoginCallback)
 
 	router.GET("/", auth.NotGuest, getUser)
+	router.GET("/:cid", getUser)
 	router.PATCH("/", auth.NotGuest, patchUser)
 	router.PATCH("/:cid", auth.NotGuest, patchUser)
+
+	router.GET("/roles", auth.NotGuest, getUserRoles)
+	router.GET("/:cid/roles", getUserRoles)
+	router.PUT("/:cid/roles/:role", auth.NotGuest, putUserRoles)
+	router.DELETE("/:cid/roles/:role", auth.NotGuest, deleteUserRoles)
 }

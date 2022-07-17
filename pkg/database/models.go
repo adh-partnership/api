@@ -4,8 +4,43 @@ import (
 	"strconv"
 
 	dbTypes "github.com/kzdv/types/database"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
+
+func AddRoleToUser(user *dbTypes.User, role *dbTypes.Role) error {
+	if err := DB.Model(user).Association("Roles").Append(role); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func RemoveRoleFromUser(user *dbTypes.User, role *dbTypes.Role) error {
+	if err := DB.Model(user).Association("Roles").Delete(role); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func FindRole(name string) (*dbTypes.Role, error) {
+	role := &dbTypes.Role{}
+	if err := DB.Where(dbTypes.Role{Name: name}).First(role).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			role = &dbTypes.Role{
+				Name: name,
+			}
+			if err := DB.Create(role).Error; err != nil {
+				return nil, err
+			}
+			return role, nil
+		}
+		return nil, err
+	}
+
+	return role, nil
+}
 
 func FindUserByCID(cid string) (*dbTypes.User, error) {
 	user := &dbTypes.User{}

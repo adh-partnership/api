@@ -4,6 +4,11 @@ import (
 	dbTypes "github.com/kzdv/types/database"
 )
 
+type Role struct {
+	Name        string
+	RolesCanAdd []string
+}
+
 var Groups = map[string][]string{
 	"admin": {
 		"atm",
@@ -14,6 +19,107 @@ var Groups = map[string][]string{
 		"ta",
 		"ins",
 		"mtr",
+	},
+}
+
+var Roles = map[string]Role{
+	"atm": {
+		Name: "atm",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"datm": {
+		Name: "datm",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"ta": {
+		Name: "ta",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"ec": {
+		Name: "ec",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"fe": {
+		Name: "fe",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"wm": {
+		Name: "wm",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"ins": {
+		Name: "ins",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"ta",
+			"wm",
+		},
+	},
+	"mtr": {
+		Name: "mtr",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"ta",
+			"wm",
+		},
+	},
+	"k8s-cluster-admin": {
+		Name: "k8s-cluster-admin",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"k8s-cluster-webteam": {
+		Name: "k8s-cluster-webteam",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"k8s-cluster-mysql": {
+		Name: "k8s-cluster-mysql",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
+	},
+	"k8s-cluster-mysql-write": {
+		Name: "k8s-cluster-mysql-write",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"wm",
+		},
 	},
 }
 

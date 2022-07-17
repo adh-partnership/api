@@ -21,8 +21,22 @@ import (
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
 // @Router /v1/user [GET]
+// @Router /v1/user/:cid [GET]
 func getUser(c *gin.Context) {
+	var err error
 	user := c.MustGet("x-user").(*dbTypes.User)
+
+	if c.Param("cid") != "" {
+		user, err = database.FindUserByCID(c.Param("cid"))
+		if err != nil {
+			response.Respond(c, http.StatusInternalServerError, err)
+			return
+		}
+		if user == nil {
+			response.RespondMessage(c, http.StatusNotFound, "User not found")
+			return
+		}
+	}
 
 	response.Respond(c, http.StatusOK, dto.ConvUserToUserResponse(user))
 }
