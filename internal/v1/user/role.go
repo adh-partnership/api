@@ -17,7 +17,7 @@ import (
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
 // @Router /v1/user/:cid/roles [GET]
-// @Router /v1/user/roles
+// @Router /v1/user/roles [GET]
 func getUserRoles(c *gin.Context) {
 	var err error
 	user := c.MustGet("x-user").(*dbTypes.User)
