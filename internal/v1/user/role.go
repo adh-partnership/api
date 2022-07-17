@@ -79,7 +79,7 @@ func putUserRoles(c *gin.Context) {
 		return
 	}
 
-	if !auth.HasRoleList(reqUser, auth.Roles[role].RolesCanAdd) {
+	if !auth.CanUserModifyRole(reqUser, role) {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
@@ -136,7 +136,7 @@ func deleteUserRoles(c *gin.Context) {
 		return
 	}
 
-	if !auth.HasRoleList(reqUser, auth.Roles[role].RolesCanAdd) {
+	if !auth.CanUserModifyRole(reqUser, role) {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}

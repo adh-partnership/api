@@ -148,6 +148,13 @@ var Roles = map[string]Role{
 	},
 }
 
+func CanUserModifyRole(user *dbTypes.User, role string) bool {
+	if _, ok := Roles[role]; !ok {
+		return false
+	}
+	return HasRoleList(user, Roles[role].RolesCanAdd)
+}
+
 func InGroup(user *dbTypes.User, group string) bool {
 	if _, ok := Groups[group]; !ok {
 		return false
