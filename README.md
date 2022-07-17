@@ -16,3 +16,13 @@ The API follows standard RESTful API designs. The API documentation is accessibl
 - PATCH (update)
 - DELETE
 
+## Tests
+
+Tests are a good thing and should be written were practical.  To run tests:
+
+```bash
+make test
+```
+
+An example of a test can be found in pkg/database/dto/user_test.go. Use either the built-in testing framework
+or [stretchr/testify](https://github.com/stretchr/testify).
