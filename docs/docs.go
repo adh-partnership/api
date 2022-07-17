@@ -22,7 +22,236 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {},
+    "paths": {
+        "/v1/user": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Information",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Patch User Information",
+                "parameters": [
+                    {
+                        "description": "User",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/login": {
+            "get": {
+                "tags": [
+                    "user",
+                    "oauth"
+                ],
+                "summary": "Login to account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Redirect URL",
+                        "name": "redirect",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "307": {
+                        "description": ""
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/login/callback": {
+            "get": {
+                "tags": [
+                    "user",
+                    "oauth"
+                ],
+                "summary": "Login callback",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "307": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.UserResponse": {
+            "type": "object",
+            "properties": {
+                "certifications": {
+                    "$ref": "#/definitions/dto.UserResponseCertifications"
+                },
+                "cid": {
+                    "type": "integer"
+                },
+                "controller_type": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "discord_id": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "operating_initials": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UserResponseCertifications": {
+            "type": "object",
+            "properties": {
+                "approach": {
+                    "type": "string"
+                },
+                "delivery": {
+                    "type": "string"
+                },
+                "enroute": {
+                    "type": "string"
+                },
+                "ground": {
+                    "type": "string"
+                },
+                "local": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.R": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "BasicAuth": {
             "type": "basic"

@@ -6,10 +6,8 @@ if [[ -d "out" ]]; then
   rm -rf out
 fi
 
-swag init --parseDependency --parseInternal --parseDepth 3 -g cmd/api/main.go
-
 binaries=(envsubst api)
 
 for binary in "${binaries[@]}"; do
-  GOOS=linux GOARCH=amd64 go build -o out/$binary tools/$binary/main.go
+  GOOS=linux GOARCH=amd64 go build -o out/$binary cmd/$binary/main.go
 done

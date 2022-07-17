@@ -22,7 +22,7 @@ import (
 // @Success 307
 // @Failure 500 {object} response.R
 // @Router /v1/user/login [GET]
-func GetLogin(c *gin.Context) {
+func getLogin(c *gin.Context) {
 	state, _ := gonanoid.Generate("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 64)
 	session := sessions.Default(c)
 	session.Set("state", state)
@@ -41,7 +41,7 @@ func GetLogin(c *gin.Context) {
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
 // @Router /v1/user/login/callback [GET]
-func GetLoginCallback(c *gin.Context) {
+func getLoginCallback(c *gin.Context) {
 	session := sessions.Default(c)
 	state := session.Get("state")
 	if state == nil {

@@ -1,4 +1,53 @@
 basePath: /v1
+definitions:
+  dto.UserResponse:
+    properties:
+      certifications:
+        $ref: '#/definitions/dto.UserResponseCertifications'
+      cid:
+        type: integer
+      controller_type:
+        type: string
+      created_at:
+        type: string
+      discord_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      operating_initials:
+        type: string
+      rating:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.UserResponseCertifications:
+    properties:
+      approach:
+        type: string
+      delivery:
+        type: string
+      enroute:
+        type: string
+      ground:
+        type: string
+      local:
+        type: string
+    type: object
+  response.R:
+    properties:
+      data: {}
+      status:
+        type: string
+    type: object
 host: api.denartcc.org
 info:
   contact:
@@ -10,7 +59,104 @@ info:
     url: https://github.com/kzdv/api2/blob/main/LICENSE
   title: KZDV API
   version: "1.0"
-paths: {}
+paths:
+  /v1/user:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BasicAuth: []
+      summary: Get User Information
+      tags:
+      - user
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BasicAuth: []
+      summary: Patch User Information
+      tags:
+      - user
+  /v1/user/login:
+    get:
+      parameters:
+      - description: Redirect URL
+        in: path
+        name: redirect
+        type: string
+      responses:
+        "307":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Login to account
+      tags:
+      - user
+      - oauth
+  /v1/user/login/callback:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+        "307":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Login callback
+      tags:
+      - user
+      - oauth
 securityDefinitions:
   BasicAuth:
     type: basic

@@ -44,7 +44,6 @@ func GenerateDSN(options DBOptions) (string, error) {
 	if options.Driver == "mysql" {
 		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", options.User, options.Password,
 			options.Host, options.Port, options.Database)
-
 		if options.Options != "" {
 			dsn += "?" + options.Options
 		}

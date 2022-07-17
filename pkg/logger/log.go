@@ -5,11 +5,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var Logger *logrus.Logger
+var Logger = logrus.New()
 var Format string
 
 func NewLogger(format string) {
-	Logger = logrus.New()
 	Format = format
 	if format == "json" {
 		Logger.SetFormatter(&logrus.JSONFormatter{})

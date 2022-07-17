@@ -6,6 +6,7 @@ type Config struct {
 	Redis    ConfigRedis    `yaml:"redis"`
 	Session  ConfigSession  `yaml:"session"`
 	OAuth    ConfigOAuth    `yaml:"oauth"`
+	VATUSA   ConfigVATUSA   `yaml:"vatusa"`
 }
 
 type ConfigServer struct {
@@ -56,4 +57,8 @@ type ConfigOAuthEndpoints struct {
 	Authorize string `yaml:"authorize"`
 	Token     string `yaml:"token"`
 	UserInfo  string `yaml:"user"`
+}
+
+type ConfigVATUSA struct {
+	APIKey string `yaml:"api_key"`
 }

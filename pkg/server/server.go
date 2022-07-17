@@ -51,22 +51,23 @@ func NewServer(o *ServerOpts) (*server, error) {
 		Password: cfg.Database.Password,
 		Database: cfg.Database.Database,
 		Driver:   "mysql",
-		Options:  "TimeZone=UTC",
 		Logger:   logger.Logger,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	log.Info("Connecting to redis")
-	database.ConnectRedis(database.RedisOptions{
-		Password:      cfg.Redis.Password,
-		DB:            cfg.Redis.Database,
-		Sentinel:      cfg.Redis.Sentinel,
-		MasterName:    cfg.Redis.MasterName,
-		SentinelAddrs: cfg.Redis.SentinelAddrs,
-		Addr:          cfg.Redis.Address,
-	})
+	/*
+		log.Info("Connecting to redis")
+		database.ConnectRedis(database.RedisOptions{
+			Password:      cfg.Redis.Password,
+			DB:            cfg.Redis.Database,
+			Sentinel:      cfg.Redis.Sentinel,
+			MasterName:    cfg.Redis.MasterName,
+			SentinelAddrs: cfg.Redis.SentinelAddrs,
+			Addr:          cfg.Redis.Address,
+		})
+	*/
 
 	log.Info("Building OAuth2 Client")
 	oauth.Build(
@@ -111,7 +112,7 @@ func NewServer(o *ServerOpts) (*server, error) {
 	log.Info("Registering routes")
 	router.SetupRoutes(s.Engine)
 
-	log.Info("Starting webserver on %s:%s", cfg.Server.Host, cfg.Server.Port)
+	log.Infof("Starting webserver on %s:%s", cfg.Server.Host, cfg.Server.Port)
 
 	Server = s
 

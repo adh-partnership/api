@@ -1,7 +1,14 @@
 package main
 
-func main() {
+import (
+	"os"
 
+	"github.com/kzdv/api/cmd/api/app"
+)
+
+func main() {
+	app := app.NewRootCommand()
+	app.Run(os.Args)
 }
 
 // @title KZDV API
