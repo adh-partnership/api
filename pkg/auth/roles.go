@@ -20,6 +20,14 @@ var Groups = map[string][]string{
 		"ins",
 		"mtr",
 	},
+	"events": {
+		"ec",
+		"events",
+	},
+	"web": {
+		"wm",
+		"web",
+	},
 }
 
 var Roles = map[string]Role{
@@ -86,6 +94,23 @@ var Roles = map[string]Role{
 			"atm",
 			"datm",
 			"ta",
+			"wm",
+		},
+	},
+	"events": {
+		Name: "events",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
+			"ec",
+			"wm",
+		},
+	},
+	"web": {
+		Name: "web",
+		RolesCanAdd: []string{
+			"atm",
+			"datm",
 			"wm",
 		},
 	},
