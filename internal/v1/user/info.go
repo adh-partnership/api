@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"github.com/kzdv/api/pkg/network/vatusa"
 	"net/http"
 	"strings"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/database/dto"
 	"github.com/kzdv/api/pkg/gin/response"
-	"github.com/kzdv/api/pkg/vatusa"
 	dbTypes "github.com/kzdv/types/database"
 )
 

@@ -13,6 +13,7 @@ func NewRootCommand() *cli.App {
 		Usage: "KZDV Monolithic API",
 		Commands: []*cli.Command{
 			newServerCommand(),
+			newJobCommand(),
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{

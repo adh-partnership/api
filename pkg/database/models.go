@@ -1,11 +1,10 @@
 package database
 
 import (
-	"strconv"
-
 	dbTypes "github.com/kzdv/types/database"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"strconv"
 )
 
 func AddRoleToUser(user *dbTypes.User, role *dbTypes.Role) error {
@@ -52,6 +51,18 @@ func FindUserByCID(cid string) (*dbTypes.User, error) {
 	}
 
 	return user, nil
+}
+
+func FindOI(user *dbTypes.User) (string, error) {
+	oi := string(user.FirstName[0]) + string(user.LastName[0])
+	if err := DB.Where(dbTypes.User{OperatingInitials: oi}).First(&dbTypes.User{}).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return oi, nil
+		}
+		return "", err
+	}
+
+	return "", nil
 }
 
 func FindRatingByShort(short string) (*dbTypes.Rating, error) {

@@ -27,7 +27,7 @@ func getLogin(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("state", state)
 	session.Set("redirect", c.Query("redirect"))
-	session.Save()
+	//session.Save()
 
 	c.Redirect(http.StatusTemporaryRedirect, oauth.OAuthConfig.AuthCodeURL(state))
 }
@@ -65,7 +65,9 @@ func getLoginCallback(c *gin.Context) {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
-	defer res.Body.Close()
+	defer func() {
+		_ = res.Body.Close()
+	}()
 	contents, err := io.ReadAll(res.Body)
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
@@ -80,7 +82,7 @@ func getLoginCallback(c *gin.Context) {
 
 	session.Delete("state")
 	session.Set("cid", fmt.Sprint(user.User.CID))
-	session.Save()
+	//session.Save()
 
 	redirect := session.Get("redirect")
 	if redirect != nil {

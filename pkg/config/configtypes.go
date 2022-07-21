@@ -3,6 +3,7 @@ package config
 type Config struct {
 	Server   ConfigServer   `yaml:"server"`
 	Database ConfigDatabase `yaml:"database"`
+	Discord  ConfigDiscord  `yaml:"discord"`
 	Redis    ConfigRedis    `yaml:"redis"`
 	Session  ConfigSession  `yaml:"session"`
 	OAuth    ConfigOAuth    `yaml:"oauth"`
@@ -12,6 +13,10 @@ type Config struct {
 type ConfigServer struct {
 	Host string `yaml:"host"`
 	Port string `yaml:"port"`
+}
+
+type ConfigDiscord struct {
+	Webhooks map[string]string `yaml:"webhooks"`
 }
 
 type ConfigDatabase struct {

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/kzdv/api/pkg/discord"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
@@ -56,6 +57,9 @@ func NewServer(o *ServerOpts) (*server, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Info("Configuring Discord package")
+	discord.SetupWebhooks(cfg.Discord.Webhooks)
 
 	/*
 		log.Info("Connecting to redis")

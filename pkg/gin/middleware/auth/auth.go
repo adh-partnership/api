@@ -5,8 +5,10 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/kzdv/api/pkg/auth"
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/gin/response"
+	dbTypes "github.com/kzdv/types/database"
 )
 
 func Auth(c *gin.Context) {
@@ -31,16 +33,27 @@ func Auth(c *gin.Context) {
 	// If we get here, they had a cookie with an invalid user
 	// so delete it.
 	session.Delete("cid")
-	session.Save()
 	c.Set("x-guest", true)
 	c.Next()
 }
 
 func NotGuest(c *gin.Context) {
 	if c.GetBool("x-guest") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		response.RespondError(c, http.StatusUnauthorized, "Unauthorized")
 		c.Abort()
 		return
 	}
 	c.Next()
+}
+
+func HasRole(roles ...string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user := c.MustGet("x-user").(*dbTypes.User)
+		if auth.HasRoleList(user, roles) {
+			c.Next()
+			return
+		}
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		c.Abort()
+	}
 }

@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	app := app.NewRootCommand()
-	app.Run(os.Args)
+	a := app.NewRootCommand()
+	_ = a.Run(os.Args)
 }
 
 // @title KZDV API
@@ -21,7 +21,7 @@ func main() {
 // @license.name Apache
 // @license.url https://github.com/kzdv/api2/blob/main/LICENSE
 
-// @host api.denartcc.org
+// @host network.denartcc.org
 // @BasePath /v1
 // @query.collection.format multi
 
