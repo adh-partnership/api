@@ -2,10 +2,11 @@ package facility
 
 import (
 	"fmt"
+
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/network"
+	"github.com/kzdv/api/pkg/network/global"
 	"github.com/kzdv/api/pkg/network/vatusa"
 	dbTypes "github.com/kzdv/types/database"
 	"gorm.io/gorm"
@@ -61,7 +62,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 		user.UpdateID = updateid
 
 		if controller.Membership == "visit" {
-			location, err := network.GetLocation(fmt.Sprint(controller.CID))
+			location, err := global.GetLocation(fmt.Sprint(controller.CID))
 			if err != nil {
 				log.Errorf("Error getting location for %d: %s", controller.CID, err.Error())
 			} else {

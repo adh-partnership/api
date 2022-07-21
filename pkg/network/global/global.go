@@ -1,4 +1,4 @@
-package network
+package global
 
 import (
 	"github.com/kzdv/api/pkg/network/vatsim"

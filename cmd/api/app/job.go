@@ -2,11 +2,12 @@ package app
 
 import (
 	"fmt"
+
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/facility"
 	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/network"
+	"github.com/kzdv/api/pkg/network/global"
 	"github.com/kzdv/api/pkg/network/vatusa"
 	dbTypes "github.com/kzdv/types/database"
 	gonanoid "github.com/matoous/go-nanoid/v2"
@@ -67,7 +68,7 @@ func newJobCommand() *cli.Command {
 				log.Errorf("Error getting foreign visitors: %s", err)
 			}
 			for _, user := range users {
-				location, err := network.GetLocation(fmt.Sprint(user.CID))
+				location, err := global.GetLocation(fmt.Sprint(user.CID))
 				if err != nil {
 					log.Errorf("Error getting location for user %d: %s", user.CID, err)
 					continue
