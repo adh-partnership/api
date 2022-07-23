@@ -14,6 +14,13 @@ data:
       password: {{.DB_PASSWORD | default "root"}}
       database: {{.DB_DATABASE | default "zdv"}}
       automigrate: true
+    discord:
+      webhooks:
+        events: {{.DISCORD_WEBHOOK_EVENTS}}
+        seniorstaff: {{.DISCORD_WEBHOOK_SENIORSTAFF}}
+        staffup: {{.DISCORD_WEBHOOK_STAFFUP}}
+        training: {{.DISCORD_WEBHOOK_TRAINING}}
+        default: {{.DISCORD_WEBHOOK_DEFAULT}}
     redis:
       address: {{.REDIS_HOST | default "redis.redis.svc.cluster.local:6379"}}
       database: 0
