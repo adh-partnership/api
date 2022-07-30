@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/kzdv/api/pkg/logger"
@@ -20,6 +22,11 @@ func SetupRoutes(router *gin.Engine) {
 		grp := v1.Group(prefix)
 		f(grp)
 	}
+
+	// Setup redirect for old overflight endpoint
+	router.GET("/live/{fac}", func(c *gin.Context) {
+		c.Redirect(http.StatusPermanentRedirect, "/v1/overflight/"+c.Param("fac"))
+	})
 }
 
 func AddGroup(prefix string, f func(*gin.RouterGroup)) {

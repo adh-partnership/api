@@ -16,20 +16,81 @@ const docTemplate = `{
         },
         "license": {
             "name": "Apache",
-            "URL": "https://github.com/kzdv/api2/blob/main/LICENSE"
+            "url": "https://github.com/kzdv/api2/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/user": {
+        "/v1/overflight": {
             "get": {
-                "security": [
+                "tags": [
+                    "overflight"
+                ],
+                "summary": "Get Overflights for Facility",
+                "parameters": [
                     {
-                        "BasicAuth": []
+                        "type": "string",
+                        "description": "Facility, defaults to ZDV if no facility id provided",
+                        "name": "fac",
+                        "in": "path"
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/user.Flightsv1"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/overflight/:facility": {
+            "get": {
+                "tags": [
+                    "overflight"
+                ],
+                "summary": "Get Overflights for Facility",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Facility, defaults to ZDV if no facility id provided",
+                        "name": "fac",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/user.Flightsv1"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user": {
+            "get": {
                 "tags": [
                     "user"
                 ],
@@ -56,11 +117,6 @@ const docTemplate = `{
                 }
             },
             "patch": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -80,6 +136,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/dto.UserResponse"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -97,6 +160,163 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/:cid": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Information",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/:cid/roles": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Information",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/:cid/roles/:role": {
+            "put": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Add User Role",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Role",
+                        "name": "role",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "309": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Remove User Role",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Role",
+                        "name": "role",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
@@ -175,6 +395,95 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/user/roles": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Information",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/{cid}": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Patch User Information",
+                "parameters": [
+                    {
+                        "description": "User",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -206,6 +515,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rating": {
+                    "type": "string"
+                },
+                "removal_reason": {
                     "type": "string"
                 },
                 "roles": {
@@ -250,6 +562,50 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "user.Flightsv1": {
+            "type": "object",
+            "properties": {
+                "alt": {
+                    "type": "integer"
+                },
+                "arr": {
+                    "type": "string"
+                },
+                "callsign": {
+                    "type": "string"
+                },
+                "cid": {
+                    "type": "integer"
+                },
+                "dep": {
+                    "type": "string"
+                },
+                "facility": {
+                    "type": "string"
+                },
+                "hdg": {
+                    "type": "integer"
+                },
+                "lastSeen": {
+                    "type": "string"
+                },
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "route": {
+                    "type": "string"
+                },
+                "spd": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -262,7 +618,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "api.denartcc.org",
+	Host:             "network.denartcc.org",
 	BasePath:         "/v1",
 	Schemes:          []string{},
 	Title:            "KZDV API",

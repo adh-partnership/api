@@ -20,6 +20,8 @@ definitions:
         type: string
       rating:
         type: string
+      removal_reason:
+        type: string
       roles:
         items:
           type: string
@@ -48,7 +50,36 @@ definitions:
       status:
         type: string
     type: object
-host: api.denartcc.org
+  user.Flightsv1:
+    properties:
+      alt:
+        type: integer
+      arr:
+        type: string
+      callsign:
+        type: string
+      cid:
+        type: integer
+      dep:
+        type: string
+      facility:
+        type: string
+      hdg:
+        type: integer
+      lastSeen:
+        type: string
+      lat:
+        type: number
+      lon:
+        type: number
+      route:
+        type: string
+      spd:
+        type: integer
+      type:
+        type: string
+    type: object
+host: network.denartcc.org
 info:
   contact:
     email: wm@denartcc.org
@@ -60,6 +91,48 @@ info:
   title: KZDV API
   version: "1.0"
 paths:
+  /v1/overflight:
+    get:
+      parameters:
+      - description: Facility, defaults to ZDV if no facility id provided
+        in: path
+        name: fac
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/user.Flightsv1'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Overflights for Facility
+      tags:
+      - overflight
+  /v1/overflight/:facility:
+    get:
+      parameters:
+      - description: Facility, defaults to ZDV if no facility id provided
+        in: path
+        name: fac
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/user.Flightsv1'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Overflights for Facility
+      tags:
+      - overflight
   /v1/user:
     get:
       responses:
@@ -75,8 +148,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      security:
-      - BasicAuth: []
       summary: Get User Information
       tags:
       - user
@@ -90,6 +161,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/dto.UserResponse'
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -109,8 +185,147 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      security:
-      - BasicAuth: []
+      summary: Patch User Information
+      tags:
+      - user
+  /v1/user/:cid:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get User Information
+      tags:
+      - user
+  /v1/user/:cid/roles:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get User Information
+      tags:
+      - user
+  /v1/user/:cid/roles/:role:
+    delete:
+      parameters:
+      - description: Role
+        in: path
+        name: role
+        required: true
+        type: string
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Remove User Role
+      tags:
+      - user
+    put:
+      parameters:
+      - description: Role
+        in: path
+        name: role
+        required: true
+        type: string
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "309":
+          description: ""
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Add User Role
+      tags:
+      - user
+  /v1/user/{cid}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserResponse'
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
       summary: Patch User Information
       tags:
       - user
@@ -118,8 +333,7 @@ paths:
     get:
       parameters:
       - description: Redirect URL
-        required: true
-        in: query
+        in: path
         name: redirect
         type: string
       responses:
@@ -158,6 +372,26 @@ paths:
       tags:
       - user
       - oauth
+  /v1/user/roles:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get User Information
+      tags:
+      - user
 securityDefinitions:
   BasicAuth:
     type: basic
