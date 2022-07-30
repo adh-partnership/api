@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"github.com/kzdv/api/internal/v1/router"
 	"github.com/kzdv/api/pkg/gin/middleware/auth"
 	"github.com/kzdv/api/pkg/logger"

@@ -5,8 +5,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	loggr "github.com/kzdv/api/pkg/logger"
 	"github.com/sirupsen/logrus"
+
+	loggr "github.com/kzdv/api/pkg/logger"
 )
 
 func Logger(c *gin.Context) {

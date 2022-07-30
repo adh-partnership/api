@@ -33,7 +33,7 @@ type DBOptions struct {
 	Logger *logrus.Logger
 }
 
-var default_options = DBOptions{
+var defaultOptions = DBOptions{
 	MaxOpenConns: 50,
 	MaxIdleConns: 10,
 }
@@ -54,9 +54,9 @@ func GenerateDSN(options DBOptions) (string, error) {
 	return dsn, nil
 }
 
-func HandleCACert(driver string, CACert string) error {
+func HandleCACert(driver string, cacert string) error {
 	rootCertPool := x509.NewCertPool()
-	pem, err := base64.StdEncoding.DecodeString(CACert)
+	pem, err := base64.StdEncoding.DecodeString(cacert)
 	if err != nil {
 		return err
 	}
@@ -66,9 +66,12 @@ func HandleCACert(driver string, CACert string) error {
 
 	// @TODO: support other drivers
 	if driver == "mysql" {
-		gomysql.RegisterTLSConfig("custom", &tls.Config{
+		err := gomysql.RegisterTLSConfig("custom", &tls.Config{
 			RootCAs: rootCertPool,
 		})
+		if err != nil {
+			return errors.New("error registering tls config: " + err.Error())
+		}
 	}
 
 	return nil
@@ -83,7 +86,7 @@ func Connect(options DBOptions) error {
 		return errors.New("invalid driver: " + options.Driver)
 	}
 
-	err := mergo.Merge(&options, default_options)
+	err := mergo.Merge(&options, defaultOptions)
 	if err != nil {
 		return errors.New("failed to apply defaults: " + err.Error())
 	}

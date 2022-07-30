@@ -3,13 +3,14 @@ package facility
 import (
 	"fmt"
 
+	"gorm.io/gorm"
+
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/network/global"
 	"github.com/kzdv/api/pkg/network/vatusa"
 	dbTypes "github.com/kzdv/types/database"
-	"gorm.io/gorm"
 )
 
 var log = logger.Logger.WithField("component", "facility")

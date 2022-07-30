@@ -7,9 +7,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/urfave/cli/v2"
+
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/server"
-	"github.com/urfave/cli/v2"
 )
 
 var log = logger.Logger.WithField("component", "server")

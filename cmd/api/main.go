@@ -19,7 +19,7 @@ func main() {
 // @contact.email wm@denartcc.org
 
 // @license.name Apache
-// @license.url https://github.com/kzdv/api2/blob/main/LICENSE
+// @license.URL https://github.com/kzdv/api2/blob/main/LICENSE
 
 // @host network.denartcc.org
 // @BasePath /v1

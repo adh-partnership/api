@@ -16,7 +16,7 @@ const docTemplate = `{
         },
         "license": {
             "name": "Apache",
-            "url": "https://github.com/kzdv/api2/blob/main/LICENSE"
+            "URL": "https://github.com/kzdv/api2/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },

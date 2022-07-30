@@ -50,10 +50,10 @@ type ConfigSessionCookie struct {
 }
 
 type ConfigOAuth struct {
-	BaseURL      string `yaml:"base_url"`
+	BaseURL      string `yaml:"base_URL"`
 	ClientID     string `yaml:"client_id"`
 	ClientSecret string `yaml:"client_secret"`
-	MyBaseURL    string `yaml:"my_base_url"`
+	MyBaseURL    string `yaml:"my_base_URL"`
 
 	Endpoints ConfigOAuthEndpoints `yaml:"endpoints"`
 }

@@ -2,14 +2,14 @@ package discord
 
 type Message struct {
 	Username  *string  `json:"username,omitempty"`
-	AvatarUrl *string  `json:"avatar_url,omitempty"`
+	AvatarURL *string  `json:"avatar_URL,omitempty"`
 	Content   *string  `json:"content,omitempty"`
 	Embeds    *[]Embed `json:"embeds,omitempty"`
 }
 
 type Embed struct {
 	Title       *string    `json:"title,omitempty"`
-	Url         *string    `json:"url,omitempty"`
+	URL         *string    `json:"URL,omitempty"`
 	Description *string    `json:"description,omitempty"`
 	Color       *string    `json:"color,omitempty"`
 	Author      *Author    `json:"author,omitempty"`
@@ -21,8 +21,8 @@ type Embed struct {
 
 type Author struct {
 	Name    *string `json:"name,omitempty"`
-	Url     *string `json:"url,omitempty"`
-	IconUrl *string `json:"icon_url,omitempty"`
+	URL     *string `json:"URL,omitempty"`
+	IconURL *string `json:"icon_URL,omitempty"`
 }
 
 type Field struct {
@@ -32,14 +32,14 @@ type Field struct {
 }
 
 type Thumbnail struct {
-	Url *string `json:"url,omitempty"`
+	URL *string `json:"URL,omitempty"`
 }
 
 type Image struct {
-	Url *string `json:"url,omitempty"`
+	URL *string `json:"URL,omitempty"`
 }
 
 type Footer struct {
 	Text    *string `json:"text,omitempty"`
-	IconUrl *string `json:"icon_url,omitempty"`
+	IconURL *string `json:"icon_URL,omitempty"`
 }

@@ -8,11 +8,12 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	gonanoid "github.com/matoous/go-nanoid/v2"
+
 	"github.com/kzdv/api/internal/v1/dto"
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/gin/response"
 	"github.com/kzdv/api/pkg/oauth"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 // Login to account
@@ -27,7 +28,6 @@ func getLogin(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("state", state)
 	session.Set("redirect", c.Query("redirect"))
-	//session.Save()
 
 	c.Redirect(http.StatusTemporaryRedirect, oauth.OAuthConfig.AuthCodeURL(state))
 }
@@ -82,7 +82,6 @@ func getLoginCallback(c *gin.Context) {
 
 	session.Delete("state")
 	session.Set("cid", fmt.Sprint(user.User.CID))
-	//session.Save()
 
 	redirect := session.Get("redirect")
 	if redirect != nil {

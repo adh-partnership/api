@@ -2,13 +2,15 @@ package roster
 
 import (
 	"fmt"
+
+	gonanoid "github.com/matoous/go-nanoid/v2"
+
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/facility"
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/network/global"
 	"github.com/kzdv/api/pkg/network/vatusa"
 	dbTypes "github.com/kzdv/types/database"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 var log = logger.Logger.WithField("component", "job/roster")

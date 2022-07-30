@@ -2,30 +2,32 @@ package server
 
 import (
 	"fmt"
-	"github.com/kzdv/api/pkg/discord"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	// For Swagger docs
 	_ "github.com/kzdv/api/docs"
 	"github.com/kzdv/api/internal/v1/router"
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/database"
+	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/gin/middleware/auth"
 	ginLogger "github.com/kzdv/api/pkg/gin/middleware/logger"
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/oauth"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-type server struct {
+type ServerStruct struct {
 	Engine *gin.Engine
 	Config *config.Config
 }
 
-var Server *server
+var Server *ServerStruct
 
 type ServerOpts struct {
 	ConfigFile string
@@ -33,8 +35,8 @@ type ServerOpts struct {
 
 var log = logger.Logger.WithField("component", "server")
 
-func NewServer(o *ServerOpts) (*server, error) {
-	s := &server{}
+func NewServer(o *ServerOpts) (*ServerStruct, error) {
+	s := &ServerStruct{}
 
 	log.Infof("Loading config file: %s", o.ConfigFile)
 	cfg, err := config.ParseConfig(o.ConfigFile)
@@ -62,15 +64,17 @@ func NewServer(o *ServerOpts) (*server, error) {
 	discord.SetupWebhooks(cfg.Discord.Webhooks)
 
 	/*
-		log.Info("Connecting to redis")
-		database.ConnectRedis(database.RedisOptions{
-			Password:      cfg.Redis.Password,
-			DB:            cfg.Redis.Database,
-			Sentinel:      cfg.Redis.Sentinel,
-			MasterName:    cfg.Redis.MasterName,
-			SentinelAddrs: cfg.Redis.SentinelAddrs,
-			Addr:          cfg.Redis.Address,
-		})
+		Commented out while we plan for Redis and possible RabbitMQ
+
+			log.Info("Connecting to redis")
+			database.ConnectRedis(database.RedisOptions{
+				Password:      cfg.Redis.Password,
+				DB:            cfg.Redis.Database,
+				Sentinel:      cfg.Redis.Sentinel,
+				MasterName:    cfg.Redis.MasterName,
+				SentinelAddrs: cfg.Redis.SentinelAddrs,
+				Addr:          cfg.Redis.Address,
+			})
 	*/
 
 	log.Info("Building OAuth2 Client")

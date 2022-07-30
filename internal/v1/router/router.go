@@ -2,10 +2,11 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"github.com/kzdv/api/pkg/logger"
 )
 
-var routeGroups map[string](func(*gin.RouterGroup))
+var routeGroups map[string]func(*gin.RouterGroup)
 
 var log = logger.Logger.WithField("component", "router/v1")
 
@@ -14,14 +15,10 @@ func init() {
 }
 
 func SetupRoutes(router *gin.Engine) {
-	router.Group("/v1")
-	{
-		for prefix, f := range routeGroups {
-			grp := router.Group(prefix)
-			{
-				f(grp)
-			}
-		}
+	v1 := router.Group("/v1")
+	for prefix, f := range routeGroups {
+		grp := v1.Group(prefix)
+		f(grp)
 	}
 }
 

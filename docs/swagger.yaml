@@ -118,7 +118,8 @@ paths:
     get:
       parameters:
       - description: Redirect URL
-        in: path
+        required: true
+        in: query
         name: redirect
         type: string
       responses:

@@ -1,10 +1,12 @@
 package database
 
 import (
-	dbTypes "github.com/kzdv/types/database"
+	"strconv"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"strconv"
+
+	dbTypes "github.com/kzdv/types/database"
 )
 
 func AddRoleToUser(user *dbTypes.User, role *dbTypes.Role) error {

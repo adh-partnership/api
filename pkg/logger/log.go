@@ -5,8 +5,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var Logger = logrus.New()
-var Format string
+var (
+	Logger = logrus.New()
+	Format string
+)
 
 func NewLogger(format string) {
 	Format = format

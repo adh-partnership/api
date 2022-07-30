@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/kzdv/api/pkg/auth"
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/gin/response"

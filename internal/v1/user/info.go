@@ -2,15 +2,16 @@ package user
 
 import (
 	"fmt"
-	"github.com/kzdv/api/pkg/network/vatusa"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/kzdv/api/pkg/auth"
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/database/dto"
 	"github.com/kzdv/api/pkg/gin/response"
+	"github.com/kzdv/api/pkg/network/vatusa"
 	dbTypes "github.com/kzdv/types/database"
 )
 

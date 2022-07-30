@@ -6,11 +6,11 @@ import (
 
 var OAuthConfig *oauth2.Config
 
-func Build(clientid, clientsecret, redirecturl, authorize, token string) {
+func Build(clientid, clientsecret, redirectURL, authorize, token string) {
 	OAuthConfig = &oauth2.Config{
 		ClientID:     clientid,
 		ClientSecret: clientsecret,
-		RedirectURL:  redirecturl,
+		RedirectURL:  redirectURL,
 		Scopes:       []string{"fullname", "email"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  authorize,

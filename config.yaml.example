@@ -25,7 +25,7 @@ session:
     domain: "{{.SESSION_DOMAIN | default ".denartcc.org"}}"
     path: "/"
 oauth:
-  base_url: "https://auth.denartcc.org"
+  base_URL: "https://auth.denartcc.org"
   endpoints:
     token: "/oauth/token"
     user: "/oauth/user"

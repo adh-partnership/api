@@ -3,8 +3,9 @@ package app
 import (
 	"errors"
 
-	"github.com/kzdv/api/pkg/logger"
 	"github.com/urfave/cli/v2"
+
+	"github.com/kzdv/api/pkg/logger"
 )
 
 func NewRootCommand() *cli.App {

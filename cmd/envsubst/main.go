@@ -18,7 +18,7 @@ func main() {
 	env := env()
 
 	t := template.Must(template.New("tmpl").Funcs(sprig.TxtFuncMap()).Parse(string(buf)))
-	t.Execute(os.Stdout, env)
+	_ = t.Execute(os.Stdout, env)
 }
 
 func env() map[string]string {

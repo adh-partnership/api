@@ -11,41 +11,41 @@ import (
 	"gorm.io/gorm/utils"
 )
 
-type logger struct {
+type Logger struct {
 	log                   *logrus.Logger
 	SlowThreshold         time.Duration
 	SourceField           string
 	SkipErrRecordNotFound bool
 }
 
-func NewLogger(l *logrus.Logger) *logger {
-	return &logger{
+func NewLogger(l *logrus.Logger) *Logger {
+	return &Logger{
 		log:                   l,
 		SkipErrRecordNotFound: true,
 	}
 }
 
-func (l *logger) LogMode(gormlog.LogLevel) gormlog.Interface {
+func (l *Logger) LogMode(gormlog.LogLevel) gormlog.Interface {
 	return l
 }
 
-func (l *logger) Info(ctx context.Context, s string, args ...interface{}) {
+func (l *Logger) Info(ctx context.Context, s string, args ...interface{}) {
 	l.log.WithField("component", "database").WithContext(ctx).Infof(s, args...)
 }
 
-func (l *logger) Debug(ctx context.Context, s string, args ...interface{}) {
+func (l *Logger) Debug(ctx context.Context, s string, args ...interface{}) {
 	l.log.WithField("component", "database").WithContext(ctx).Debugf(s, args...)
 }
 
-func (l *logger) Warn(ctx context.Context, s string, args ...interface{}) {
+func (l *Logger) Warn(ctx context.Context, s string, args ...interface{}) {
 	l.log.WithField("component", "database").WithContext(ctx).Warnf(s, args...)
 }
 
-func (l *logger) Error(ctx context.Context, s string, args ...interface{}) {
+func (l *Logger) Error(ctx context.Context, s string, args ...interface{}) {
 	l.log.WithField("component", "database").WithContext(ctx).Errorf(s, args...)
 }
 
-func (l *logger) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) {
+func (l *Logger) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) {
 	elapsed := time.Since(begin)
 	sql, _ := fc()
 	fields := logrus.Fields{

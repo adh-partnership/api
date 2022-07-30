@@ -1,10 +1,11 @@
 package app
 
 import (
+	"github.com/urfave/cli/v2"
+
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/logger"
-	"github.com/urfave/cli/v2"
 )
 
 func newJobCommand() *cli.Command {

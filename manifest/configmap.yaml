@@ -38,11 +38,11 @@ data:
         domain: ".denartcc.org"
         path: "/"
     oauth:
-      base_url: "https://auth.denartcc.org"
+      base_URL: "https://auth.denartcc.org"
       endpoints:
         token: "/oauth/token"
         user: "/v1/user"
         authorize: "/oauth/authorize"
       client_id: "{{.OAUTH_CLIENT_ID | default "zdv"}}"
       client_secret: "{{.OAUTH_CLIENT_SECRET | default "zdv"}}"
-      my_base_url: "https://api.denartcc.org"
+      my_base_URL: "https://api.denartcc.org"
