@@ -4,11 +4,16 @@ import (
 	"os"
 
 	"github.com/kzdv/api/cmd/api/app"
+	"github.com/kzdv/api/pkg/logger"
 )
 
 func main() {
 	a := app.NewRootCommand()
-	_ = a.Run(os.Args)
+	err := a.Run(os.Args)
+	if err != nil {
+		logger.Logger.Errorf("Error starting application: %v", err)
+		os.Exit(1)
+	}
 }
 
 // @title KZDV API

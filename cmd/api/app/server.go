@@ -27,6 +27,8 @@ func newServerCommand() *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
+			log.Info("Starting KZDV API")
+			log.Debugf("config=%s", c.String("config"))
 			srvr, err := server.NewServer(&server.ServerOpts{
 				ConfigFile: c.String("config"),
 			})
