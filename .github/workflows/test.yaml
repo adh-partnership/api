@@ -30,6 +30,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       name: Checkout Repo
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Setup Go
       uses: actions/setup-go@v2
       with:
@@ -42,32 +45,35 @@ jobs:
     - name: Build
       run: make build
     - name: Build Image
-      run: |
-        HASH=`echo $GITHUB_SHA | cut -c1-8`
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/api:$GITHUB_SHA .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/api:${{ steps.vars.outputs.sha_short }} .
     - name: Push Image
       if: ${{ github.event_name == 'push' }}
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/api:$GITHUB_SHA
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/api:${{ steps.vars.outputs.sha_short }}
   deploy:
     name: Deploy Image to Cluster
     runs-on: ubuntu-latest
     needs: build
     if: ${{ github.event_name == 'push' }}
     steps:
+    - uses: actions/checkout@v2
+      name: Checkout Repo
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Deploy image to cluster (prod)
       uses: actions-hub/kubectl@v1.24.3
       if: ${{ github.ref == 'refs/heads/main' }}
       env:
         KUBE_CONFIG: ${{ secrets.CI_KUBECONFIG }}
       with:
-        args: set image -n prod deployment/api api=${{ secrets.DOCKER_USERNAME }}/api:$GITHUB_SHA
+        args: set image -n prod deployment/api *=${{ secrets.DOCKER_USERNAME }}/api:${{ steps.vars.outputs.sha_short }}
     - name: Deploy image to cluster (prod)
       uses: actions-hub/kubectl@v1.24.3
       if: ${{ github.ref == 'refs/heads/dev' }}
       env:
         KUBE_CONFIG: ${{ secrets.CI_KUBECONFIG }}
       with:
-        args: set image -n dev deployment/api api=${{ secrets.DOCKER_USERNAME }}/api:$GITHUB_SHA
+        args: set image -n dev deployment/api *=${{ secrets.DOCKER_USERNAME }}/api:${{ steps.vars.outputs.sha_short }}
     - name: Wait for ready (prod)
       uses: actions-hub/kubectl@v1.24.3
       if: ${{ github.ref == 'refs/heads/main' }}
