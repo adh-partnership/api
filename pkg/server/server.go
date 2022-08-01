@@ -16,6 +16,7 @@ import (
 	"github.com/kzdv/api/internal/v1/router"
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/database"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/gin/middleware/auth"
 	ginLogger "github.com/kzdv/api/pkg/gin/middleware/logger"
@@ -59,6 +60,16 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		Logger:   logger.Logger,
 	})
 	if err != nil {
+		return nil, err
+	}
+
+	log.Info("Running migrations...")
+	err = database.DB.AutoMigrate(
+		&dbTypes.User{},
+		&dbTypes.Flights{},
+	)
+	if err != nil {
+		log.Errorf("Failed to run migrations: %v", err)
 		return nil, err
 	}
 
@@ -110,6 +121,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	})
 	s.Engine.Use(sessions.Sessions(cfg.Session.Cookie.Name, store))
 	s.Engine.Use(auth.UpdateCookie)
+	s.Engine.Use(auth.Auth)
 
 	log.Info("Registering static routes and templates")
 	s.Engine.LoadHTMLGlob("static/*.html")

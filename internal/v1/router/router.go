@@ -5,6 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/kzdv/api/internal/v1/overflight"
+	"github.com/kzdv/api/internal/v1/user"
 	"github.com/kzdv/api/pkg/logger"
 )
 
@@ -14,24 +16,21 @@ var log = logger.Logger.WithField("component", "router/v1")
 
 func init() {
 	routeGroups = make(map[string]func(*gin.RouterGroup))
+	routeGroups["/overflight"] = overflight.Routes
+	routeGroups["/user"] = user.Routes
 }
 
-func SetupRoutes(router *gin.Engine) {
-	v1 := router.Group("/v1")
+func SetupRoutes(r *gin.Engine) {
+	log.Infof("Setting up old overflight redirect")
+	// Setup redirect for old overflight endpoint
+	r.GET("/live/:fac", func(c *gin.Context) {
+		c.Redirect(http.StatusPermanentRedirect, "/v1/overflight/"+c.Param("fac"))
+	})
+
+	v1 := r.Group("/v1")
 	for prefix, f := range routeGroups {
+		log.Infof("Loading route prefix: %s", prefix)
 		grp := v1.Group(prefix)
 		f(grp)
 	}
-
-	// Setup redirect for old overflight endpoint
-	router.GET("/live/{fac}", func(c *gin.Context) {
-		c.Redirect(http.StatusPermanentRedirect, "/v1/overflight/"+c.Param("fac"))
-	})
-}
-
-func AddGroup(prefix string, f func(*gin.RouterGroup)) {
-	if _, exists := routeGroups[prefix]; exists {
-		log.Warnf("Route group prefix %s defined already but got request to add again... this will overwrite the previous definition", prefix)
-	}
-	routeGroups[prefix] = f
 }
