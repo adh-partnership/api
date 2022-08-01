@@ -39,9 +39,9 @@ func newServerCommand() *cli.Command {
 			ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 			defer stop()
 
-			log.Infof("Starting server on %s:%s", srvr.Config.Server.Host, srvr.Config.Server.Port)
+			log.Infof("Starting server on :%s", srvr.Config.Server.Port)
 			srv := &http.Server{
-				Addr:    srvr.Config.Server.Host + ":" + srvr.Config.Server.Port,
+				Addr:    ":" + srvr.Config.Server.Port,
 				Handler: srvr.Engine,
 			}
 

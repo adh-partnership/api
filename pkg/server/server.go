@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
@@ -18,6 +19,7 @@ import (
 	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/gin/middleware/auth"
 	ginLogger "github.com/kzdv/api/pkg/gin/middleware/logger"
+	"github.com/kzdv/api/pkg/gin/response"
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/oauth"
 )
@@ -117,10 +119,12 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	})
 	s.Engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
+	s.Engine.GET("/ping", func(c *gin.Context) {
+		response.RespondMessage(c, http.StatusOK, "PONG")
+	})
+
 	log.Info("Registering routes")
 	router.SetupRoutes(s.Engine)
-
-	log.Infof("Starting webserver on %s:%s", cfg.Server.Host, cfg.Server.Port)
 
 	Server = s
 
