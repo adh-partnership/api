@@ -1002,7 +1002,7 @@
         null == ae || ae({ LitElement: ne })
         function oe() {
           return {
-            baseURL: null,
+            baseUrl: null,
             breaks: !1,
             extensions: null,
             gfm: !0,
@@ -1028,7 +1028,7 @@
           : (globalThis.litElementVersions = [])
         ).push("3.2.0")
         let ie = {
-          baseURL: null,
+          baseUrl: null,
           breaks: !1,
           extensions: null,
           gfm: !0,
@@ -1738,9 +1738,9 @@
               )
             }
           }
-          URL(e, t) {
+          url(e, t) {
             let r
-            if ((r = this.rules.inline.URL.exec(e))) {
+            if ((r = this.rules.inline.url.exec(e))) {
               let e, n
               if ("@" === r[2])
                 (e = he(this.options.mangle ? t(r[0]) : r[0])),
@@ -1901,7 +1901,7 @@
         const Re = {
           escape: /^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,
           autolink: /^<(scheme:[^\s\x00-\x1f<>]*|email)>/,
-          URL: Ae,
+          url: Ae,
           tag: "^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>",
           link: /^!?\[(label)\]\(\s*(href)(?:\s+(title))?\s*\)/,
           reflink: /^!?\[(label)\]\[(ref)\]/,
@@ -2018,13 +2018,13 @@
             escape: ge(Re.escape).replace("])", "~|])").getRegex(),
             _extended_email:
               /[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/,
-            URL: /^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,
+            url: /^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,
             _backpedal:
               /(?:[^?!.,:;*_~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_~)]+(?!$))+/,
             del: /^(~~?)(?=[^\s~])([\s\S]*?[^\s~])\1(?=[^~]|$)/,
             text: /^([`~]+|[^`~])(?:(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/,
           })),
-          (Re.gfm.URL = ge(Re.gfm.URL, "i")
+          (Re.gfm.url = ge(Re.gfm.url, "i")
             .replace("email", Re.gfm._extended_email)
             .getRegex()),
           (Re.breaks = Oe({}, Re.gfm, {
@@ -2279,7 +2279,7 @@
                   (e = e.substring(r.raw.length)), t.push(r)
                 else if (
                   this.state.inLink ||
-                  !(r = this.tokenizer.URL(e, De))
+                  !(r = this.tokenizer.url(e, De))
                 ) {
                   if (
                     ((a = e),
@@ -2416,7 +2416,7 @@
           }
           link(e, t, r) {
             if (
-              null === (e = xe(this.options.sanitize, this.options.baseURL, e))
+              null === (e = xe(this.options.sanitize, this.options.baseUrl, e))
             )
               return r
             let n = '<a href="' + he(e) + '"'
@@ -2424,7 +2424,7 @@
           }
           image(e, t, r) {
             if (
-              null === (e = xe(this.options.sanitize, this.options.baseURL, e))
+              null === (e = xe(this.options.sanitize, this.options.baseUrl, e))
             )
               return r
             let n = `<img src="${e}" alt="${r}"`
@@ -3317,7 +3317,7 @@ input[type="password"] {
 select {
   font-family: var(--font-regular);
   padding: 5px 30px 5px 5px;
-  background-image: URL("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%3E%3Cpath%20d%3D%22M10.3%203.3L6%207.6%201.7%203.3A1%201%200%2000.3%204.7l5%205a1%201%200%20001.4%200l5-5a1%201%200%2010-1.4-1.4z%22%20fill%3D%22%23777777%22%2F%3E%3C%2Fsvg%3E"); 
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%3E%3Cpath%20d%3D%22M10.3%203.3L6%207.6%201.7%203.3A1%201%200%2000.3%204.7l5%205a1%201%200%20001.4%200l5-5a1%201%200%2010-1.4-1.4z%22%20fill%3D%22%23777777%22%2F%3E%3C%2Fsvg%3E"); 
   background-position: calc(100% - 5px) center;
   background-repeat: no-repeat;  
   background-size: 10px;
@@ -3796,7 +3796,7 @@ pre[class*="language-"] {
 
 .token.operator,
 .token.entity,
-.token.URL {
+.token.url {
   color: var(--code-operator-color);
 }
 
@@ -6339,7 +6339,7 @@ pre[class*="language-"] {
             Au.isString(e) && (e = qu(e))
             return e instanceof Ou ? e.format() : Ou.prototype.format.call(e)
           }),
-          (bu.URL = Ou)
+          (bu.Url = Ou)
         var Eu = /^([a-z0-9.+-]+:)/i,
           Tu = /:[0-9]*$/,
           Cu = /^(\/\/?(?!\/)[^\?\s]*)(\?[^\s]*)?$/,
@@ -6381,7 +6381,7 @@ pre[class*="language-"] {
         ;(Ou.prototype.parse = function (e, t, r) {
           if (!Au.isString(e))
             throw new TypeError(
-              "Parameter 'URL' must be a string, not " + typeof e
+              "Parameter 'url' must be a string, not " + typeof e
             )
           var n = e.indexOf("?"),
             a = -1 !== n && n < e.indexOf("#") ? "?" : "#",
@@ -8734,7 +8734,7 @@ pre[class*="language-"] {
                           URLSearchParams.prototype.isPrototypeOf(e) &&
                           this.headers.set(
                             "content-type",
-                            "application/x-www-form-URLencoded;charset=UTF-8"
+                            "application/x-www-form-urlencoded;charset=UTF-8"
                           ))
                 }),
                 a &&
@@ -8844,7 +8844,7 @@ pre[class*="language-"] {
               var r = (t = t || {}).body
               if (e instanceof b) {
                 if (e.bodyUsed) throw new TypeError("Already read")
-                ;(this.URL = e.URL),
+                ;(this.url = e.url),
                   (this.credentials = e.credentials),
                   t.headers || (this.headers = new u(e.headers)),
                   (this.method = e.method),
@@ -8853,7 +8853,7 @@ pre[class*="language-"] {
                   r ||
                     null == e._bodyInit ||
                     ((r = e._bodyInit), (e.bodyUsed = !0))
-              } else this.URL = String(e)
+              } else this.url = String(e)
               if (
                 ((this.credentials =
                   t.credentials || this.credentials || "same-origin"),
@@ -8895,7 +8895,7 @@ pre[class*="language-"] {
                 (this.ok = this.status >= 200 && this.status < 300),
                 (this.statusText = "statusText" in t ? t.statusText : "OK"),
                 (this.headers = new u(t.headers)),
-                (this.URL = t.URL || ""),
+                (this.url = t.url || ""),
                 this._initBody(e)
             }
             ;(b.prototype.clone = function () {
@@ -8908,7 +8908,7 @@ pre[class*="language-"] {
                   status: this.status,
                   statusText: this.statusText,
                   headers: new u(this.headers),
-                  URL: this.URL,
+                  url: this.url,
                 })
               }),
               (w.error = function () {
@@ -8964,7 +8964,7 @@ pre[class*="language-"] {
                           }),
                         t),
                     }
-                  r.URL =
+                  r.url =
                     "responseURL" in s
                       ? s.responseURL
                       : r.headers.get("X-Request-URL")
@@ -8980,7 +8980,7 @@ pre[class*="language-"] {
                   (s.onabort = function () {
                     o(new t.DOMException("Aborted", "AbortError"))
                   }),
-                  s.open(i.method, i.URL, !0),
+                  s.open(i.method, i.url, !0),
                   "include" === i.credentials
                     ? (s.withCredentials = !0)
                     : "omit" === i.credentials && (s.withCredentials = !1),
@@ -13464,7 +13464,7 @@ pre[class*="language-"] {
                       case 0:
                         if (
                           ((r = s.length > 1 && void 0 !== s[1] ? s[1] : {}),
-                          "object" === Ff(t) && (t = (r = t).URL),
+                          "object" === Ff(t) && (t = (r = t).url),
                           (r.headers = r.headers || {}),
                           zS.mergeInQueryOrForm(r),
                           r.headers &&
@@ -13498,7 +13498,7 @@ pre[class*="language-"] {
                             delete r.headers["Content-Type"]),
                           (e.prev = 14),
                           (e.next = 17),
-                          (r.userFetch || fetch)(r.URL, r)
+                          (r.userFetch || fetch)(r.url, r)
                         )
                       case 17:
                         return (
@@ -13585,7 +13585,7 @@ pre[class*="language-"] {
             a = void 0 !== n && n,
             o = {
               ok: e.ok,
-              URL: e.URL || t,
+              url: e.url || t,
               status: e.status,
               statusText: e.statusText,
               headers: VS(e.headers),
@@ -13813,7 +13813,7 @@ pre[class*="language-"] {
               arguments.length > 0 && void 0 !== arguments[0]
                 ? arguments[0]
                 : {},
-            t = e.URL,
+            t = e.url,
             r = void 0 === t ? "" : t,
             n = e.query,
             a = e.form,
@@ -13858,7 +13858,7 @@ pre[class*="language-"] {
                 (h = O$.stringify(f, { encode: !0 }))
             }
             var y = o(h, eA(n))
-            ;(e.URL = d + y), delete e.query
+            ;(e.url = d + y), delete e.query
           }
           return e
         }
@@ -15404,7 +15404,7 @@ pre[class*="language-"] {
           ),
           mC = function (e) {
             ;(this.entries = []),
-              (this.URL = null),
+              (this.url = null),
               void 0 !== e &&
                 (TT(e)
                   ? this.parseObject(e)
@@ -15419,7 +15419,7 @@ pre[class*="language-"] {
         mC.prototype = {
           type: FT,
           bindURL: function (e) {
-            ;(this.URL = e), this.update()
+            ;(this.url = e), this.update()
           },
           parseObject: function (e) {
             var t,
@@ -15456,10 +15456,10 @@ pre[class*="language-"] {
             return QT(r, "&")
           },
           update: function () {
-            ;(this.entries.length = 0), this.parseQuery(this.URL.query)
+            ;(this.entries.length = 0), this.parseQuery(this.url.query)
           },
           updateURL: function () {
-            this.URL && this.URL.update()
+            this.url && this.url.update()
           },
         }
         var yC = function () {
@@ -15586,7 +15586,7 @@ pre[class*="language-"] {
                       bC(
                         t,
                         "content-type",
-                        "application/x-www-form-URLencoded;charset=UTF-8"
+                        "application/x-www-form-urlencoded;charset=UTF-8"
                       ),
                     jT(e, { body: _T(0, CT(r)), headers: _T(0, t) })
                   )
@@ -16342,7 +16342,7 @@ pre[class*="language-"] {
                                 ? arguments[2]
                                 : {},
                             n = r.specmap,
-                            a = r.getBaseURLForNodePath,
+                            a = r.getBaseUrlForNodePath,
                             o =
                               void 0 === a
                                 ? function (e) {
@@ -16370,7 +16370,7 @@ pre[class*="language-"] {
                             l
                           )
                         })(e, PS(r).call(r, 0, -1), {
-                          getBaseURLForNodePath: function (e) {
+                          getBaseUrlForNodePath: function (e) {
                             var a
                             return n.getContext(
                               Hb((a = [])).call(a, IS(r), [t], IS(e))
@@ -17264,7 +17264,7 @@ pre[class*="language-"] {
             a = e.withCredentials ? "include" : "same-origin"
           return function (t) {
             return e({
-              URL: t,
+              url: t,
               loadSpec: !0,
               requestInterceptor: r,
               responseInterceptor: n,
@@ -17278,7 +17278,7 @@ pre[class*="language-"] {
         function kj(e) {
           var t = e.fetch,
             r = e.spec,
-            n = e.URL,
+            n = e.url,
             a = e.mode,
             o = e.allowMetaPatches,
             i = void 0 === o || o,
@@ -18091,7 +18091,7 @@ pre[class*="language-"] {
             var t = e.req,
               r = e.value,
               n = e.parameter
-            t.URL = t.URL
+            t.url = t.url
               .split("{".concat(n.name, "}"))
               .join(encodeURIComponent(r))
           },
@@ -18129,7 +18129,7 @@ pre[class*="language-"] {
               s = n.content
             if (s) {
               var l = zb(s)[0]
-              t.URL = t.URL
+              t.url = t.url
                 .split("{".concat(a, "}"))
                 .join(DS(eP(r, l), { escape: !0 }))
             } else {
@@ -18140,7 +18140,7 @@ pre[class*="language-"] {
                 explode: i || !1,
                 escape: !0,
               })
-              t.URL = t.URL.split("{".concat(a, "}")).join(c)
+              t.url = t.url.split("{".concat(a, "}")).join(c)
             }
           },
           query: function (e) {
@@ -18317,7 +18317,7 @@ pre[class*="language-"] {
             if (s) {
               if (c.indexOf(s) > -1)
                 if (
-                  "application/x-www-form-URLencoded" === s ||
+                  "application/x-www-form-urlencoded" === s ||
                   "multipart/form-data" === s
                 )
                   if ("object" === Ff(n)) {
@@ -18429,7 +18429,7 @@ pre[class*="language-"] {
                     return "formData" === e.in
                   }).length &&
                   (t.headers["Content-Type"] =
-                    "application/x-www-form-URLencoded")
+                    "application/x-www-form-urlencoded")
           else if (s) {
             var u,
               h,
@@ -18479,7 +18479,7 @@ pre[class*="language-"] {
             i = e.scheme,
             s = e.requestInterceptor,
             l = e.responseInterceptor,
-            c = e.contextURL,
+            c = e.contextUrl,
             p = e.userFetch,
             d = e.server,
             u = e.serverVariables,
@@ -18490,7 +18490,7 @@ pre[class*="language-"] {
             g = mj(n)
           y || (y = g ? rP : XI)
           var v = {
-            URL: "",
+            url: "",
             credentials: h && h.withCredentials ? "include" : "same-origin",
             headers: {},
             cookies: {},
@@ -18506,10 +18506,10 @@ pre[class*="language-"] {
             $ = b.method,
             k = b.pathName
           if (
-            ((v.URL += uP({
+            ((v.url += uP({
               spec: n,
               scheme: i,
-              contextURL: c,
+              contextUrl: c,
               server: d,
               serverVariables: u,
               pathName: k,
@@ -18518,7 +18518,7 @@ pre[class*="language-"] {
             !a)
           )
             return delete v.cookies, v
-          ;(v.URL += k), (v.method = "".concat($).toUpperCase()), (m = m || {})
+          ;(v.url += k), (v.method = "".concat($).toUpperCase()), (m = m || {})
           var S = n.paths[k] || {}
           o && (v.headers.accept = o)
           var A = (function (e) {
@@ -18616,7 +18616,7 @@ pre[class*="language-"] {
                   r = e.pathName,
                   n = e.method,
                   a = e.server,
-                  o = e.contextURL,
+                  o = e.contextUrl,
                   i = e.serverVariables,
                   s = void 0 === i ? {} : i,
                   l =
@@ -18627,12 +18627,12 @@ pre[class*="language-"] {
                   p = null
                 if (a && l && l.length) {
                   var d = Nb(l).call(l, function (e) {
-                    return e.URL
+                    return e.url
                   })
                   d.indexOf(a) > -1 && ((c = a), (p = l[d.indexOf(a)]))
                 }
                 if (!c && l && l.length) {
-                  c = l[0].URL
+                  c = l[0].url
                   var u = Nf(l, 1)
                   p = u[0]
                 }
@@ -18677,7 +18677,7 @@ pre[class*="language-"] {
                   r,
                   n = e.spec,
                   a = e.scheme,
-                  o = e.contextURL,
+                  o = e.contextUrl,
                   i = void 0 === o ? "" : o,
                   s = bu.parse(i),
                   l = Array.isArray(n.schemes) ? n.schemes[0] : null,
@@ -18695,7 +18695,7 @@ pre[class*="language-"] {
                 ? arguments[1]
                 : {}
           if (
-            ("string" == typeof e ? (r.URL = e) : (r = e),
+            ("string" == typeof e ? (r.url = e) : (r = e),
             !(this instanceof hP))
           )
             return new hP(r)
@@ -18720,7 +18720,7 @@ pre[class*="language-"] {
                 }),
               function (n) {
                 return (
-                  "string" == typeof n && (n = { URL: n }),
+                  "string" == typeof n && (n = { url: n }),
                   zS.mergeInQueryOrForm(n),
                   (n = t(n)),
                   r(e(n))
@@ -18785,7 +18785,7 @@ pre[class*="language-"] {
           }),
           (hP.buildRequest = pP),
           (hP.helpers = { opId: yj }),
-          (hP.getBaseURL = uP),
+          (hP.getBaseUrl = uP),
           (hP.prototype = {
             http: qS,
             execute: function (e) {
@@ -18797,8 +18797,8 @@ pre[class*="language-"] {
                       spec: this.spec,
                       http: this.http,
                       securities: { authorized: this.authorizations },
-                      contextURL:
-                        "string" == typeof this.URL ? this.URL : void 0,
+                      contextUrl:
+                        "string" == typeof this.url ? this.url : void 0,
                       requestInterceptor: this.requestInterceptor || null,
                       responseInterceptor: this.responseInterceptor || null,
                     },
@@ -18818,7 +18818,7 @@ pre[class*="language-"] {
                   Ld(
                     {
                       spec: this.spec,
-                      URL: this.URL,
+                      url: this.url,
                       http: this.http || this.fetch,
                       allowMetaPatches: this.allowMetaPatches,
                       useCircularStructures: this.useCircularStructures,
@@ -18841,7 +18841,7 @@ pre[class*="language-"] {
           }),
           (hP.prototype.applyDefaults = function () {
             var e = this.spec,
-              t = this.URL
+              t = this.url
             if (t && vu(t).call(t, "http")) {
               var r = bu.parse(t)
               e.host || (e.host = r.host),
@@ -19177,17 +19177,17 @@ pre[class*="language-"] {
             let n = e.flow
             "application" === e.flow && (n = "clientCredentials"),
               "accessCode" === e.flow && (n = "authorizationCode"),
-              "string" == typeof e.authorizationURL &&
-                (r.authorizationURL =
-                  e.authorizationURL.split("?")[0].trim() || "/"),
-              "string" == typeof e.tokenURL &&
-                (r.tokenURL = e.tokenURL.split("?")[0].trim() || "/"),
+              "string" == typeof e.authorizationUrl &&
+                (r.authorizationUrl =
+                  e.authorizationUrl.split("?")[0].trim() || "/"),
+              "string" == typeof e.tokenUrl &&
+                (r.tokenUrl = e.tokenUrl.split("?")[0].trim() || "/"),
               (r.scopes = e.scopes || {}),
               (e.flows = {}),
               (e.flows[n] = r),
               delete e.flow,
-              delete e.authorizationURL,
-              delete e.tokenURL,
+              delete e.authorizationUrl,
+              delete e.tokenUrl,
               delete e.scopes,
               e.name &&
                 (delete e.name,
@@ -19340,13 +19340,13 @@ pre[class*="language-"] {
                   void 0 !== e[t] && (e.schema[t] = e[t]), delete e[t]
               }
             e.schema && wP(e.schema, i),
-              e["x-ms-skip-URL-encoding"] &&
+              e["x-ms-skip-url-encoding"] &&
                 "query" === e.in &&
-                ((e.allowReserved = !0), delete e["x-ms-skip-URL-encoding"])
+                ((e.allowReserved = !0), delete e["x-ms-skip-url-encoding"])
           }
           if (e && "formData" === e.in) {
             ;(c = !1), (s.content = {})
-            let t = "application/x-www-form-URLencoded"
+            let t = "application/x-www-form-urlencoded"
             if (
               (p.length &&
                 p.indexOf("multipart/form-data") >= 0 &&
@@ -19452,37 +19452,37 @@ pre[class*="language-"] {
                         .required)
                   : t.requestBody.content &&
                     t.requestBody.content[
-                      "application/x-www-form-URLencoded"
+                      "application/x-www-form-urlencoded"
                     ] &&
-                    t.requestBody.content["application/x-www-form-URLencoded"]
+                    t.requestBody.content["application/x-www-form-urlencoded"]
                       .schema &&
-                    t.requestBody.content["application/x-www-form-URLencoded"]
+                    t.requestBody.content["application/x-www-form-urlencoded"]
                       .schema.properties &&
-                    s.content["application/x-www-form-URLencoded"] &&
-                    s.content["application/x-www-form-URLencoded"].schema &&
-                    s.content["application/x-www-form-URLencoded"].schema
+                    s.content["application/x-www-form-urlencoded"] &&
+                    s.content["application/x-www-form-urlencoded"].schema &&
+                    s.content["application/x-www-form-urlencoded"].schema
                       .properties
                   ? ((t.requestBody.content[
-                      "application/x-www-form-URLencoded"
+                      "application/x-www-form-urlencoded"
                     ].schema.properties = Object.assign(
-                      t.requestBody.content["application/x-www-form-URLencoded"]
+                      t.requestBody.content["application/x-www-form-urlencoded"]
                         .schema.properties,
-                      s.content["application/x-www-form-URLencoded"].schema
+                      s.content["application/x-www-form-urlencoded"].schema
                         .properties
                     )),
                     (t.requestBody.content[
-                      "application/x-www-form-URLencoded"
+                      "application/x-www-form-urlencoded"
                     ].schema.required = (
-                      t.requestBody.content["application/x-www-form-URLencoded"]
+                      t.requestBody.content["application/x-www-form-urlencoded"]
                         .schema.required || []
                     ).concat(
-                      s.content["application/x-www-form-URLencoded"].schema
+                      s.content["application/x-www-form-urlencoded"].schema
                         .required || []
                     )),
-                    t.requestBody.content["application/x-www-form-URLencoded"]
+                    t.requestBody.content["application/x-www-form-urlencoded"]
                       .schema.required.length ||
                       delete t.requestBody.content[
-                        "application/x-www-form-URLencoded"
+                        "application/x-www-form-urlencoded"
                       ].schema.required)
                   : ((t.requestBody = Object.assign(t.requestBody, s)),
                     t.requestBody["x-s2o-name"] ||
@@ -19706,10 +19706,10 @@ pre[class*="language-"] {
           }
         }
         function CP(e) {
-          return e && e.URL && "string" == typeof e.URL
-            ? ((e.URL = e.URL.split("{{").join("{")),
-              (e.URL = e.URL.split("}}").join("}")),
-              e.URL.replace(/\{(.+?)\}/g, (t, r) => {
+          return e && e.url && "string" == typeof e.url
+            ? ((e.url = e.url.split("{{").join("{")),
+              (e.url = e.url.split("}}").join("}")),
+              e.url.replace(/\{(.+?)\}/g, (t, r) => {
                 e.variables || (e.variables = {}),
                   (e.variables[r] = { default: "unknown" })
               }),
@@ -19798,14 +19798,14 @@ pre[class*="language-"] {
             (e.schemes || []).forEach((r) => {
               const n = {},
                 a = (e.basePath || "").replace(/\/$/, "")
-              ;(n.URL = `${r ? `${r}:` : ""}//${e.host}${a}`),
+              ;(n.url = `${r ? `${r}:` : ""}//${e.host}${a}`),
                 CP(n),
                 t.openapi.servers || (t.openapi.servers = []),
                 t.openapi.servers.push(n)
             })
           else if (e.basePath) {
             const r = {}
-            ;(r.URL = e.basePath),
+            ;(r.url = e.basePath),
               CP(r),
               t.openapi.servers || (t.openapi.servers = []),
               t.openapi.servers.push(r)
@@ -19817,9 +19817,9 @@ pre[class*="language-"] {
           ) {
             const r = e["x-ms-parameterized-host"],
               n = {}
-            ;(n.URL = r.hostTemplate + (e.basePath ? e.basePath : "")),
+            ;(n.url = r.hostTemplate + (e.basePath ? e.basePath : "")),
               (n.variables = {})
-            const a = n.URL.match(/\{\w+\}/g)
+            const a = n.url.match(/\{\w+\}/g)
             for (const e in r.parameters) {
               const t = r.parameters[e]
               e.startsWith("x-") ||
@@ -19836,7 +19836,7 @@ pre[class*="language-"] {
               !1 === r.useSchemePrefix
                 ? t.openapi.servers.push(n)
                 : e.schemes.forEach((e) => {
-                    t.openapi.servers.push({ ...n, URL: `${e}://${n.URL}` })
+                    t.openapi.servers.push({ ...n, url: `${e}://${n.url}` })
                   }),
               delete t.openapi["x-ms-parameterized-host"]
           }
@@ -20047,7 +20047,7 @@ pre[class*="language-"] {
               (this.requestUpdate(),
               (t =
                 "string" == typeof e
-                  ? await RP.resolve({ URL: e, allowMetaPatches: !1 })
+                  ? await RP.resolve({ url: e, allowMetaPatches: !1 })
                   : await RP.resolve({ spec: e, allowMetaPatches: !1 })),
               await nt(0),
               null !== (d = t.resolvedSpec) &&
@@ -20102,11 +20102,11 @@ pre[class*="language-"] {
                   info: {
                     title: "Error loading the spec",
                     description:
-                      null !== (h = t.response) && void 0 !== h && h.URL
+                      null !== (h = t.response) && void 0 !== h && h.url
                         ? `${
                             null === (f = t.response) || void 0 === f
                               ? void 0
-                              : f.URL
+                              : f.url
                           } ┃ ${
                             null === (m = t.response) || void 0 === m
                               ? void 0
@@ -20419,32 +20419,32 @@ pre[class*="language-"] {
           let w = []
           p.servers && Array.isArray(p.servers)
             ? (p.servers.forEach((e) => {
-                let t = e.URL.trim()
+                let t = e.url.trim()
                 t.startsWith("http") ||
                   t.startsWith("//") ||
                   t.startsWith("{") ||
                   (window.location.origin.startsWith("http") &&
-                    ((e.URL = window.location.origin + e.URL), (t = e.URL))),
+                    ((e.url = window.location.origin + e.url), (t = e.url))),
                   e.variables &&
                     Object.entries(e.variables).forEach((e) => {
                       const r = new RegExp(`{${e[0]}}`, "g")
                       ;(t = t.replace(r, e[1].default || "")),
                         (e[1].value = e[1].default || "")
                     }),
-                  (e.computedURL = t)
+                  (e.computedUrl = t)
               }),
-              s && p.servers.push({ URL: s, computedURL: s }))
+              s && p.servers.push({ url: s, computedUrl: s }))
             : s
-            ? (p.servers = [{ URL: s, computedURL: s }])
+            ? (p.servers = [{ url: s, computedUrl: s }])
             : window.location.origin.startsWith("http")
             ? (p.servers = [
                 {
-                  URL: window.location.origin,
-                  computedURL: window.location.origin,
+                  url: window.location.origin,
+                  computedUrl: window.location.origin,
                 },
               ])
             : (p.servers = [
-                { URL: "http://localhost", computedURL: "http://localhost" },
+                { url: "http://localhost", computedUrl: "http://localhost" },
               ]),
             (w = p.servers)
           return {
@@ -20786,25 +20786,25 @@ pre[class*="language-"] {
           }
         }
         function rR(e, t, r, n, a, o = [], i = "header") {
-          let { authorizationURL: s, tokenURL: l, refreshURL: c } = a
+          let { authorizationUrl: s, tokenUrl: l, refreshUrl: c } = a
           const p = (e) => e.indexOf("://") > 0 || 0 === e.indexOf("//")
           let d
           return (
             c &&
               !p(c) &&
-              (c = `${this.selectedServer.computedURL}/${c.replace(
+              (c = `${this.selectedServer.computedUrl}/${c.replace(
                 /^\//,
                 ""
               )}`),
             l &&
               !p(l) &&
-              (l = `${this.selectedServer.computedURL}/${l.replace(
+              (l = `${this.selectedServer.computedUrl}/${l.replace(
                 /^\//,
                 ""
               )}`),
             s &&
               !p(s) &&
-              (s = `${this.selectedServer.computedURL}/${s.replace(
+              (s = `${this.selectedServer.computedUrl}/${s.replace(
                 /^\//,
                 ""
               )}`),
@@ -21667,7 +21667,7 @@ pre[class*="language-"] {
                 16
               )}0`.repeat(16)
               switch (e.format.toLowerCase()) {
-                case "URL":
+                case "url":
                 case "uri":
                   return "http://example.com"
                 case "date":
@@ -22465,7 +22465,7 @@ pre[class*="language-"] {
     margin-left: 2px;
 }
 
-.stri, .string, .uri, .URL, .byte, .bina, .date, .pass, .ipv4, .ipv4, .uuid, .emai, .host {color:var(--green);}
+.stri, .string, .uri, .url, .byte, .bina, .date, .pass, .ipv4, .ipv4, .uuid, .emai, .host {color:var(--green);}
 .inte, .numb, .number, .int6, .int3, .floa, .doub, .deci .blue {color:var(--blue);}
 .null {color:var(--red);}
 .bool, .boolean{color:var(--orange)}
@@ -23105,8 +23105,8 @@ pre[class*="language-"] {
                 (this.responseStatus = "success"),
                 (this.responseHeaders = ""),
                 (this.responseText = ""),
-                (this.responseURL = ""),
-                (this.cURLSyntax = ""),
+                (this.responseUrl = ""),
+                (this.curlSyntax = ""),
                 (this.activeResponseTab = "response"),
                 (this.selectedRequestBodyType = ""),
                 (this.selectedRequestBodyExample = ""),
@@ -23114,7 +23114,7 @@ pre[class*="language-"] {
             }
             static get properties() {
               return {
-                serverURL: { type: String, attribute: "server-URL" },
+                serverUrl: { type: String, attribute: "server-url" },
                 servers: { type: Array },
                 method: { type: String },
                 path: { type: String },
@@ -23130,7 +23130,7 @@ pre[class*="language-"] {
                 responseText: { type: String, attribute: !1 },
                 responseHeaders: { type: String, attribute: !1 },
                 responseStatus: { type: String, attribute: !1 },
-                responseURL: { type: String, attribute: !1 },
+                responseUrl: { type: String, attribute: !1 },
                 fillRequestFieldsWithExample: {
                   type: String,
                   attribute: "fill-request-fields-with-example",
@@ -23945,7 +23945,7 @@ pre[class*="language-"] {
             </div>
           `))
                   else if (
-                    this.selectedRequestBodyType.includes("form-URLencoded") ||
+                    this.selectedRequestBodyType.includes("form-urlencoded") ||
                     this.selectedRequestBodyType.includes("form-data")
                   ) {
                     if (e.mimeType === this.selectedRequestBodyType) {
@@ -24141,7 +24141,7 @@ pre[class*="language-"] {
             style = "width:100%; border:none; resize:vertical;" 
             data-array = "false" 
             data-ptype = "${
-              r.includes("form-URLencode") ? "form-URLencode" : "form-data"
+              r.includes("form-urlencode") ? "form-urlencode" : "form-data"
             }"
             data-pname = "${e}"
             data-example = "${
@@ -24225,8 +24225,8 @@ pre[class*="language-"] {
                       style = "width:100%" 
                       data-pname = "${r}" 
                       data-ptype = "${
-                        t.includes("form-URLencode")
-                          ? "form-URLencode"
+                        t.includes("form-urlencode")
+                          ? "form-urlencode"
                           : "form-data"
                       }"
                       data-array = "false" 
@@ -24241,8 +24241,8 @@ pre[class*="language-"] {
                   <tag-input
                     style = "width:100%" 
                     data-ptype = "${
-                      t.includes("form-URLencode")
-                        ? "form-URLencode"
+                      t.includes("form-urlencode")
+                        ? "form-urlencode"
                         : "form-data"
                     }"
                     data-pname = "${r}"
@@ -24283,8 +24283,8 @@ pre[class*="language-"] {
                           part = "textbox textbox-param"
                           style = "width:100%"
                           data-ptype = "${
-                            t.includes("form-URLencode")
-                              ? "form-URLencode"
+                            t.includes("form-urlencode")
+                              ? "form-urlencode"
                               : "form-data"
                           }"
                           data-pname = "${r}"
@@ -24439,8 +24439,8 @@ pre[class*="language-"] {
             "headers" === this.activeResponseTab ? "active" : ""
           }"  data-tab = 'headers' > RESPONSE HEADERS</button>
           <button class="tab-btn ${
-            "cURL" === this.activeResponseTab ? "active" : ""
-          }" data-tab = 'cURL'>CURL</button>
+            "curl" === this.activeResponseTab ? "active" : ""
+          }" data-tab = 'curl'>CURL</button>
         </div>
         ${
           this.responseIsBlob
@@ -24451,7 +24451,7 @@ pre[class*="language-"] {
               <button class="m-btn thin-border mar-top-8" style="width:135px" @click='${(
                 e
               ) => {
-                st(this.responseBlobURL, this.respContentDisposition)
+                st(this.responseBlobUrl, this.respContentDisposition)
               }}' part="btn btn-outline">
                 DOWNLOAD
               </button>
@@ -24460,7 +24460,7 @@ pre[class*="language-"] {
                   ? F`<button class="m-btn thin-border mar-top-8" style="width:135px"  @click='${(
                       e
                     ) => {
-                      lt(this.responseBlobURL)
+                      lt(this.responseBlobUrl)
                     }}' part="btn btn-outline">VIEW (NEW TAB)</button>`
                   : ""
               }
@@ -24490,16 +24490,16 @@ pre[class*="language-"] {
           )}</code></pre>
         </div>
         <div class="tab-content col m-markdown" style="flex:1; display:${
-          "cURL" === this.activeResponseTab ? "flex" : "none"
+          "curl" === this.activeResponseTab ? "flex" : "none"
         };">
           <button  class="toolbar-btn" style = "position:absolute; top:12px; right:8px" @click='${(
             e
           ) => {
-            at(this.cURLSyntax.replace(/\\$/, ""), e)
+            at(this.curlSyntax.replace(/\\$/, ""), e)
           }}' part="btn btn-fill"> Copy </button>
           <pre style="white-space:pre"><code>${HP(
             He().highlight(
-              this.cURLSyntax.trim().replace(/\\$/, ""),
+              this.curlSyntax.trim().replace(/\\$/, ""),
               He().languages.shell,
               "shell"
             )
@@ -24514,11 +24514,11 @@ pre[class*="language-"] {
                 this.servers.length > 0 &&
                 (r = F`
         <select style="min-width:100px;" @change='${(e) => {
-          this.serverURL = e.target.value
+          this.serverUrl = e.target.value
         }}'>
           ${this.servers.map(
             (e) =>
-              F`<option value = "${e.URL}"> ${e.URL} - ${e.description} </option>`
+              F`<option value = "${e.url}"> ${e.url} - ${e.description} </option>`
           )}
         </select>
       `)
@@ -24526,11 +24526,11 @@ pre[class*="language-"] {
       <div style="display:flex; flex-direction:column;">
         ${r}
         ${
-          this.serverURL
+          this.serverUrl
             ? F`
             <div style="display:flex; align-items:baseline;">
               <div style="font-weight:bold; padding-right:5px;">API Server</div> 
-              <span class = "gray-text"> ${this.serverURL} </span>
+              <span class = "gray-text"> ${this.serverUrl} </span>
             </div>
           `
             : ""
@@ -24743,12 +24743,12 @@ pre[class*="language-"] {
                       e.name
                     }=${encodeURIComponent(e.finalKeyValue)}`
                   }),
-                (n = `${this.serverURL.replace(/\/$/, "")}${n}`),
+                (n = `${this.serverUrl.replace(/\/$/, "")}${n}`),
                 !1 === n.startsWith("http"))
               ) {
                 a = new URL(n, window.location.href).href
               } else a = n
-              o = `cURL -X ${this.method.toUpperCase()} "${a}" \\\n`
+              o = `curl -X ${this.method.toUpperCase()} "${a}" \\\n`
               const w = new Headers()
               if (
                 (p
@@ -24770,7 +24770,7 @@ pre[class*="language-"] {
                 y)
               ) {
                 const e = y.dataset.selectedRequestBodyType
-                if (e.includes("form-URLencoded")) {
+                if (e.includes("form-urlencoded")) {
                   const e = d.querySelector("[data-ptype='dynamic-form']")
                   if (e) {
                     const t = e.value,
@@ -24791,7 +24791,7 @@ pre[class*="language-"] {
                     }
                   } else {
                     const e = [
-                        ...d.querySelectorAll("[data-ptype='form-URLencode']"),
+                        ...d.querySelectorAll("[data-ptype='form-urlencode']"),
                       ],
                       t = new URLSearchParams()
                     e
@@ -24861,16 +24861,16 @@ pre[class*="language-"] {
                 e.includes("form-data") || w.append("Content-Type", e),
                   (i += ` -H "Content-Type: ${e}" \\\n`)
               }
-              ;(this.responseURL = ""),
+              ;(this.responseUrl = ""),
                 (this.responseHeaders = []),
-                (this.cURLSyntax = ""),
+                (this.curlSyntax = ""),
                 (this.responseStatus = "success"),
                 (this.responseIsBlob = !1),
                 (this.respContentDisposition = ""),
-                this.responseBlobURL &&
-                  (URL.revokeObjectURL(this.responseBlobURL),
-                  (this.responseBlobURL = "")),
-                (this.cURLSyntax = `${o}${i}${s}${l}`),
+                this.responseBlobUrl &&
+                  (URL.revokeObjectURL(this.responseBlobUrl),
+                  (this.responseBlobUrl = "")),
+                (this.curlSyntax = `${o}${i}${s}${l}`),
                 this.fetchCredentials && (g.credentials = this.fetchCredentials)
               const $ = new AbortController(),
                 { signal: k } = $
@@ -24899,7 +24899,7 @@ pre[class*="language-"] {
                   } <div style="color:var(--light-fg)"> Took ${Math.round(
                     o - a
                   )} milliseconds </div>`),
-                  (this.responseURL = A.URL)
+                  (this.responseUrl = A.url)
                 const i = {}
                 A.headers.forEach((e, t) => {
                   ;(i[t] = e),
@@ -24951,7 +24951,7 @@ pre[class*="language-"] {
                       ? t.split("filename=")[1].replace(/"|'/g, "")
                       : "filename"),
                       (e = await A.blob()),
-                      (this.responseBlobURL = URL.createObjectURL(e))
+                      (this.responseBlobUrl = URL.createObjectURL(e))
                   }
                 } else (n = await A.text()), (this.responseText = n)
                 this.dispatchEvent(
@@ -25003,7 +25003,7 @@ pre[class*="language-"] {
                 o.setAttribute("data-pname", t),
                 o.setAttribute(
                   "data-ptype",
-                  r.includes("form-URLencode") ? "form-URLencode" : "form-data"
+                  r.includes("form-urlencode") ? "form-urlencode" : "form-data"
                 ),
                 o.setAttribute("data-array", "false"),
                 o.setAttribute("data-file-array", "true")
@@ -25015,7 +25015,7 @@ pre[class*="language-"] {
                 n.insertBefore(a, e.target)
             }
             clearResponseData() {
-              ;(this.responseURL = ""),
+              ;(this.responseUrl = ""),
                 (this.responseHeaders = ""),
                 (this.responseText = ""),
                 (this.responseStatus = "success"),
@@ -25023,14 +25023,14 @@ pre[class*="language-"] {
                 (this.responseIsBlob = !1),
                 (this.responseBlobType = ""),
                 (this.respContentDisposition = ""),
-                this.responseBlobURL &&
-                  (URL.revokeObjectURL(this.responseBlobURL),
-                  (this.responseBlobURL = ""))
+                this.responseBlobUrl &&
+                  (URL.revokeObjectURL(this.responseBlobUrl),
+                  (this.responseBlobUrl = ""))
             }
             disconnectedCallback() {
-              this.responseBlobURL &&
-                (URL.revokeObjectURL(this.responseBlobURL),
-                (this.responseBlobURL = "")),
+              this.responseBlobUrl &&
+                (URL.revokeObjectURL(this.responseBlobUrl),
+                (this.responseBlobUrl = "")),
                 super.disconnectedCallback()
             }
           }
@@ -25615,13 +25615,13 @@ pre[class*="language-"] {
           .request_body = "${e.requestBody}"
           .api_keys = "${l}"
           .servers = "${e.servers}"
-          server-URL = "${
+          server-url = "${
             (null === (n = e.servers) ||
             void 0 === n ||
             null === (a = n[0]) ||
             void 0 === a
               ? void 0
-              : a.URL) || this.selectedServer.computedURL
+              : a.url) || this.selectedServer.computedUrl
           }"
           fill-request-fields-with-example = "${
             this.fillRequestFieldsWithExample
@@ -25853,16 +25853,16 @@ pre[class*="language-"] {
             ${
               null !== (r = this.resolvedSpec.info.contact) &&
               void 0 !== r &&
-              r.URL
-                ? F`<span>URL: <a href="${this.resolvedSpec.info.contact.URL}" part="anchor anchor-overview">${this.resolvedSpec.info.contact.URL}</a></span>`
+              r.url
+                ? F`<span>URL: <a href="${this.resolvedSpec.info.contact.url}" part="anchor anchor-overview">${this.resolvedSpec.info.contact.url}</a></span>`
                 : ""
             }
             ${
               this.resolvedSpec.info.license
                 ? F`<span>License: 
                 ${
-                  this.resolvedSpec.info.license.URL
-                    ? F`<a href="${this.resolvedSpec.info.license.URL}" part="anchor anchor-overview">${this.resolvedSpec.info.license.name}</a>`
+                  this.resolvedSpec.info.license.url
+                    ? F`<a href="${this.resolvedSpec.info.license.url}" part="anchor anchor-overview">${this.resolvedSpec.info.license.name}</a>`
                     : this.resolvedSpec.info.license.name
                 } </span>`
                 : ""
@@ -25873,22 +25873,22 @@ pre[class*="language-"] {
                 : ""
             }
             ${
-              this.specURL && "true" === this.allowSpecFileDownload
+              this.specUrl && "true" === this.allowSpecFileDownload
                 ? F`
                 <div style="display:flex; margin:12px 0; gap:8px; justify-content: start;">
                   <button class="m-btn thin-border" style="width:170px" part="btn btn-outline" @click='${(
                     e
                   ) => {
-                    st(this.specURL, "openapi-spec")
+                    st(this.specUrl, "openapi-spec")
                   }}'>Download OpenAPI spec</button>
                   ${
-                    null !== (n = this.specURL) &&
+                    null !== (n = this.specUrl) &&
                     void 0 !== n &&
                     n.trim().toLowerCase().endsWith("json")
                       ? F`<button class="m-btn thin-border" style="width:200px" part="btn btn-outline" @click='${(
                           e
                         ) => {
-                          lt(this.specURL)
+                          lt(this.specUrl)
                         }}'>View OpenAPI spec (New Tab)</button>`
                       : ""
                   }
@@ -25922,7 +25922,7 @@ pre[class*="language-"] {
           const r =
             null === (t = this.resolvedSpec) || void 0 === t
               ? void 0
-              : t.servers.find((t) => t.URL === e)
+              : t.servers.find((t) => t.url === e)
           return (
             !!r &&
             ((this.selectedServer = r),
@@ -25943,12 +25943,12 @@ pre[class*="language-"] {
               .closest("table")
               .querySelectorAll("input, select"),
           ]
-          let n = t.URL
+          let n = t.url
           r.forEach((e) => {
             const t = new RegExp(`{${e.dataset.var}}`, "g")
             n = n.replace(t, e.value)
           }),
-            (t.computedURL = n),
+            (t.computedUrl = n),
             this.requestUpdate()
         }
         function BR() {
@@ -26039,15 +26039,15 @@ pre[class*="language-"] {
             <input type = 'radio'
               name = 'api_server'
               id = 'srvr-opt-${t}'
-              value = '${e.URL}'
+              value = '${e.url}'
               @change = ${() => {
-                qR.call(this, e.URL)
+                qR.call(this, e.url)
               }}
-              .checked = '${this.selectedServer.URL === e.URL}'
+              .checked = '${this.selectedServer.url === e.url}'
               style = 'margin:4px 0; cursor:pointer'
             />
               <label style='cursor:pointer' for='srvr-opt-${t}'>
-                ${e.URL} ${
+                ${e.url} ${
                     e.description
                       ? F`- <span class='regular-font'>${e.description} </span>`
                       : ""
@@ -26063,7 +26063,7 @@ pre[class*="language-"] {
       <div class="table-title primary-text" part="label-selected-server"> SELECTED: ${
         (null === (r = this.selectedServer) || void 0 === r
           ? void 0
-          : r.computedURL) || "none"
+          : r.computedUrl) || "none"
       }</div>
     </div>
     <slot name="servers"></slot>
@@ -26642,10 +26642,10 @@ pre[class*="language-"] {
           .request_body = "${e.requestBody}"
           .api_keys = "${o}"
           .servers = "${e.servers}" 
-          server-URL = "${
+          server-url = "${
             e.servers && e.servers.length > 0
-              ? e.servers[0].URL
-              : this.selectedServer.computedURL
+              ? e.servers[0].url
+              : this.selectedServer.computedUrl
           }" 
           active-schema-tab = "${this.defaultSchemaTab}"
           fill-request-fields-with-example = "${
@@ -26828,17 +26828,17 @@ pre[class*="language-"] {
     </div>  
     <div style="margin: 0px 8px;display:flex;flex:1">
       ${
-        "false" === this.allowSpecURLLoad
+        "false" === this.allowSpecUrlLoad
           ? ""
           : F`
-          <input id="spec-URL" 
+          <input id="spec-url" 
             type="text" 
             style="font-size:var(--font-size-small)" 
             class="header-input mono-font"
-            part="textbox textbox-spec-URL" 
+            part="textbox textbox-spec-url" 
             placeholder="Spec URL" 
-            value="${this.specURL || ""}" 
-            @change="${this.onSepcURLChange}" 
+            value="${this.specUrl || ""}" 
+            @change="${this.onSepcUrlChange}" 
             spellcheck="false"
           >
           <div style="margin: 6px 5px 0 -24px; font-size:var(--font-size-regular); cursor:pointer;">&#x21a9;</div> 
@@ -27974,9 +27974,7 @@ pre[class*="language-"] {
                 this.pageDirection
               } >
       <!-- Side Nav -->
-      ${
-        GR.call(this)
-      }
+      ${GR.call(this)}
 
       <!-- Main Content -->
       <main class="main-content regular-font" part="section-main-content">
@@ -28046,7 +28044,7 @@ pre[class*="language-"] {
               gotoPath: { type: String, attribute: "goto-path" },
               updateRoute: { type: String, attribute: "update-route" },
               routePrefix: { type: String, attribute: "route-prefix" },
-              specURL: { type: String, attribute: "spec-URL" },
+              specUrl: { type: String, attribute: "spec-url" },
               sortTags: { type: String, attribute: "sort-tags" },
               generateMissingTags: {
                 type: String,
@@ -28090,11 +28088,11 @@ pre[class*="language-"] {
               apiKeyName: { type: String, attribute: "api-key-name" },
               apiKeyLocation: { type: String, attribute: "api-key-location" },
               apiKeyValue: { type: String, attribute: "api-key-value" },
-              defaultApiServerURL: {
+              defaultApiServerUrl: {
                 type: String,
                 attribute: "default-api-server",
               },
-              serverURL: { type: String, attribute: "server-URL" },
+              serverUrl: { type: String, attribute: "server-url" },
               oauthReceiver: { type: String, attribute: "oauth-receiver" },
               showHeader: { type: String, attribute: "show-header" },
               showSideNav: { type: String, attribute: "show-side-nav" },
@@ -28104,9 +28102,9 @@ pre[class*="language-"] {
                 attribute: "allow-authentication",
               },
               allowTry: { type: String, attribute: "allow-try" },
-              allowSpecURLLoad: {
+              allowSpecUrlLoad: {
                 type: String,
-                attribute: "allow-spec-URL-load",
+                attribute: "allow-spec-url-load",
               },
               allowSpecFileLoad: {
                 type: String,
@@ -28470,13 +28468,13 @@ pre[class*="language-"] {
                 },
                 t = new FontFace(
                   "Open Sans",
-                  "URL(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhpKKSTjw.woff2) format('woff2')",
+                  "url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhpKKSTjw.woff2) format('woff2')",
                   e
                 )
               e.weight = "600"
               const r = new FontFace(
                 "Open Sans",
-                "URL(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2) format('woff2')",
+                "url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2) format('woff2')",
                 e
               )
               t.load().then((e) => {
@@ -28650,7 +28648,7 @@ pre[class*="language-"] {
           }
           attributeChangedCallback(e, t, r) {
             if (
-              ("spec-URL" === e &&
+              ("spec-url" === e &&
                 t !== r &&
                 window.setTimeout(async () => {
                   await this.loadSpec(r),
@@ -28719,10 +28717,10 @@ pre[class*="language-"] {
             }
             super.attributeChangedCallback(e, t, r)
           }
-          onSepcURLChange() {
+          onSepcUrlChange() {
             this.setAttribute(
-              "spec-URL",
-              this.shadowRoot.getElementById("spec-URL").value
+              "spec-url",
+              this.shadowRoot.getElementById("spec-url").value
             )
           }
           onSepcFileChange(e) {
@@ -28736,7 +28734,7 @@ pre[class*="language-"] {
               try {
                 const e = JSON.parse(r.result)
                 this.loadSpec(e),
-                  (this.shadowRoot.getElementById("spec-URL").value = "")
+                  (this.shadowRoot.getElementById("spec-url").value = "")
               } catch (e) {
                 console.error("RapiDoc: Unable to read or parse json")
               }
@@ -28803,7 +28801,7 @@ pre[class*="language-"] {
                   this.getAttribute("api-key-name"),
                   this.getAttribute("api-key-location"),
                   this.getAttribute("api-key-value"),
-                  this.getAttribute("server-URL")
+                  this.getAttribute("server-url")
                 )
                 ;(this.loading = !1), this.afterSpecParsedAndValidated(t)
               } catch (e) {
@@ -28821,15 +28819,15 @@ pre[class*="language-"] {
             for (
               this.resolvedSpec = e,
                 this.selectedServer = void 0,
-                this.defaultApiServerURL &&
-                  (this.defaultApiServerURL === this.serverURL
+                this.defaultApiServerUrl &&
+                  (this.defaultApiServerUrl === this.serverUrl
                     ? (this.selectedServer = {
-                        URL: this.serverURL,
-                        computedURL: this.serverURL,
+                        url: this.serverUrl,
+                        computedUrl: this.serverUrl,
                       })
                     : this.resolvedSpec.servers &&
                       (this.selectedServer = this.resolvedSpec.servers.find(
-                        (e) => e.URL === this.defaultApiServerURL
+                        (e) => e.url === this.defaultApiServerUrl
                       ))),
                 this.selectedServer ||
                   (this.resolvedSpec.servers &&
@@ -29123,7 +29121,7 @@ pre[class*="language-"] {
             }
             static get properties() {
               return {
-                specURL: { type: String, attribute: "spec-URL" },
+                specUrl: { type: String, attribute: "spec-url" },
                 sortEndpointsBy: {
                   type: String,
                   attribute: "sort-endpoints-by",
@@ -29159,11 +29157,11 @@ pre[class*="language-"] {
                 apiKeyName: { type: String, attribute: "api-key-name" },
                 apiKeyLocation: { type: String, attribute: "api-key-location" },
                 apiKeyValue: { type: String, attribute: "api-key-value" },
-                defaultApiServerURL: {
+                defaultApiServerUrl: {
                   type: String,
                   attribute: "default-api-server",
                 },
-                serverURL: { type: String, attribute: "server-URL" },
+                serverUrl: { type: String, attribute: "server-url" },
                 oauthReceiver: { type: String, attribute: "oauth-receiver" },
                 allowTry: { type: String, attribute: "allow-try" },
                 theme: { type: String },
@@ -29231,13 +29229,13 @@ pre[class*="language-"] {
                   },
                   t = new FontFace(
                     "Open Sans",
-                    "URL(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhpKKSTjw.woff2) format('woff2')",
+                    "url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhpKKSTjw.woff2) format('woff2')",
                     e
                   )
                 e.weight = "600"
                 const r = new FontFace(
                   "Open Sans",
-                  "URL(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2) format('woff2')",
+                  "url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2) format('woff2')",
                   e
                 )
                 t.load().then((e) => {
@@ -29326,7 +29324,7 @@ pre[class*="language-"] {
             }
             attributeChangedCallback(e, t, r) {
               if (
-                ("spec-URL" === e &&
+                ("spec-url" === e &&
                   t !== r &&
                   window.setTimeout(async () => {
                     await this.loadSpec(r)
@@ -29386,10 +29384,10 @@ pre[class*="language-"] {
               }
               super.attributeChangedCallback(e, t, r)
             }
-            onSepcURLChange() {
+            onSepcUrlChange() {
               this.setAttribute(
-                "spec-URL",
-                this.shadowRoot.getElementById("spec-URL").value
+                "spec-url",
+                this.shadowRoot.getElementById("spec-url").value
               )
             }
             async loadSpec(e) {
@@ -29412,7 +29410,7 @@ pre[class*="language-"] {
                     this.getAttribute("api-key-name"),
                     this.getAttribute("api-key-location"),
                     this.getAttribute("api-key-value"),
-                    this.getAttribute("server-URL")
+                    this.getAttribute("server-url")
                   )
                   ;(this.loading = !1), this.afterSpecParsedAndValidated(t)
                 } catch (e) {
@@ -29440,15 +29438,15 @@ pre[class*="language-"] {
               for (
                 this.resolvedSpec = e,
                   this.selectedServer = void 0,
-                  this.defaultApiServerURL &&
-                    (this.defaultApiServerURL === this.serverURL
+                  this.defaultApiServerUrl &&
+                    (this.defaultApiServerUrl === this.serverUrl
                       ? (this.selectedServer = {
-                          URL: this.serverURL,
-                          computedURL: this.serverURL,
+                          url: this.serverUrl,
+                          computedUrl: this.serverUrl,
                         })
                       : this.resolvedSpec.servers &&
                         (this.selectedServer = this.resolvedSpec.servers.find(
-                          (e) => e.URL === this.defaultApiServerURL
+                          (e) => e.url === this.defaultApiServerUrl
                         ))),
                   this.selectedServer ||
                     (this.resolvedSpec.servers &&
@@ -29753,7 +29751,7 @@ pre[class*="language-"] {
             }
             static get properties() {
               return {
-                specURL: { type: String, attribute: "spec-URL" },
+                specUrl: { type: String, attribute: "spec-url" },
                 schemaStyle: { type: String, attribute: "schema-style" },
                 schemaExpandLevel: {
                   type: Number,
@@ -29770,9 +29768,9 @@ pre[class*="language-"] {
                 showHeader: { type: String, attribute: "show-header" },
                 showSideNav: { type: String, attribute: "show-side-nav" },
                 showInfo: { type: String, attribute: "show-info" },
-                allowSpecURLLoad: {
+                allowSpecUrlLoad: {
                   type: String,
-                  attribute: "allow-spec-URL-load",
+                  attribute: "allow-spec-url-load",
                 },
                 allowSpecFileLoad: {
                   type: String,
@@ -29921,13 +29919,13 @@ pre[class*="language-"] {
                   },
                   t = new FontFace(
                     "Open Sans",
-                    "URL(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhpKKSTjw.woff2) format('woff2')",
+                    "url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhpKKSTjw.woff2) format('woff2')",
                     e
                   )
                 e.weight = "600"
                 const r = new FontFace(
                   "Open Sans",
-                  "URL(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2) format('woff2')",
+                  "url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2) format('woff2')",
                   e
                 )
                 t.load().then((e) => {
@@ -29987,17 +29985,17 @@ pre[class*="language-"] {
               return yL.call(this, !0, !1, !1, this.pathsExpanded)
             }
             attributeChangedCallback(e, t, r) {
-              "spec-URL" === e &&
+              "spec-url" === e &&
                 t !== r &&
                 window.setTimeout(async () => {
                   await this.loadSpec(r)
                 }, 0),
                 super.attributeChangedCallback(e, t, r)
             }
-            onSepcURLChange() {
+            onSepcUrlChange() {
               this.setAttribute(
-                "spec-URL",
-                this.shadowRoot.getElementById("spec-URL").value
+                "spec-url",
+                this.shadowRoot.getElementById("spec-url").value
               )
             }
             onSearchChange(e) {
@@ -30178,7 +30176,7 @@ pre[class*="language-"] {
             variable: n.variable,
             function: {
               pattern:
-                /(^|[\s;|&]|[<>]\()(?:add|apropos|apt|apt-cache|apt-get|aptitude|aspell|automysqlbackup|awk|basename|bash|bc|bconsole|bg|bzip2|cal|cat|cfdisk|chgrp|chkconfig|chmod|chown|chroot|cksum|clear|cmp|column|comm|composer|cp|cron|crontab|csplit|cURL|cut|date|dc|dd|ddrescue|debootstrap|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|docker|docker-compose|du|egrep|eject|env|ethtool|expand|expect|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|git|gparted|grep|groupadd|groupdel|groupmod|groups|grub-mkconfig|gzip|halt|head|hg|history|host|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|ip|jobs|join|kill|killall|less|link|ln|locate|logname|logrotate|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|lynx|make|man|mc|mdadm|mkconfig|mkdir|mke2fs|mkfifo|mkfs|mkisofs|mknod|mkswap|mmv|more|most|mount|mtools|mtr|mutt|mv|nano|nc|netstat|nice|nl|node|nohup|notify-send|npm|nslookup|op|open|parted|passwd|paste|pathchk|ping|pkill|pnpm|podman|podman-compose|popd|pr|printcap|printenv|ps|pushd|pv|quota|quotacheck|quotactl|ram|rar|rcp|reboot|remsync|rename|renice|rev|rm|rmdir|rpm|rsync|scp|screen|sdiff|sed|sendmail|seq|service|sftp|sh|shellcheck|shuf|shutdown|sleep|slocate|sort|split|ssh|stat|strace|su|sudo|sum|suspend|swapon|sync|tac|tail|tar|tee|time|timeout|top|touch|tr|traceroute|tsort|tty|umount|uname|unexpand|uniq|units|unrar|unshar|unzip|update-grub|uptime|useradd|userdel|usermod|users|uudecode|uuencode|v|vcpkg|vdir|vi|vim|virsh|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yarn|yes|zenity|zip|zsh|zypper)(?=$|[)\s;|&])/,
+                /(^|[\s;|&]|[<>]\()(?:add|apropos|apt|apt-cache|apt-get|aptitude|aspell|automysqlbackup|awk|basename|bash|bc|bconsole|bg|bzip2|cal|cat|cfdisk|chgrp|chkconfig|chmod|chown|chroot|cksum|clear|cmp|column|comm|composer|cp|cron|crontab|csplit|curl|cut|date|dc|dd|ddrescue|debootstrap|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|docker|docker-compose|du|egrep|eject|env|ethtool|expand|expect|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|git|gparted|grep|groupadd|groupdel|groupmod|groups|grub-mkconfig|gzip|halt|head|hg|history|host|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|ip|jobs|join|kill|killall|less|link|ln|locate|logname|logrotate|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|lynx|make|man|mc|mdadm|mkconfig|mkdir|mke2fs|mkfifo|mkfs|mkisofs|mknod|mkswap|mmv|more|most|mount|mtools|mtr|mutt|mv|nano|nc|netstat|nice|nl|node|nohup|notify-send|npm|nslookup|op|open|parted|passwd|paste|pathchk|ping|pkill|pnpm|podman|podman-compose|popd|pr|printcap|printenv|ps|pushd|pv|quota|quotacheck|quotactl|ram|rar|rcp|reboot|remsync|rename|renice|rev|rm|rmdir|rpm|rsync|scp|screen|sdiff|sed|sendmail|seq|service|sftp|sh|shellcheck|shuf|shutdown|sleep|slocate|sort|split|ssh|stat|strace|su|sudo|sum|suspend|swapon|sync|tac|tail|tar|tee|time|timeout|top|touch|tr|traceroute|tsort|tty|umount|uname|unexpand|uniq|units|unrar|unshar|unzip|update-grub|uptime|useradd|userdel|usermod|users|uudecode|uuencode|v|vcpkg|vdir|vi|vim|virsh|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yarn|yes|zenity|zip|zsh|zypper)(?=$|[)\s;|&])/,
               lookbehind: !0,
             },
             keyword: {
@@ -30559,9 +30557,9 @@ pre[class*="language-"] {
                 },
               },
             },
-            URL: {
+            url: {
               pattern: RegExp(
-                "\\bURL\\((?:" +
+                "\\burl\\((?:" +
                   t.source +
                   "|" +
                   /(?:[^\\\r\n()"']|\\[\s\S])*/.source +
@@ -30570,9 +30568,9 @@ pre[class*="language-"] {
               ),
               greedy: !0,
               inside: {
-                function: /^URL/i,
+                function: /^url/i,
                 punctuation: /^\(|\)$/,
-                string: { pattern: RegExp("^" + t.source + "$"), alias: "URL" },
+                string: { pattern: RegExp("^" + t.source + "$"), alias: "url" },
               },
             },
             selector: {
@@ -30642,7 +30640,7 @@ pre[class*="language-"] {
                 "request-target": {
                   pattern: /^(\s)(?:https?:\/\/|\/)\S*(?=\s)/,
                   lookbehind: !0,
-                  alias: "URL",
+                  alias: "url",
                   inside: e.languages.uri,
                 },
                 "http-version": {
@@ -31651,9 +31649,9 @@ pre[class*="language-"] {
                   },
                 },
               },
-              URL: {
+              url: {
                 pattern: RegExp(
-                  "\\bURL\\((?:" +
+                  "\\burl\\((?:" +
                     t.source +
                     "|" +
                     /(?:[^\\\r\n()"']|\\[\s\S])*/.source +
@@ -31662,11 +31660,11 @@ pre[class*="language-"] {
                 ),
                 greedy: !0,
                 inside: {
-                  function: /^URL/i,
+                  function: /^url/i,
                   punctuation: /^\(|\)$/,
                   string: {
                     pattern: RegExp("^" + t.source + "$"),
-                    alias: "URL",
+                    alias: "url",
                   },
                 },
               },
@@ -32798,4 +32796,3 @@ pre[class*="language-"] {
     })()
   a(448)
 })()
-//# sourceMappingURL=rapidoc-min.js.map
