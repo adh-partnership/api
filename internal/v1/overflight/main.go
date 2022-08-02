@@ -10,5 +10,5 @@ var log = logger.Logger.WithField("component", "overflight")
 
 func Routes(r *gin.RouterGroup) {
 	r.GET("", getOverflights)
-	r.GET("/:facility", getOverflights)
+	r.GET("/:fac", getOverflights)
 }
