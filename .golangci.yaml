@@ -41,7 +41,7 @@ linters-settings:
   goimports:
     # put imports beginning with prefix after 3rd-party packages;
     # it's a comma-separated list of prefixes
-    local-prefixes: istio.io/
+    local-prefixes: github.com/kzdv
   maligned:
     # print struct with more effective memory layout or not, false by default
     suggest-new: true
