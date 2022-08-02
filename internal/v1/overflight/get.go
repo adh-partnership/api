@@ -38,7 +38,7 @@ type Flightsv1 struct {
 func getOverflights(c *gin.Context) {
 	var flights []dbTypes.Flights
 
-	facility := c.Param("facility")
+	facility := c.Param("fac")
 	if facility == "" {
 		facility = "ZDV"
 	}
@@ -70,4 +70,48 @@ func getOverflights(c *gin.Context) {
 	}
 
 	response.Respond(c, http.StatusOK, flightsv1)
+}
+
+// Get Overflights for Facility [Legacy/Deprecated]
+// @Summary Get Overflights for Facility [Legacy/Deprecated]
+// @Tags overflight
+// @Param fac path string false "Facility, defaults to ZDV if no facility id provided"
+// @Success 200 {object} []Flightsv1
+// @Failure 500 {object} response.R
+// @Router /live/:facility [GET]
+func GetOverflightsLegacy(c *gin.Context) {
+	var flights []dbTypes.Flights
+
+	facility := c.Param("fac")
+	if facility == "" {
+		facility = "ZDV"
+	}
+
+	if err := database.DB.Where(dbTypes.Flights{Facility: facility}).Find(&flights).Error; err != nil {
+		log.Errorf("Error getting flights for facility %s: %s", facility, err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	// This could be a DTO in the future
+	var flightsv1 []Flightsv1
+	for _, flight := range flights {
+		flightsv1 = append(flightsv1, Flightsv1{
+			Callsign:    flight.Callsign,
+			CID:         flight.CID,
+			Facility:    flight.Facility,
+			Latitude:    flight.Latitude,
+			Longitude:   flight.Longitude,
+			Groundspeed: flight.Groundspeed,
+			Heading:     flight.Heading,
+			Altitude:    flight.Altitude,
+			Aircraft:    flight.Aircraft,
+			Departure:   flight.Departure,
+			Arrival:     flight.Arrival,
+			Route:       flight.Route,
+			UpdatedAt:   flight.UpdatedAt,
+		})
+	}
+
+	c.JSON(http.StatusOK, flightsv1)
 }

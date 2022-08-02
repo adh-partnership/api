@@ -1,8 +1,6 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 
 	"github.com/kzdv/api/internal/v1/overflight"
@@ -23,9 +21,7 @@ func init() {
 func SetupRoutes(r *gin.Engine) {
 	log.Infof("Setting up old overflight redirect")
 	// Setup redirect for old overflight endpoint
-	r.GET("/live/:fac", func(c *gin.Context) {
-		c.Redirect(http.StatusPermanentRedirect, "/v1/overflight/"+c.Param("fac"))
-	})
+	r.GET("/live/:fac", overflight.GetOverflightsLegacy)
 
 	v1 := r.Group("/v1")
 	for prefix, f := range routeGroups {

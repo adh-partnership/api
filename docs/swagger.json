@@ -16,6 +16,39 @@
     "host": "network.denartcc.org",
     "basePath": "/v1",
     "paths": {
+        "/live/:facility": {
+            "get": {
+                "tags": [
+                    "overflight"
+                ],
+                "summary": "Get Overflights for Facility [Legacy/Deprecated]",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Facility, defaults to ZDV if no facility id provided",
+                        "name": "fac",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/overflight": {
             "get": {
                 "tags": [
@@ -36,7 +69,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/user.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -69,7 +102,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/user.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -82,12 +115,20 @@
                 }
             }
         },
-        "/v1/user": {
+        "/v1/user/:cid": {
             "get": {
                 "tags": [
                     "user"
                 ],
-                "summary": "Get User Information",
+                "summary": "Get User Information, if cid is not provided, defaults to logged in user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID, defaults to logged in user",
+                        "name": "cid",
+                        "in": "path"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -166,40 +207,20 @@
                 }
             }
         },
-        "/v1/user/:cid": {
-            "get": {
-                "tags": [
-                    "user"
-                ],
-                "summary": "Get User Information",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/user/:cid/roles": {
             "get": {
                 "tags": [
                     "user"
                 ],
                 "summary": "Get User Information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID, if not provided, defaults to logged in user",
+                        "name": "cid",
+                        "in": "path"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -388,95 +409,6 @@
                     }
                 }
             }
-        },
-        "/v1/user/roles": {
-            "get": {
-                "tags": [
-                    "user"
-                ],
-                "summary": "Get User Information",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/user/{cid}": {
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Patch User Information",
-                "parameters": [
-                    {
-                        "description": "User",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "CID",
-                        "name": "cid",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -547,55 +479,125 @@
                 }
             }
         },
+        "github.com_kzdv_api_internal_v1_overflight.Flightsv1": {
+            "type": "object",
+            "properties": {
+                "alt": {
+                    "type": "integer",
+                    "example": 10500
+                },
+                "arr": {
+                    "type": "string",
+                    "example": "KLMO"
+                },
+                "callsign": {
+                    "type": "string",
+                    "example": "N462AW"
+                },
+                "cid": {
+                    "type": "integer",
+                    "example": 876594
+                },
+                "dep": {
+                    "type": "string",
+                    "example": "KLMO"
+                },
+                "facility": {
+                    "type": "string",
+                    "example": "ZDV"
+                },
+                "hdg": {
+                    "type": "integer",
+                    "example": 180
+                },
+                "lastSeen": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "lat": {
+                    "type": "number",
+                    "example": -33.867
+                },
+                "lon": {
+                    "type": "number",
+                    "example": 151.206
+                },
+                "route": {
+                    "type": "string",
+                    "example": "DCT"
+                },
+                "spd": {
+                    "type": "integer",
+                    "example": 150
+                },
+                "type": {
+                    "type": "string",
+                    "example": "C208"
+                }
+            }
+        },
+        "internal_v1_overflight.Flightsv1": {
+            "type": "object",
+            "properties": {
+                "alt": {
+                    "type": "integer",
+                    "example": 10500
+                },
+                "arr": {
+                    "type": "string",
+                    "example": "KLMO"
+                },
+                "callsign": {
+                    "type": "string",
+                    "example": "N462AW"
+                },
+                "cid": {
+                    "type": "integer",
+                    "example": 876594
+                },
+                "dep": {
+                    "type": "string",
+                    "example": "KLMO"
+                },
+                "facility": {
+                    "type": "string",
+                    "example": "ZDV"
+                },
+                "hdg": {
+                    "type": "integer",
+                    "example": 180
+                },
+                "lastSeen": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "lat": {
+                    "type": "number",
+                    "example": -33.867
+                },
+                "lon": {
+                    "type": "number",
+                    "example": 151.206
+                },
+                "route": {
+                    "type": "string",
+                    "example": "DCT"
+                },
+                "spd": {
+                    "type": "integer",
+                    "example": 150
+                },
+                "type": {
+                    "type": "string",
+                    "example": "C208"
+                }
+            }
+        },
         "response.R": {
             "type": "object",
             "properties": {
                 "data": {},
                 "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "user.Flightsv1": {
-            "type": "object",
-            "properties": {
-                "alt": {
-                    "type": "integer"
-                },
-                "arr": {
-                    "type": "string"
-                },
-                "callsign": {
-                    "type": "string"
-                },
-                "cid": {
-                    "type": "integer"
-                },
-                "dep": {
-                    "type": "string"
-                },
-                "facility": {
-                    "type": "string"
-                },
-                "hdg": {
-                    "type": "integer"
-                },
-                "lastSeen": {
-                    "type": "string"
-                },
-                "lat": {
-                    "type": "number"
-                },
-                "lon": {
-                    "type": "number"
-                },
-                "route": {
-                    "type": "string"
-                },
-                "spd": {
-                    "type": "integer"
-                },
-                "type": {
                     "type": "string"
                 }
             }

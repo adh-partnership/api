@@ -44,39 +44,94 @@ definitions:
       local:
         type: string
     type: object
+  github.com_kzdv_api_internal_v1_overflight.Flightsv1:
+    properties:
+      alt:
+        example: 10500
+        type: integer
+      arr:
+        example: KLMO
+        type: string
+      callsign:
+        example: N462AW
+        type: string
+      cid:
+        example: 876594
+        type: integer
+      dep:
+        example: KLMO
+        type: string
+      facility:
+        example: ZDV
+        type: string
+      hdg:
+        example: 180
+        type: integer
+      lastSeen:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      lat:
+        example: -33.867
+        type: number
+      lon:
+        example: 151.206
+        type: number
+      route:
+        example: DCT
+        type: string
+      spd:
+        example: 150
+        type: integer
+      type:
+        example: C208
+        type: string
+    type: object
+  internal_v1_overflight.Flightsv1:
+    properties:
+      alt:
+        example: 10500
+        type: integer
+      arr:
+        example: KLMO
+        type: string
+      callsign:
+        example: N462AW
+        type: string
+      cid:
+        example: 876594
+        type: integer
+      dep:
+        example: KLMO
+        type: string
+      facility:
+        example: ZDV
+        type: string
+      hdg:
+        example: 180
+        type: integer
+      lastSeen:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      lat:
+        example: -33.867
+        type: number
+      lon:
+        example: 151.206
+        type: number
+      route:
+        example: DCT
+        type: string
+      spd:
+        example: 150
+        type: integer
+      type:
+        example: C208
+        type: string
+    type: object
   response.R:
     properties:
       data: {}
       status:
-        type: string
-    type: object
-  user.Flightsv1:
-    properties:
-      alt:
-        type: integer
-      arr:
-        type: string
-      callsign:
-        type: string
-      cid:
-        type: integer
-      dep:
-        type: string
-      facility:
-        type: string
-      hdg:
-        type: integer
-      lastSeen:
-        type: string
-      lat:
-        type: number
-      lon:
-        type: number
-      route:
-        type: string
-      spd:
-        type: integer
-      type:
         type: string
     type: object
 host: network.denartcc.org
@@ -91,6 +146,27 @@ info:
   title: KZDV API
   version: "1.0"
 paths:
+  /live/:facility:
+    get:
+      parameters:
+      - description: Facility, defaults to ZDV if no facility id provided
+        in: path
+        name: fac
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Overflights for Facility [Legacy/Deprecated]
+      tags:
+      - overflight
   /v1/overflight:
     get:
       parameters:
@@ -103,7 +179,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/user.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -124,7 +200,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/user.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -133,8 +209,13 @@ paths:
       summary: Get Overflights for Facility
       tags:
       - overflight
-  /v1/user:
+  /v1/user/:cid:
     get:
+      parameters:
+      - description: CID, defaults to logged in user
+        in: path
+        name: cid
+        type: string
       responses:
         "200":
           description: OK
@@ -148,7 +229,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Get User Information
+      summary: Get User Information, if cid is not provided, defaults to logged in
+        user
       tags:
       - user
     patch:
@@ -188,26 +270,13 @@ paths:
       summary: Patch User Information
       tags:
       - user
-  /v1/user/:cid:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.UserResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get User Information
-      tags:
-      - user
   /v1/user/:cid/roles:
     get:
+      parameters:
+      - description: CID, if not provided, defaults to logged in user
+        in: path
+        name: cid
+        type: string
       responses:
         "200":
           description: OK
@@ -291,44 +360,6 @@ paths:
       summary: Add User Role
       tags:
       - user
-  /v1/user/{cid}:
-    patch:
-      consumes:
-      - application/json
-      parameters:
-      - description: User
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/dto.UserResponse'
-      - description: CID
-        in: path
-        name: cid
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.UserResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Patch User Information
-      tags:
-      - user
   /v1/user/login:
     get:
       parameters:
@@ -372,26 +403,6 @@ paths:
       tags:
       - user
       - oauth
-  /v1/user/roles:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              type: string
-            type: array
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get User Information
-      tags:
-      - user
 securityDefinitions:
   BasicAuth:
     type: basic

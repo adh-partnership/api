@@ -16,12 +16,12 @@ import (
 )
 
 // Get User Information
-// @Summary Get User Information
+// @Summary Get User Information, if cid is not provided, defaults to logged in user
 // @Tags user
+// @Param cid path string false "CID, defaults to logged in user"
 // @Success 200 {object} dto.UserResponse
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /v1/user [GET]
 // @Router /v1/user/:cid [GET]
 func getUser(c *gin.Context) {
 	var err error
@@ -53,8 +53,7 @@ func getUser(c *gin.Context) {
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /v1/user/{cid} [PATCH]
-// @Router /v1/user [PATCH]
+// @Router /v1/user/:cid [PATCH]
 func patchUser(c *gin.Context) {
 	user := c.MustGet("x-user").(*dbTypes.User)
 	status := 200

@@ -31,17 +31,13 @@ func RespondError(c *gin.Context, status int, message string) {
 }
 
 func Respond(c *gin.Context, status int, data interface{}) {
-	ret := R{}
-	ret.Status = http.StatusText(status)
-	ret.Data = data
-
 	// Use this to allow client to specify what format, but default to JSON
 	if c.GetHeader("Accept") == "text/x-yaml" || c.GetHeader("Accept") == "application/x-yaml" || c.GetHeader("Accept") == "application/yaml" {
-		c.YAML(status, ret)
+		c.YAML(status, data)
 	} else if c.GetHeader("Accept") == "application/xml" {
-		c.XML(status, ret)
+		c.XML(status, data)
 	} else {
-		c.JSON(status, ret)
+		c.JSON(status, data)
 	}
 }
 

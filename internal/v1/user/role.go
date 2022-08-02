@@ -14,11 +14,11 @@ import (
 // Get User Information
 // @Summary Get User Information
 // @Tags user
+// @Param cid path string false "CID, if not provided, defaults to logged in user"
 // @Success 200 {object} []string
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
 // @Router /v1/user/:cid/roles [GET]
-// @Router /v1/user/roles [GET]
 func getUserRoles(c *gin.Context) {
 	var err error
 	user := c.MustGet("x-user").(*dbTypes.User)
