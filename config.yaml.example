@@ -8,6 +8,11 @@ database:
   password: {{.DB_PASSWORD | default "root"}}
   database: {{.DB_DATABASE | default "zdv"}}
   automigrate: true
+rabbitmq:
+  host: {{.RABBITMQ_HOST | default "rabbitmq.rabbitmq.svc.cluster.local"}}
+  port: {{.RABBITMQ_PORT | default 5672}}
+  user: {{.RABBITMQ_USER | default "guest"}}
+  password: {{.RABBITMQ_PASSWORD | default ""}}
 redis:
   address: {{.REDIS_HOST | default "redis.redis.svc.cluster.local:6379"}}
   database: 0

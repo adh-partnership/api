@@ -22,6 +22,7 @@ import (
 	ginLogger "github.com/kzdv/api/pkg/gin/middleware/logger"
 	"github.com/kzdv/api/pkg/gin/response"
 	"github.com/kzdv/api/pkg/logger"
+	"github.com/kzdv/api/pkg/messaging"
 	"github.com/kzdv/api/pkg/oauth"
 )
 
@@ -75,6 +76,9 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Configuring Discord package")
 	discord.SetupWebhooks(cfg.Discord.Webhooks)
+
+	log.Info("Configuring RabbitMQ")
+	messaging.Setup(cfg.RabbitMQ.Host, cfg.RabbitMQ.Port, cfg.RabbitMQ.User, cfg.RabbitMQ.Password)
 
 	/*
 		Commented out while we plan for Redis and possible RabbitMQ
