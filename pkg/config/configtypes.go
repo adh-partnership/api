@@ -4,6 +4,7 @@ type Config struct {
 	Server   ConfigServer   `yaml:"server"`
 	Database ConfigDatabase `yaml:"database"`
 	Discord  ConfigDiscord  `yaml:"discord"`
+	RabbitMQ ConfigRabbitMQ `yaml:"rabbitmq"`
 	Redis    ConfigRedis    `yaml:"redis"`
 	Session  ConfigSession  `yaml:"session"`
 	OAuth    ConfigOAuth    `yaml:"oauth"`
@@ -26,6 +27,13 @@ type ConfigDatabase struct {
 	Password    string `yaml:"password"`
 	Database    string `yaml:"database"`
 	Automigrate bool   `yaml:"automigrate"`
+}
+
+type ConfigRabbitMQ struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
 }
 
 type ConfigRedis struct {
