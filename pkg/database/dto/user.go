@@ -1,7 +1,7 @@
 package dto
 
 import (
-	dbTypes "github.com/kzdv/types/database"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
 )
 
 type UserResponse struct {

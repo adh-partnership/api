@@ -1,4 +1,4 @@
-package flights
+package types
 
 type Rating struct {
 	ID    int    `json:"id" example:"1"`

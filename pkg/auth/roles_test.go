@@ -3,7 +3,7 @@ package auth
 import (
 	"testing"
 
-	dbTypes "github.com/kzdv/types/database"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
 )
 
 func TestCanUserModifyRole(t *testing.T) {

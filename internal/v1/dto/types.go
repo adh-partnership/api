@@ -1,6 +1,6 @@
 package dto
 
-import dbTypes "github.com/kzdv/types/database"
+import dbTypes "github.com/kzdv/api/pkg/database/types"
 
 type StandardResponse struct {
 	Message string      `json:"message" yaml:"message" xml:"message"`
