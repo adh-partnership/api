@@ -8,6 +8,12 @@ database:
   password: {{.DB_PASSWORD | default "root"}}
   database: {{.DB_DATABASE | default "zdv"}}
   automigrate: true
+email:
+  host: {{.EMAIL_HOST | default "localhost"}}
+  port: {{.EMAIL_PORT | default "25"}}
+  user: {{.EMAIL_USER | default "root"}}
+  password: {{.EMAIL_PASSWORD | default "root"}}
+  from: {{.EMAIL_FROM | default "root@localhost"}}
 rabbitmq:
   host: {{.RABBITMQ_HOST | default "rabbitmq.rabbitmq.svc.cluster.local"}}
   port: {{.RABBITMQ_PORT | default 5672}}

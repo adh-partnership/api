@@ -17,7 +17,7 @@ import (
 var log = logger.Logger.WithField("component", "job/roster")
 
 func ScheduleJobs(s *gocron.Scheduler) error {
-	_, err := s.Cron("10,40 * * * *").Do(UpdateRoster)
+	_, err := s.Cron("1,11,21,31,41,51 * * * *").Do(UpdateRoster)
 	if err != nil {
 		log.Errorf("Error scheduling UpdateRoster: %s", err)
 		return err
