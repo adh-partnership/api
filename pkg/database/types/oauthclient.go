@@ -1,4 +1,4 @@
-package flights
+package types
 
 import (
 	"encoding/json"

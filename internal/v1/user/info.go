@@ -10,9 +10,9 @@ import (
 	"github.com/kzdv/api/pkg/auth"
 	"github.com/kzdv/api/pkg/database"
 	"github.com/kzdv/api/pkg/database/dto"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/gin/response"
 	"github.com/kzdv/api/pkg/network/vatusa"
-	dbTypes "github.com/kzdv/types/database"
 )
 
 // Get User Information

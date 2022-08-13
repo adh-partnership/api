@@ -3,17 +3,34 @@ package roster
 import (
 	"fmt"
 
+	"github.com/go-co-op/gocron"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 
 	"github.com/kzdv/api/pkg/database"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/facility"
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/network/global"
 	"github.com/kzdv/api/pkg/network/vatusa"
-	dbTypes "github.com/kzdv/types/database"
 )
 
 var log = logger.Logger.WithField("component", "job/roster")
+
+func ScheduleJobs(s *gocron.Scheduler) error {
+	_, err := s.Cron("10,40 * * * *").Do(UpdateRoster)
+	if err != nil {
+		log.Errorf("Error scheduling UpdateRoster: %s", err)
+		return err
+	}
+
+	_, err = s.Every(1).Day().At("00:00").Do(UpdateForeignRoster)
+	if err != nil {
+		log.Errorf("Error scheduling UpdateForeignRoster: %s", err)
+		return err
+	}
+
+	return nil
+}
 
 func UpdateRoster() error {
 	controllers, err := vatusa.GetFacilityRoster("both")
@@ -27,6 +44,18 @@ func UpdateRoster() error {
 		return err
 	}
 
+	// Users not part of the VATUSA roster will be removed from our roster
+	if err := database.DB.Model(&dbTypes.User{}).Updates(dbTypes.User{
+		ControllerType: dbTypes.ControllerTypeOptions["none"],
+		UpdateID:       updateid,
+	}).Not(dbTypes.User{UpdateID: updateid}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateForeignRoster() {
 	// Update foreign visitors
 	var users []dbTypes.User
 	if err := database.DB.
@@ -47,14 +76,4 @@ func UpdateRoster() error {
 			log.Errorf("Error saving user %d: %s", user.CID, err)
 		}
 	}
-
-	// Users not part of the VATUSA roster will be removed from our roster
-	if err := database.DB.Model(&dbTypes.User{}).Updates(dbTypes.User{
-		ControllerType: dbTypes.ControllerTypeOptions["none"],
-		UpdateID:       updateid,
-	}).Not(dbTypes.User{UpdateID: updateid}).Error; err != nil {
-		return err
-	}
-
-	return nil
 }

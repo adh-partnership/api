@@ -7,8 +7,8 @@ import (
 
 	"github.com/kzdv/api/pkg/auth"
 	"github.com/kzdv/api/pkg/database"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/gin/response"
-	dbTypes "github.com/kzdv/types/database"
 )
 
 // Get User Information

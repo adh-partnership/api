@@ -2,12 +2,16 @@ package database
 
 import (
 	"strconv"
+	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	dbTypes "github.com/kzdv/types/database"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
+	"github.com/kzdv/api/pkg/logger"
 )
+
+var log = logger.Logger.WithField("component", "database")
 
 func AddRoleToUser(user *dbTypes.User, role *dbTypes.Role) error {
 	if err := DB.Model(user).Association("Roles").Append(role); err != nil {
@@ -23,6 +27,18 @@ func RemoveRoleFromUser(user *dbTypes.User, role *dbTypes.Role) error {
 	}
 
 	return nil
+}
+
+func FindEmailTemplate(name string) (*dbTypes.EmailTemplate, error) {
+	template := &dbTypes.EmailTemplate{}
+	if err := DB.Where(dbTypes.EmailTemplate{Name: name}).First(template).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return template, nil
 }
 
 func FindRole(name string) (*dbTypes.Role, error) {
@@ -77,6 +93,20 @@ func FindRatingByShort(short string) (*dbTypes.Rating, error) {
 	}
 
 	return rating, nil
+}
+
+func AddDelayedJob(queue, body string, duration time.Duration) error {
+	djob := &dbTypes.DelayedJob{
+		Queue:     queue,
+		Body:      body,
+		NotBefore: time.Now().Add(duration),
+	}
+	if err := DB.Create(djob).Error; err != nil {
+		log.Errorf("Error creating delayed lob %+v: %v", djob, err)
+		return err
+	}
+
+	return nil
 }
 
 func atou(a string) uint {
