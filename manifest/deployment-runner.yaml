@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+  spec:
+    initContainers:
+    - name: config
+      image: denartcc/api:latest
+      env:
+      - name: CONFIGMAP_PATH
+        value: /tmp/config-map/config.yaml
+      - name: DEFAULT_CONFIGMAP
+        value: /app/config.yaml.default
+      - name: ENV_PATH
+        value: /app
+      - name: CONFIG
+        value: /etc/zdv-api/config.yaml
+      command: 
+        - bash
+        - /app/init.sh
+      volumeMounts:
+      - name: config
+        mountPath: /etc/zdv-api
+      - name: config-map
+        mountPath: /tmp/config-map
+    containers:
+    - name: api
+      image: denartcc/api:latest
+      args:
+        - runner
+        - --config
+        - /etc/zdv-api/config.yaml
+      volumeMounts:
+      - name: config
+        mountPath: /etc/zdv-api
+    volumes:
+    - name: config
+      emptyDir: {}
+    - name: config-map
+      configMap:
+        name: api-config

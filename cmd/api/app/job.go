@@ -18,8 +18,8 @@ import (
 
 func newJobCommand() *cli.Command {
 	return &cli.Command{
-		Name:  "sync",
-		Usage: "Sync Job",
+		Name:  "runner",
+		Usage: "Job Runner",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "config",
