@@ -16,7 +16,7 @@ import (
 	"github.com/kzdv/api/pkg/messaging"
 )
 
-func newJobCommand() *cli.Command {
+func newRunnerCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "runner",
 		Usage: "Job Runner",

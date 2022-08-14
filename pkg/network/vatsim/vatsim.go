@@ -9,7 +9,7 @@ import (
 // The rating is a integar that represents the rating "id".
 // Typical: OBS=1, S1=2, S2=3, S3=4, C1=5, C2=6, C3=7, I1=8, I2=9, I3=10, SUP=11, ADM=12
 func GetRating(cid string) (int, error) {
-	status, contents, err := handle("GET", "/rating/cid/"+cid+"/", nil)
+	status, contents, err := handle("GET", "/ratings/"+cid+"/", nil)
 	if err != nil {
 		return 0, err
 	}
@@ -34,7 +34,7 @@ func GetRating(cid string) (int, error) {
 // from the VATSIM API.
 // Returns: Region, Division, Subdivision, error
 func GetLocation(cid string) (string, string, string, error) {
-	status, contents, err := handle("GET", "/division/cid/"+cid+"/", nil)
+	status, contents, err := handle("GET", "/ratings/"+cid+"/", nil)
 	if err != nil {
 		return "", "", "", err
 	}

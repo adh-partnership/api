@@ -45,10 +45,11 @@ func UpdateRoster() error {
 	}
 
 	// Users not part of the VATUSA roster will be removed from our roster
-	if err := database.DB.Model(&dbTypes.User{}).Updates(dbTypes.User{
-		ControllerType: dbTypes.ControllerTypeOptions["none"],
-		UpdateID:       updateid,
-	}).Not(dbTypes.User{UpdateID: updateid}).Error; err != nil {
+	if err := database.DB.Model(&dbTypes.User{}).Not(dbTypes.User{UpdateID: updateid}).
+		Updates(dbTypes.User{
+			ControllerType: dbTypes.ControllerTypeOptions["none"],
+			UpdateID:       updateid,
+		}).Error; err != nil {
 		return err
 	}
 

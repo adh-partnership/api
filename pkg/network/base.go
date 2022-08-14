@@ -4,10 +4,14 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/kzdv/api/pkg/logger"
 )
 
 // UserAgent is the user agent to pass in request headers
 var UserAgent = "kzdv-network"
+
+var log = logger.Logger.WithField("component", "network")
 
 // Handle will make the request as presented in a structured and expected way. It adds appropriate headers, including
 // a user agent so our requests can be known to come from us.
@@ -21,6 +25,7 @@ func Handle(method, url, contenttype, body string) (int, []byte, error) {
 // a user agent so our requests can be known to come from us.
 func HandleWithHeaders(method, url, contenttype, body string, headers map[string]string) (int, []byte, error) {
 	r, err := http.NewRequest(method, url, strings.NewReader(body))
+	log.Debugf("Making request: %s %s", method, url)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -31,14 +36,22 @@ func HandleWithHeaders(method, url, contenttype, body string, headers map[string
 		r.Header.Set(k, v)
 	}
 
-	defer func() {
-		_ = r.Body.Close()
-	}()
-
-	contents, err := io.ReadAll(r.Body)
+	client := &http.Client{}
+	resp, err := client.Do(r)
 	if err != nil {
 		return 0, nil, err
 	}
 
-	return r.Response.StatusCode, contents, nil
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
+	contents, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, nil, err
+	}
+
+	log.Debugf("Response from %s %s: %d", method, url, resp.StatusCode)
+
+	return resp.StatusCode, contents, nil
 }

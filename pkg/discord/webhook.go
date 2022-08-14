@@ -20,10 +20,10 @@ func SetupWebhooks(hooks map[string]string) {
 
 func SendWebhookMessage(name string, username, msg string) error {
 	usedDefault := false
-	if webhooks[name] == "" {
+	if _, ok := webhooks[name]; !ok || webhooks[name] == "" {
 		name = "default"
 		usedDefault = true
-		if webhooks[name] == "" {
+		if _, ok := webhooks[name]; !ok || webhooks[name] == "" {
 			return ErrWebhookNotConfigured
 		}
 	}

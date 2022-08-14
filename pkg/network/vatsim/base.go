@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/url"
 
-	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/network"
 )
@@ -26,7 +25,6 @@ func handle(method, endpoint string, formdata map[string]string) (int, []byte, e
 		return 0, nil, err
 	}
 	q := u.Query()
-	q.Set("apikey", config.Cfg.VATUSA.APIKey)
 	u.RawQuery = q.Encode()
 
 	return network.Handle(method, u.String(), "application/json", string(data))

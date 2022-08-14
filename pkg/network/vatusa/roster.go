@@ -6,13 +6,14 @@ import (
 )
 
 type VATUSAController struct {
-	CID        int    `json:"cid"`
-	FirstName  string `json:"fname"`
-	LastName   string `json:"lname"`
-	Email      string `json:"email"`
-	Rating     int    `json:"rating"`
-	Facility   string `json:"facility"`
-	Membership string `json:"membership"`
+	CID         int    `json:"cid"`
+	FirstName   string `json:"fname"`
+	LastName    string `json:"lname"`
+	Email       string `json:"email"`
+	Rating      int    `json:"rating"`
+	Facility    string `json:"facility"`
+	Membership  string `json:"membership"`
+	RatingShort string `json:"rating_short"`
 }
 
 // RemoveController removes a home controller from the roster at VATUSA.
