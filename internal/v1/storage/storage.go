@@ -20,9 +20,10 @@ import (
 // Get Storage Listing
 // @Summary Get Storage Listing
 // @Tags storage
+// @Param category path string false "Category, if applicable"
 // @Success 200 {object} []dbTypes.Document
 // @Failure 500 {object} response.R
-// @Router /v1/storage/*category [GET]
+// @Router /v1/storage/:category [GET]
 func getStorage(c *gin.Context) {
 	storage := []dbTypes.Document{}
 
