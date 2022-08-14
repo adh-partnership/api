@@ -28,6 +28,14 @@ var Groups = map[string][]string{
 		"wm",
 		"web",
 	},
+	"files": {
+		"atm",
+		"datm",
+		"wm",
+		"ta",
+		"ec",
+		"fe",
+	},
 }
 
 var Roles = map[string]Role{

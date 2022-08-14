@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/kzdv/api/internal/v1/overflight"
+	"github.com/kzdv/api/internal/v1/storage"
 	"github.com/kzdv/api/internal/v1/user"
 	"github.com/kzdv/api/pkg/logger"
 )
@@ -16,6 +17,7 @@ func init() {
 	routeGroups = make(map[string]func(*gin.RouterGroup))
 	routeGroups["/overflight"] = overflight.Routes
 	routeGroups["/user"] = user.Routes
+	routeGroups["/storage"] = storage.Routes
 }
 
 func SetupRoutes(r *gin.Engine) {

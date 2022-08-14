@@ -58,3 +58,17 @@ func HasRole(roles ...string) gin.HandlerFunc {
 		c.Abort()
 	}
 }
+
+func InGroup(group ...string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user := c.MustGet("x-user").(*dbTypes.User)
+		for _, g := range group {
+			if auth.InGroup(user, g) {
+				c.Next()
+				return
+			}
+		}
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		c.Abort()
+	}
+}
