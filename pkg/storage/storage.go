@@ -24,7 +24,7 @@ func Storage(name string) *Client {
 	return client[name]
 }
 
-func Configure(c config.ConfigStorage, name string, bucket string) *Client {
+func Configure(c config.ConfigStorage, name string) *Client {
 	s3Config := &aws.Config{
 		Credentials: credentials.NewStaticCredentials(c.AccessKey, c.SecretKey, ""),
 		Region:      aws.String(c.Region),
@@ -34,7 +34,7 @@ func Configure(c config.ConfigStorage, name string, bucket string) *Client {
 	cl := &Client{}
 	cl.Session = session.Must(session.NewSession(s3Config))
 	cl.S3 = s3.New(cl.Session)
-	cl.Bucket = bucket
+	cl.Bucket = c.Bucket
 
 	client[name] = cl
 

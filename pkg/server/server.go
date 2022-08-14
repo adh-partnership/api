@@ -24,6 +24,7 @@ import (
 	"github.com/kzdv/api/pkg/logger"
 	"github.com/kzdv/api/pkg/messaging"
 	"github.com/kzdv/api/pkg/oauth"
+	"github.com/kzdv/api/pkg/storage"
 )
 
 type ServerStruct struct {
@@ -66,8 +67,9 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Running migrations...")
 	err = database.DB.AutoMigrate(
-		&dbTypes.User{},
+		&dbTypes.Document{},
 		&dbTypes.Flights{},
+		&dbTypes.User{},
 	)
 	if err != nil {
 		log.Errorf("Failed to run migrations: %v", err)
@@ -102,6 +104,10 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		fmt.Sprintf("%s%s", cfg.OAuth.BaseURL, cfg.OAuth.Endpoints.Authorize),
 		fmt.Sprintf("%s%s", cfg.OAuth.BaseURL, cfg.OAuth.Endpoints.Token),
 	)
+
+	log.Info("Building storage objects")
+	log.Info(" - Uploads")
+	_ = storage.Configure(cfg.Storage, "uploads")
 
 	log.Info("Building gin engine")
 	gin.SetMode(gin.ReleaseMode)

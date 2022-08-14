@@ -5,6 +5,22 @@ import (
 	"fmt"
 )
 
+var Ratings [13]string = [13]string{
+	"",
+	"OBS",
+	"S1",
+	"S2",
+	"S3",
+	"C1",
+	"C2",
+	"C3",
+	"I1",
+	"I2",
+	"I3",
+	"SUP",
+	"ADM",
+}
+
 // GetRating returns the rating of a VATSIM CID from the VATSIM API.
 // The rating is a integar that represents the rating "id".
 // Typical: OBS=1, S1=2, S2=3, S3=4, C1=5, C2=6, C3=7, I1=8, I2=9, I3=10, SUP=11, ADM=12
