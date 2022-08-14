@@ -1,12 +1,13 @@
 package storage
 
 import (
-	"bytes"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 
 	"github.com/kzdv/api/pkg/config"
 )
@@ -40,22 +41,36 @@ func Configure(c config.ConfigStorage, name string, bucket string) *Client {
 	return cl
 }
 
-func (c *Client) PutObject(key string, data []byte, private bool, length int64, contenttype string) error {
+func (c *Client) PutObject(key string, filepath string, private bool, length int64, contenttype string) error {
 	acl := aws.String("public-read")
 	if private {
 		acl = aws.String("private")
 	}
 
-	_, err := c.S3.PutObject(&s3.PutObjectInput{
-		Bucket:        aws.String(c.Bucket),
-		Key:           aws.String(key),
-		Body:          bytes.NewReader(data),
-		ACL:           acl,
-		ContentLength: aws.Int64(length),
-		ContentType:   aws.String(contenttype),
+	uploader := s3manager.NewUploader(c.Session, func(u *s3manager.Uploader) {
+		u.PartSize = 10 * 1024 * 1024
 	})
 
-	return err
+	f, err := os.Open(filepath)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = f.Close()
+	}()
+
+	_, err = uploader.Upload(&s3manager.UploadInput{
+		ACL:         acl,
+		Body:        f,
+		Bucket:      aws.String(c.Bucket),
+		ContentType: aws.String(contenttype),
+		Key:         aws.String(key),
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *Client) ListObjects() ([]string, error) {

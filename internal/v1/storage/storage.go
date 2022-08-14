@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path/filepath"
 
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/gin-gonic/gin"
 
 	"github.com/kzdv/api/pkg/database"
@@ -190,25 +191,13 @@ func putStorageFile(c *gin.Context) {
 	}
 	fileSlug := fmt.Sprintf("%s.%s", utils.StringToSlug(s.Name), filepath.Ext(file.Filename))
 
-	fh, err := file.Open()
+	mtype, err := mimetype.DetectFile(file.Filename)
 	if err != nil {
-		log.Errorf("Error opening file: %s", err.Error())
-		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-		return
-	}
-	defer func() {
-		_ = fh.Close()
-	}()
-
-	buffer := make([]byte, file.Size)
-	_, err = fh.Read(buffer)
-	if err != nil {
-		log.Errorf("Error reading file: %s", err.Error())
-		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
 
-	err = storagePackage.Storage("uploads").PutObject(fileSlug, buffer, false, file.Size, http.DetectContentType(buffer))
+	err = storagePackage.Storage("uploads").PutObject(fileSlug, file.Filename, false, file.Size, mtype.String())
 	if err != nil {
 		log.Errorf("Error uploading file to storage: %s", err.Error())
 		_ = discord.SendWebhookMessage("uploads", "KZDV API", fmt.Sprintf("Error uploading file %s to uploads storage: %v", fileSlug, err))
