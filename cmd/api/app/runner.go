@@ -9,6 +9,7 @@ import (
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/database"
 	dbTypes "github.com/kzdv/api/pkg/database/types"
+	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/jobs/delayedjobs"
 	"github.com/kzdv/api/pkg/jobs/emails"
 	"github.com/kzdv/api/pkg/jobs/roster"
@@ -36,6 +37,9 @@ func newRunnerCommand() *cli.Command {
 				return err
 			}
 			config.Cfg = cfg
+
+			log.Infof("Configuring Discord webhooks")
+			discord.SetupWebhooks(cfg.Discord.Webhooks)
 
 			log.Info("Connecting to database")
 			err = database.Connect(database.DBOptions{

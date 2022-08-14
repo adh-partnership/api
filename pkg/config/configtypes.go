@@ -10,6 +10,7 @@ type Config struct {
 	Session  ConfigSession  `yaml:"session"`
 	OAuth    ConfigOAuth    `yaml:"oauth"`
 	VATUSA   ConfigVATUSA   `yaml:"vatusa"`
+	Storage  ConfigStorage  `yaml:"storage"`
 }
 
 type ConfigServer struct {
@@ -83,4 +84,12 @@ type ConfigOAuthEndpoints struct {
 
 type ConfigVATUSA struct {
 	APIKey string `yaml:"api_key"`
+}
+
+type ConfigStorage struct {
+	AccessKey string `yaml:"access_key"`
+	SecretKey string `yaml:"secret_key"`
+	Bucket    string `yaml:"bucket"`
+	Region    string `yaml:"region"`
+	Endpoint  string `yaml:"endpoint"`
 }
