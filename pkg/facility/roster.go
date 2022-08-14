@@ -72,9 +72,10 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 				if controller.Facility == "ZAE" && isInDailyCheck() {
 					err := discord.SendWebhookMessage("seniorstaff", "KZDV Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, but is in %s, %s, %s -- verify eligibility",
 						user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))
-					if err != nil {
+					if err != nil && err != discord.ErrWebhookNotConfigured && err != discord.ErrUsedDefaultWebhook {
 						log.Errorf("Error sending discord message: %s", err.Error())
-						return err
+					} else if err != nil {
+						log.Warnf("Error sending discord message: %s", err.Error())
 					}
 				}
 			} else {
@@ -99,7 +100,6 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 							user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))
 						if err != nil && err != discord.ErrWebhookNotConfigured && err != discord.ErrUsedDefaultWebhook {
 							log.Errorf("Error sending discord message: %s", err.Error())
-							return err
 						} else if err != nil {
 							log.Warnf("Error sending discord message: %s", err.Error())
 						}
