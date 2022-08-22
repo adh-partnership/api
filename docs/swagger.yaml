@@ -1,5 +1,14 @@
 basePath: /v1
 definitions:
+  dto.StorageRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    type: object
   dto.UserResponse:
     properties:
       certifications:
@@ -134,6 +143,143 @@ definitions:
       status:
         type: string
     type: object
+  types.Document:
+    properties:
+      category:
+        example: sops
+        type: string
+      created_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      created_by:
+        $ref: '#/definitions/types.User'
+      created_by_id:
+        example: 1
+        type: integer
+      description:
+        example: Description of document
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: document name
+        type: string
+      updated_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      updated_by:
+        $ref: '#/definitions/types.User'
+      updated_by_id:
+        example: 1
+        type: integer
+      url:
+        example: https://www.example.com/document.pdf
+        type: string
+    type: object
+  types.Rating:
+    properties:
+      id:
+        example: 1
+        type: integer
+      long:
+        example: Observer
+        type: string
+      short:
+        example: OBS
+        type: string
+    type: object
+  types.Role:
+    properties:
+      created_at:
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: wm
+        type: string
+      updated_at:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/types.User'
+        type: array
+    type: object
+  types.User:
+    properties:
+      appCertification:
+        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        example: certified
+        type: string
+      cid:
+        example: 876594
+        type: integer
+      controllerType:
+        description: 'Must be one of: none, active, inactive, loa'
+        example: home
+        type: string
+      created_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      ctrCertification:
+        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        example: none
+        type: string
+      delCertification:
+        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        example: certified
+        type: string
+      discord_id:
+        example: "123456789012345678"
+        type: string
+      division:
+        example: USA
+        type: string
+      email:
+        example: wm@denartcc.org
+        type: string
+      firstname:
+        example: Daniel
+        type: string
+      gndCertification:
+        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        example: certified
+        type: string
+      lastname:
+        example: Hawton
+        type: string
+      lclCertification:
+        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        example: certified
+        type: string
+      oi:
+        example: DH
+        type: string
+      rating:
+        $ref: '#/definitions/types.Rating'
+      region:
+        example: AMAS
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/types.Role'
+        type: array
+      status:
+        description: 'Must be one of: none, active, inactive, loa'
+        example: active
+        type: string
+      subdivision:
+        description: This may be blank
+        example: ZDV
+        type: string
+      updated_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      updateid:
+        description: Internally used identifier during scheduled updates for removals
+        type: string
+    type: object
 host: network.denartcc.org
 info:
   contact:
@@ -209,6 +355,176 @@ paths:
       summary: Get Overflights for Facility
       tags:
       - overflight
+  /v1/storage:
+    post:
+      parameters:
+      - description: Storage Object
+        in: body
+        name: storage
+        required: true
+        schema:
+          $ref: '#/definitions/dto.StorageRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.Document'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Create storage object
+      tags:
+      - storage
+  /v1/storage/:category:
+    get:
+      parameters:
+      - description: Category, if applicable
+        in: path
+        name: category
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Document'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Storage Listing
+      tags:
+      - storage
+  /v1/storage/:id:
+    delete:
+      parameters:
+      - description: Storage ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/response.R'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Delete storage object
+      tags:
+      - storage
+    put:
+      parameters:
+      - description: Storage Object
+        in: body
+        name: storage
+        required: true
+        schema:
+          $ref: '#/definitions/dto.StorageRequest'
+      - description: Storage ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Document'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Update storage object
+      tags:
+      - storage
+  /v1/storage/:id/file:
+    put:
+      parameters:
+      - description: Storage ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: File
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Upload file data to storage object
+      tags:
+      - storage
   /v1/user/:cid:
     get:
       parameters:

@@ -115,6 +115,266 @@
                 }
             }
         },
+        "/v1/storage": {
+            "post": {
+                "tags": [
+                    "storage"
+                ],
+                "summary": "Create storage object",
+                "parameters": [
+                    {
+                        "description": "Storage Object",
+                        "name": "storage",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.StorageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.Document"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/storage/:category": {
+            "get": {
+                "tags": [
+                    "storage"
+                ],
+                "summary": "Get Storage Listing",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category, if applicable",
+                        "name": "category",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Document"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/storage/:id": {
+            "put": {
+                "tags": [
+                    "storage"
+                ],
+                "summary": "Update storage object",
+                "parameters": [
+                    {
+                        "description": "Storage Object",
+                        "name": "storage",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.StorageRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Storage ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Document"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "storage"
+                ],
+                "summary": "Delete storage object",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Storage ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/storage/:id/file": {
+            "put": {
+                "tags": [
+                    "storage"
+                ],
+                "summary": "Upload file data to storage object",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Storage ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "File",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/user/:cid": {
             "get": {
                 "tags": [
@@ -412,6 +672,20 @@
         }
     },
     "definitions": {
+        "dto.StorageRequest": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.UserResponse": {
             "type": "object",
             "properties": {
@@ -598,6 +872,193 @@
             "properties": {
                 "data": {},
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Document": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "example": "sops"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "created_by": {
+                    "$ref": "#/definitions/types.User"
+                },
+                "created_by_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Description of document"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "document name"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "updated_by": {
+                    "$ref": "#/definitions/types.User"
+                },
+                "updated_by_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://www.example.com/document.pdf"
+                }
+            }
+        },
+        "types.Rating": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "long": {
+                    "type": "string",
+                    "example": "Observer"
+                },
+                "short": {
+                    "type": "string",
+                    "example": "OBS"
+                }
+            }
+        },
+        "types.Role": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "wm"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.User"
+                    }
+                }
+            }
+        },
+        "types.User": {
+            "type": "object",
+            "properties": {
+                "appCertification": {
+                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "type": "string",
+                    "example": "certified"
+                },
+                "cid": {
+                    "type": "integer",
+                    "example": 876594
+                },
+                "controllerType": {
+                    "description": "Must be one of: none, active, inactive, loa",
+                    "type": "string",
+                    "example": "home"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "ctrCertification": {
+                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "type": "string",
+                    "example": "none"
+                },
+                "delCertification": {
+                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "type": "string",
+                    "example": "certified"
+                },
+                "discord_id": {
+                    "type": "string",
+                    "example": "123456789012345678"
+                },
+                "division": {
+                    "type": "string",
+                    "example": "USA"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "wm@denartcc.org"
+                },
+                "firstname": {
+                    "type": "string",
+                    "example": "Daniel"
+                },
+                "gndCertification": {
+                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "type": "string",
+                    "example": "certified"
+                },
+                "lastname": {
+                    "type": "string",
+                    "example": "Hawton"
+                },
+                "lclCertification": {
+                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "type": "string",
+                    "example": "certified"
+                },
+                "oi": {
+                    "type": "string",
+                    "example": "DH"
+                },
+                "rating": {
+                    "$ref": "#/definitions/types.Rating"
+                },
+                "region": {
+                    "type": "string",
+                    "example": "AMAS"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Role"
+                    }
+                },
+                "status": {
+                    "description": "Must be one of: none, active, inactive, loa",
+                    "type": "string",
+                    "example": "active"
+                },
+                "subdivision": {
+                    "description": "This may be blank",
+                    "type": "string",
+                    "example": "ZDV"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "updateid": {
+                    "description": "Internally used identifier during scheduled updates for removals",
                     "type": "string"
                 }
             }

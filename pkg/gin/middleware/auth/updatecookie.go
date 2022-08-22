@@ -12,11 +12,10 @@ import (
 func UpdateCookie(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("t", time.Now().String())
-
-	c.Next()
-
 	err := session.Save()
 	if err != nil {
 		logger.Logger.WithField("component", "middleware/UpdateCookie").Errorf("Error saving cookie: %s", err.Error())
 	}
+
+	c.Next()
 }

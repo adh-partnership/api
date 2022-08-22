@@ -28,6 +28,7 @@ func getLogin(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("state", state)
 	session.Set("redirect", c.Query("redirect"))
+	_ = session.Save()
 
 	c.Redirect(http.StatusTemporaryRedirect, oauth.OAuthConfig.AuthCodeURL(state))
 }
@@ -82,6 +83,7 @@ func getLoginCallback(c *gin.Context) {
 
 	session.Delete("state")
 	session.Set("cid", fmt.Sprint(user.User.CID))
+	_ = session.Save()
 
 	redirect := session.Get("redirect")
 	if redirect != nil {
