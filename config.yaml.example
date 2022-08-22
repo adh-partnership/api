@@ -49,5 +49,6 @@ oauth:
     authorize: "/oauth/authorize"
   client_id: "{{.OAUTH_CLIENT_ID | default "zdv"}}"
   client_secret: "{{.OAUTH_CLIENT_SECRET | default "zdv"}}"
+  my_base_URL: "{{.OAUTH_MY_BASE_URL | default "https://api.dev.denartcc.org" }}"
 vatusa:
   apiKey: "{{.VATUSA_API_KEY | default "zdv"}}"

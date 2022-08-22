@@ -16,6 +16,7 @@ import (
 	"github.com/kzdv/api/internal/v1/router"
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/database"
+	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/gin/middleware/auth"
 	ginLogger "github.com/kzdv/api/pkg/gin/middleware/logger"
@@ -63,18 +64,18 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	if err != nil {
 		return nil, err
 	}
-	/*
-		log.Info("Running migrations...")
-		err = database.DB.AutoMigrate(
-			&dbTypes.Document{},
-			&dbTypes.Flights{},
-			&dbTypes.User{},
-		)
-		if err != nil {
-			log.Errorf("Failed to run migrations: %v", err)
-			return nil, err
-		}
-	*/
+
+	log.Info("Running migrations...")
+	err = database.DB.AutoMigrate(
+		&dbTypes.Document{},
+		&dbTypes.Flights{},
+		&dbTypes.User{},
+	)
+	if err != nil {
+		log.Errorf("Failed to run migrations: %v", err)
+		return nil, err
+	}
+
 	log.Info("Configuring Discord package")
 	discord.SetupWebhooks(cfg.Discord.Webhooks)
 
@@ -99,7 +100,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	oauth.Build(
 		cfg.OAuth.ClientID,
 		cfg.OAuth.ClientSecret,
-		fmt.Sprintf("%s%s", cfg.OAuth.MyBaseURL, "/v1/login/callback"),
+		fmt.Sprintf("%s%s", cfg.OAuth.MyBaseURL, "/v1/user/login/callback"),
 		fmt.Sprintf("%s%s", cfg.OAuth.BaseURL, cfg.OAuth.Endpoints.Authorize),
 		fmt.Sprintf("%s%s", cfg.OAuth.BaseURL, cfg.OAuth.Endpoints.Token),
 	)
