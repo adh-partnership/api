@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -24,7 +25,10 @@ func Storage(name string) *Client {
 	return client[name]
 }
 
-func Configure(c config.ConfigStorage, name string) *Client {
+func Configure(c config.ConfigStorage, name string) (*Client, error) {
+	if c.AccessKey == "" || c.SecretKey == "" || c.Bucket == "" {
+		return nil, fmt.Errorf("storage configuration not configured")
+	}
 	s3Config := &aws.Config{
 		Credentials: credentials.NewStaticCredentials(c.AccessKey, c.SecretKey, ""),
 		Region:      aws.String(c.Region),
@@ -38,7 +42,7 @@ func Configure(c config.ConfigStorage, name string) *Client {
 
 	client[name] = cl
 
-	return cl
+	return cl, nil
 }
 
 func (c *Client) PutObject(key string, filepath string, private bool, length int64, contenttype string) error {

@@ -65,7 +65,7 @@ jobs:
     - name: Configure git
       run: |-
         cd $GITHUB_WORKSPACE/gitops/k8s/gitops
-        git config user.name "{{ secrets.GH_PIPELINE_USERNAME }}"
+        git config user.name "${{ secrets.GH_PIPELINE_USERNAME }}"
         git config user.email "wm@denartcc.org"
     - name: Setup Kustomize
       uses: imranismail/setup-kustomize@v1

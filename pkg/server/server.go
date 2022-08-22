@@ -107,7 +107,10 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Building storage objects")
 	log.Info(" - Uploads")
-	_ = storage.Configure(cfg.Storage, "uploads")
+	_, err = storage.Configure(cfg.Storage, "uploads")
+	if err != nil {
+		return nil, err
+	}
 
 	log.Info("Building gin engine")
 	gin.SetMode(gin.ReleaseMode)
