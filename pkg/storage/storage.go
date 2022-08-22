@@ -21,6 +21,10 @@ type Client struct {
 
 var client map[string]*Client
 
+func init() {
+	client = make(map[string]*Client)
+}
+
 func Storage(name string) *Client {
 	return client[name]
 }

@@ -16,7 +16,6 @@ import (
 	"github.com/kzdv/api/internal/v1/router"
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/discord"
 	"github.com/kzdv/api/pkg/gin/middleware/auth"
 	ginLogger "github.com/kzdv/api/pkg/gin/middleware/logger"
@@ -64,18 +63,18 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Info("Running migrations...")
-	err = database.DB.AutoMigrate(
-		&dbTypes.Document{},
-		&dbTypes.Flights{},
-		&dbTypes.User{},
-	)
-	if err != nil {
-		log.Errorf("Failed to run migrations: %v", err)
-		return nil, err
-	}
-
+	/*
+		log.Info("Running migrations...")
+		err = database.DB.AutoMigrate(
+			&dbTypes.Document{},
+			&dbTypes.Flights{},
+			&dbTypes.User{},
+		)
+		if err != nil {
+			log.Errorf("Failed to run migrations: %v", err)
+			return nil, err
+		}
+	*/
 	log.Info("Configuring Discord package")
 	discord.SetupWebhooks(cfg.Discord.Webhooks)
 
@@ -107,6 +106,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Building storage objects")
 	log.Info(" - Uploads")
+	log.Debugf("Config: %+v", cfg)
 	_, err = storage.Configure(cfg.Storage, "uploads")
 	if err != nil {
 		return nil, err

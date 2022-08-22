@@ -35,6 +35,12 @@ session:
     max_age: 604800
     domain: "{{.SESSION_DOMAIN | default ".denartcc.org"}}"
     path: "/"
+storage:
+  access_key: {{.STORAGE_ACCESS_KEY | default "12345"}}
+  secret_key: {{.STORAGE_SECRET_KEY | default "12345"}}
+  bucket: {{.STORAGE_BUCKET | default "denartcc"}}
+  region: {{.STORAGE_REGION | default "us-east-1"}}
+  endpoint: {{.STORAGE_ENDPOINT | default ""}}
 oauth:
   base_URL: "https://auth.denartcc.org"
   endpoints:
