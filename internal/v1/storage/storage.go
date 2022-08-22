@@ -63,8 +63,8 @@ func postStorage(c *gin.Context) {
 		Category:    storageRequest.Category,
 		Name:        storageRequest.Name,
 		Description: storageRequest.Description,
-		CreatedBy:   c.MustGet("x-user").(*dbTypes.User),
-		UpdatedBy:   c.MustGet("x-user").(*dbTypes.User),
+		CreatedBy:   *c.MustGet("x-user").(*dbTypes.User),
+		UpdatedBy:   *c.MustGet("x-user").(*dbTypes.User),
 	}
 
 	if err := database.DB.Create(&s).Error; err != nil {
@@ -103,7 +103,7 @@ func putStorage(c *gin.Context) {
 		Category:    storageRequest.Category,
 		Name:        storageRequest.Name,
 		Description: storageRequest.Description,
-		UpdatedBy:   c.MustGet("x-user").(*dbTypes.User),
+		UpdatedBy:   *c.MustGet("x-user").(*dbTypes.User),
 	}).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -206,7 +206,7 @@ func putStorageFile(c *gin.Context) {
 		return
 	}
 
-	s.UpdatedBy = c.MustGet("x-user").(*dbTypes.User)
+	s.UpdatedBy = *c.MustGet("x-user").(*dbTypes.User)
 	s.URL = GenerateURL(fileSlug)
 	if err := database.DB.Save(&s).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
