@@ -51,7 +51,7 @@ func getLoginCallback(c *gin.Context) {
 		return
 	}
 	if state != c.Query("state") {
-		log.Warn("State is not equal: %s != %s", state, c.Query("state"))
+		log.Warnf("State is not equal: %s != %s", state, c.Query("state"))
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
@@ -88,7 +88,7 @@ func getLoginCallback(c *gin.Context) {
 	}
 
 	if resp.StatusCode >= 299 {
-		log.Warn("Error getting user info: %s, %s", resp.Status, string(contents))
+		log.Warnf("Error getting user info: %s, %s", resp.Status, string(contents))
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
