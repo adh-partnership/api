@@ -103,9 +103,9 @@ func getLoginCallback(c *gin.Context) {
 	session.Set("cid", fmt.Sprint(user.User.CID))
 	_ = session.Save()
 
-	redirect := session.Get("redirect")
-	if redirect != nil {
-		c.Redirect(http.StatusTemporaryRedirect, redirect.(string))
+	redirect := session.Get("redirect").(string)
+	if redirect != "" {
+		c.Redirect(http.StatusTemporaryRedirect, redirect)
 		return
 	}
 	response.RespondMessage(c, http.StatusOK, "Logged In")
