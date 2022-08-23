@@ -46,10 +46,12 @@ func getLoginCallback(c *gin.Context) {
 	session := sessions.Default(c)
 	state := session.Get("state")
 	if state == nil {
+		log.Warn("State is nil")
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 	if state != c.Query("state") {
+		log.Warn("State is not equal: %s != %s", state, c.Query("state"))
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
@@ -79,14 +81,15 @@ func getLoginCallback(c *gin.Context) {
 		_ = resp.Body.Close()
 	}()
 
-	if resp.StatusCode >= 299 {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
 	contents, err := io.ReadAll(resp.Body)
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	if resp.StatusCode >= 299 {
+		log.Warn("Error getting user info: %s, %s", resp.Status, string(contents))
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 
