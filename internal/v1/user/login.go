@@ -55,6 +55,7 @@ func getLoginCallback(c *gin.Context) {
 	}
 	token, err := oauth.OAuthConfig.Exchange(c.Request.Context(), c.Query("code"))
 	if err != nil {
+		log.Warnf("Error exchanging code for token: %s", err.Error())
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
@@ -66,10 +67,24 @@ func getLoginCallback(c *gin.Context) {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+
+	client := &http.Client{}
+	resp, err := client.Do(res)
+	if err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
 	defer func() {
-		_ = res.Body.Close()
+		_ = resp.Body.Close()
 	}()
-	contents, err := io.ReadAll(res.Body)
+
+	if resp.StatusCode >= 299 {
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		return
+	}
+
+	contents, err := io.ReadAll(resp.Body)
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
