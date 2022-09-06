@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-var Ratings [13]string = [13]string{
+var Ratings = [13]string{
 	"",
 	"OBS",
 	"S1",

@@ -9,9 +9,9 @@ type Document struct {
 	Category    string    `json:"category" gorm:"type:varchar(100)" example:"sops"`
 	URL         string    `json:"url" gorm:"type:varchar(255)" example:"https://www.example.com/document.pdf"`
 	CreatedAt   time.Time `json:"created_at" example:"2020-01-01T00:00:00Z"`
-	CreatedById uint      `json:"created_by_id" example:"1"`
+	CreatedByID uint      `json:"created_by_id" example:"1"`
 	CreatedBy   User      `json:"created_by"`
 	UpdatedAt   time.Time `json:"updated_at" example:"2020-01-01T00:00:00Z"`
-	UpdatedById uint      `json:"updated_by_id" example:"1"`
+	UpdatedByID uint      `json:"updated_by_id" example:"1"`
 	UpdatedBy   User      `json:"updated_by"`
 }
