@@ -4,7 +4,6 @@ run:
 linters:
   disable-all: true
   enable:
-  - deadcode
   - errcheck
   - exportloopref
   - gocritic
@@ -17,12 +16,11 @@ linters:
   - lll
   - misspell
   - staticcheck
-  - structcheck
   - stylecheck
   - typecheck
   - unconvert
   - unparam
-  - varcheck
+  - unused
   - gci
   fast: false
 
