@@ -10,10 +10,14 @@ import (
 	"github.com/kzdv/api/pkg/database"
 	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/gin/response"
+	"github.com/kzdv/api/pkg/logger"
 )
+
+var log = logger.Logger.WithField("component", "user")
 
 func Auth(c *gin.Context) {
 	session := sessions.Default(c)
+	log.Debug("Cookie data: %+v", session)
 	cid := session.Get("cid")
 	if cid == nil {
 		c.Set("x-guest", true)
@@ -31,6 +35,7 @@ func Auth(c *gin.Context) {
 		return
 	}
 
+	log.Debug("Failed to find user by cid (%v): %s", cid, err.Error())
 	// If we get here, they had a cookie with an invalid user
 	// so delete it.
 	session.Delete("cid")
@@ -40,6 +45,7 @@ func Auth(c *gin.Context) {
 
 func NotGuest(c *gin.Context) {
 	if c.GetBool("x-guest") {
+		log.Debug("In NotGuest as Guest")
 		response.RespondError(c, http.StatusUnauthorized, "Unauthorized")
 		c.Abort()
 		return
