@@ -17,7 +17,7 @@ var log = logger.Logger.WithField("component", "user")
 
 func Auth(c *gin.Context) {
 	session := sessions.Default(c)
-	log.Debug("Cookie data: %+v", session)
+	log.Debugf("Cookie data: %+v", session)
 	cid := session.Get("cid")
 	if cid == nil {
 		c.Set("x-guest", true)
@@ -35,7 +35,7 @@ func Auth(c *gin.Context) {
 		return
 	}
 
-	log.Debug("Failed to find user by cid (%v): %s", cid, err.Error())
+	log.Debugf("Failed to find user by cid (%v): %s", cid, err.Error())
 	// If we get here, they had a cookie with an invalid user
 	// so delete it.
 	session.Delete("cid")
