@@ -26,7 +26,7 @@ func Auth(c *gin.Context) {
 	}
 
 	user, err := database.FindUserByCID(cid.(string))
-	if err != nil {
+	if err == nil {
 		c.Set("x-guest", false)
 		c.Set("x-cid", cid)
 		c.Set("x-user", user)
@@ -35,7 +35,6 @@ func Auth(c *gin.Context) {
 		return
 	}
 
-	log.Debugf("Failed to find user by cid (%v): %s", cid, err.Error())
 	// If we get here, they had a cookie with an invalid user
 	// so delete it.
 	session.Delete("cid")
