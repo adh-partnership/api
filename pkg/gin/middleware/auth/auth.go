@@ -20,6 +20,7 @@ func Auth(c *gin.Context) {
 	log.Debugf("Cookie data: %+v", session)
 	cid := session.Get("cid")
 	if cid == nil {
+		log.Debug("In Auth as Guest")
 		c.Set("x-guest", true)
 		c.Next()
 		return
@@ -27,6 +28,7 @@ func Auth(c *gin.Context) {
 
 	user, err := database.FindUserByCID(cid.(string))
 	if err == nil {
+		log.Debugf("User: %+v", user)
 		c.Set("x-guest", false)
 		c.Set("x-cid", cid)
 		c.Set("x-user", user)
@@ -35,6 +37,7 @@ func Auth(c *gin.Context) {
 		return
 	}
 
+	log.Debugf("User does not exist??? %+v", err)
 	// If we get here, they had a cookie with an invalid user
 	// so delete it.
 	session.Delete("cid")
