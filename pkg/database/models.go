@@ -61,7 +61,9 @@ func FindRole(name string) (*dbTypes.Role, error) {
 
 func FindUserByCID(cid string) (*dbTypes.User, error) {
 	user := &dbTypes.User{}
-	if err := DB.Preload(clause.Associations).Where(dbTypes.User{CID: atou(cid)}).First(user).Error; err != nil {
+	log.Tracef("Finding user by CID: %s -- atou()=%+v", cid, atou(cid))
+	if err := DB.Preload(clause.Associations).Where(dbTypes.User{CID: atou(cid)}).First(&user).Error; err != nil {
+		log.Tracef("Error finding user by CID (%s): %v", cid, err)
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -112,6 +114,7 @@ func AddDelayedJob(queue, body string, duration time.Duration) error {
 func atou(a string) uint {
 	i, err := strconv.ParseUint(a, 10, 0)
 	if err != nil {
+		log.Warnf("Error converting string (%s) to uint: %v", a, err)
 		return 0
 	}
 	return uint(i)

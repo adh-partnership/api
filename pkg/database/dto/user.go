@@ -30,8 +30,10 @@ type UserResponseCertifications struct {
 
 func ConvUserToUserResponse(user *dbTypes.User) *UserResponse {
 	roles := []string{}
-	for _, role := range user.Roles {
-		roles = append(roles, role.Name)
+	if user.Roles != nil {
+		for _, role := range user.Roles {
+			roles = append(roles, role.Name)
+		}
 	}
 
 	return &UserResponse{

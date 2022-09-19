@@ -7,7 +7,7 @@ import (
 	"github.com/kzdv/api/pkg/logger"
 )
 
-var log = logger.Logger.WithField("component", "user")
+var log = logger.Logger.WithField("component", "v1/user")
 
 func Routes(r *gin.RouterGroup) {
 	r.GET("/login", getLogin)

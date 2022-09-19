@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -76,7 +76,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -109,7 +109,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -679,6 +679,81 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.FeedbackPatchRequest": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.FeedbackRequest": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "string"
+                },
+                "controller": {
+                    "type": "integer"
+                },
+                "flight_callsign": {
+                    "type": "string"
+                },
+                "flight_date": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.FeedbackResponse": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "string"
+                },
+                "controller_cid": {
+                    "type": "integer"
+                },
+                "controller_name": {
+                    "type": "string"
+                },
+                "controller_rating": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "flight_callsign": {
+                    "type": "string"
+                },
+                "flight_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "submitter": {
+                    "type": "integer"
+                },
+                "submitter_name": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.StorageRequest": {
             "type": "object",
             "properties": {

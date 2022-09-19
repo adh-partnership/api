@@ -11,14 +11,15 @@ import (
 	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/gin/response"
 	"github.com/kzdv/api/pkg/logger"
+	"github.com/kzdv/api/pkg/utils"
 )
 
-var log = logger.Logger.WithField("component", "user")
+var log = logger.Logger.WithField("component", "middleware/auth")
 
 func Auth(c *gin.Context) {
 	session := sessions.Default(c)
-	log.Debugf("Cookie data: %+v", session)
 	cid := session.Get("cid")
+	log.Debugf("Cookie cid: %v", utils.DumpToJSON(cid))
 	if cid == nil {
 		log.Debug("In Auth as Guest")
 		c.Set("x-guest", true)
@@ -30,7 +31,7 @@ func Auth(c *gin.Context) {
 	if err == nil {
 		log.Debugf("User: %+v", user)
 		c.Set("x-guest", false)
-		c.Set("x-cid", cid)
+		c.Set("x-cid", cid.(string))
 		c.Set("x-user", user)
 		c.Set("x-auth-type", "cookie")
 		c.Next()

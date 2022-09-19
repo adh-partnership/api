@@ -1,5 +1,54 @@
 basePath: /v1
 definitions:
+  dto.FeedbackPatchRequest:
+    properties:
+      status:
+        type: string
+    type: object
+  dto.FeedbackRequest:
+    properties:
+      comments:
+        type: string
+      controller:
+        type: integer
+      flight_callsign:
+        type: string
+      flight_date:
+        type: string
+      position:
+        type: string
+      rating:
+        type: string
+    type: object
+  dto.FeedbackResponse:
+    properties:
+      comments:
+        type: string
+      controller_cid:
+        type: integer
+      controller_name:
+        type: string
+      controller_rating:
+        type: string
+      created_at:
+        type: string
+      flight_callsign:
+        type: string
+      flight_date:
+        type: string
+      id:
+        type: integer
+      position:
+        type: string
+      rating:
+        type: string
+      status:
+        type: string
+      submitter:
+        type: integer
+      submitter_name:
+        type: string
+    type: object
   dto.StorageRequest:
     properties:
       category:
@@ -304,7 +353,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -325,7 +374,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -346,7 +395,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error

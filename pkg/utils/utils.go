@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"regexp"
 	"strings"
 )
@@ -26,4 +27,9 @@ func StringToSlug(s string) string {
 	s = strings.TrimRight(s, "-")
 	s = strings.TrimSpace(s)
 	return s
+}
+
+func DumpToJSON(v interface{}) string {
+	b, _ := json.MarshalIndent(v, "", "  ")
+	return string(b)
 }
