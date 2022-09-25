@@ -10,7 +10,7 @@ jobs:
     name: Run linters
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       name: Checkout Repo
     - name: Setup go
       uses: actions/setup-go@v3
