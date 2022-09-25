@@ -9,6 +9,7 @@ import (
 	"github.com/kzdv/api/pkg/database"
 	dbTypes "github.com/kzdv/api/pkg/database/types"
 	"github.com/kzdv/api/pkg/gin/response"
+	"github.com/kzdv/api/pkg/memcache"
 )
 
 // Get User Information
@@ -98,6 +99,9 @@ func putUserRoles(c *gin.Context) {
 		return
 	}
 
+	// If roles change, invalidate staff cache
+	memcache.Cache.Delete("staff")
+
 	response.RespondBlank(c, http.StatusNoContent)
 }
 
@@ -154,6 +158,9 @@ func deleteUserRoles(c *gin.Context) {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+
+	// If roles change, invalidate staff cache
+	memcache.Cache.Delete("staff")
 
 	response.RespondBlank(c, http.StatusNoContent)
 }

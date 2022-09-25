@@ -59,6 +59,21 @@ func FindRole(name string) (*dbTypes.Role, error) {
 	return role, nil
 }
 
+func FindUsersWithRole(role string) ([]dbTypes.User, error) {
+	var users []dbTypes.User
+
+	r, err := FindRole(role)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := DB.Model(r).Association("Users").Find(&users); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func FindUserByCID(cid string) (*dbTypes.User, error) {
 	user := &dbTypes.User{}
 	log.Tracef("Finding user by CID: %s -- atou()=%+v", cid, atou(cid))

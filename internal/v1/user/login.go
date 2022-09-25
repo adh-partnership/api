@@ -14,6 +14,7 @@ import (
 	"github.com/kzdv/api/pkg/config"
 	"github.com/kzdv/api/pkg/gin/response"
 	"github.com/kzdv/api/pkg/oauth"
+	"github.com/kzdv/api/pkg/utils"
 )
 
 // Login to account
@@ -101,6 +102,7 @@ func getLoginCallback(c *gin.Context) {
 
 	session.Delete("state")
 	session.Set("cid", fmt.Sprint(user.User.CID))
+	log.Tracef("User %s logged in", utils.DumpToJSON(user.User.CID))
 	_ = session.Save()
 
 	redirect := session.Get("redirect").(string)

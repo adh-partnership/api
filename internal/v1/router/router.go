@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
+	"github.com/kzdv/api/internal/v1/facility"
 	"github.com/kzdv/api/internal/v1/overflight"
 	"github.com/kzdv/api/internal/v1/storage"
 	"github.com/kzdv/api/internal/v1/user"
@@ -15,9 +16,10 @@ var log = logger.Logger.WithField("component", "router/v1")
 
 func init() {
 	routeGroups = make(map[string]func(*gin.RouterGroup))
+	routeGroups["/facility"] = facility.Routes
 	routeGroups["/overflight"] = overflight.Routes
-	routeGroups["/user"] = user.Routes
 	routeGroups["/storage"] = storage.Routes
+	routeGroups["/user"] = user.Routes
 }
 
 func SetupRoutes(r *gin.Engine) {
