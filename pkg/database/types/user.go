@@ -43,6 +43,7 @@ var CertificationOptions = map[string]string{
 	"training":  "training",
 	"solo":      "solo",
 	"certified": "certified",
+	"major-solo": "major-solo",
 	"major":     "major",
 	"cantrain":  "cantrain",
 }
