@@ -40,7 +40,7 @@ func getRoster(c *gin.Context) {
 // Get Facility Staff
 // @Summary Get Facility Staff
 // @Tags user
-// @Success 200 {object} []internalDTO.FacilityStaffResponse
+// @Success 200 {object} []dto.FacilityStaffResponse
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
 // @Router /v1/user/staff [GET]

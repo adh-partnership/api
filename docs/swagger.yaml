@@ -1,5 +1,32 @@
 basePath: /v1
 definitions:
+  dto.FacilityStaffResponse:
+    properties:
+      atm:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      datm:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      ec:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      fe:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      ta:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      wm:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+    type: object
   dto.FeedbackPatchRequest:
     properties:
       status:
@@ -353,7 +380,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -374,7 +401,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -395,7 +422,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -768,6 +795,46 @@ paths:
       tags:
       - user
       - oauth
+  /v1/user/roster:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.UserResponse'
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Facility Roster
+      tags:
+      - user
+  /v1/user/staff:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.FacilityStaffResponse'
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Facility Staff
+      tags:
+      - user
 securityDefinitions:
   BasicAuth:
     type: basic

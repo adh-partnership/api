@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -76,7 +76,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -109,7 +109,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_kzdv_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -676,9 +676,112 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/user/roster": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get Facility Roster",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.UserResponse"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/staff": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get Facility Staff",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.FacilityStaffResponse"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "dto.FacilityStaffResponse": {
+            "type": "object",
+            "properties": {
+                "atm": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "datm": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "ec": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "fe": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "ta": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "wm": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                }
+            }
+        },
         "dto.FeedbackPatchRequest": {
             "type": "object",
             "properties": {
