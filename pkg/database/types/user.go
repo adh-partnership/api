@@ -39,13 +39,13 @@ type User struct {
 }
 
 var CertificationOptions = map[string]string{
-	"none":      "none",
-	"training":  "training",
-	"solo":      "solo",
-	"certified": "certified",
+	"none":       "none",
+	"training":   "training",
+	"solo":       "solo",
+	"certified":  "certified",
 	"major-solo": "major-solo",
-	"major":     "major",
-	"cantrain":  "cantrain",
+	"major":      "major",
+	"cantrain":   "cantrain",
 }
 
 var ControllerTypeOptions = map[string]string{
