@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"github.com/kzdv/api/pkg/database"
 	dbTypes "github.com/kzdv/api/pkg/database/types"
 )
 
@@ -26,6 +27,15 @@ type UserResponseCertifications struct {
 	Local    string `json:"local" yaml:"local" xml:"local"`
 	Approach string `json:"approach" yaml:"approach" xml:"approach"`
 	Enroute  string `json:"enroute" yaml:"enroute" xml:"enroute"`
+}
+
+type FacilityStaffResponse struct {
+	ATM  []*UserResponse `json:"atm" yaml:"atm" xml:"atm"`
+	DATM []*UserResponse `json:"datm" yaml:"datm" xml:"datm"`
+	TA   []*UserResponse `json:"ta" yaml:"ta" xml:"ta"`
+	EC   []*UserResponse `json:"ec" yaml:"ec" xml:"ec"`
+	FE   []*UserResponse `json:"fe" yaml:"fe" xml:"fe"`
+	WM   []*UserResponse `json:"wm" yaml:"wm" xml:"wm"`
 }
 
 func ConvUserToUserResponse(user *dbTypes.User) *UserResponse {
@@ -136,4 +146,48 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponse) []
 	}
 
 	return errs
+}
+
+func GetUsersByRole(role string) ([]*UserResponse, error) {
+	var users []*UserResponse
+
+	u, err := database.FindUsersWithRole(role)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range u {
+		users = append(users, ConvUserToUserResponse(&user))
+	}
+
+	return users, nil
+}
+
+func GetStaffResponse() (*FacilityStaffResponse, error) {
+	roles := []string{"atm", "datm", "ta", "ec", "fe", "wm"}
+	staff := &FacilityStaffResponse{}
+
+	for _, role := range roles {
+		u, err := GetUsersByRole(role)
+		if err != nil {
+			return nil, err
+		}
+
+		switch role {
+		case "atm":
+			staff.ATM = u
+		case "datm":
+			staff.DATM = u
+		case "ta":
+			staff.TA = u
+		case "ec":
+			staff.EC = u
+		case "fe":
+			staff.FE = u
+		case "wm":
+			staff.WM = u
+		}
+	}
+
+	return staff, nil
 }

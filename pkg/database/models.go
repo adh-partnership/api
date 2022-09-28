@@ -76,9 +76,7 @@ func FindUsersWithRole(role string) ([]dbTypes.User, error) {
 
 func FindUserByCID(cid string) (*dbTypes.User, error) {
 	user := &dbTypes.User{}
-	log.Tracef("Finding user by CID: %s -- atou()=%+v", cid, atou(cid))
 	if err := DB.Preload(clause.Associations).Where(dbTypes.User{CID: atou(cid)}).First(&user).Error; err != nil {
-		log.Tracef("Error finding user by CID (%s): %v", cid, err)
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
