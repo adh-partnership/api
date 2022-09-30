@@ -20,6 +20,22 @@ type UserResponse struct {
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
 
+type UserResponseAdmin struct {
+	CID               uint                       `json:"cid" yaml:"cid" xml:"cid"`
+	FirstName         string                     `json:"first_name" yaml:"first_name" xml:"first_name"`
+	LastName          string                     `json:"last_name" yaml:"last_name" xml:"last_name"`
+	OperatingInitials string                     `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
+	ControllerType    string                     `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
+	Certiciations     UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
+	RemovalReason     string                     `json:"removal_reason" yaml:"removal_reason" xml:"removal_reason"`
+	Rating            string                     `json:"rating" yaml:"rating" xml:"rating"`
+	Status            string                     `json:"status" yaml:"status" xml:"status"`
+	Roles             []string                   `json:"roles" yaml:"roles" xml:"roles"`
+	DiscordID         string                     `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
+	CreatedAt         string                     `json:"created_at" yaml:"created_at" xml:"created_at"`
+	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
+}
+
 type UserResponseCertifications struct {
 	Delivery string `json:"delivery" yaml:"delivery" xml:"delivery"`
 	Ground   string `json:"ground" yaml:"ground" xml:"ground"`
@@ -75,7 +91,7 @@ const (
 	ErrInvalidStatus            = "invalid status"
 )
 
-func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponse) []string {
+func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmin) []string {
 	var errs []string
 
 	if len(userResponse.OperatingInitials) != 2 && userResponse.OperatingInitials != "" {

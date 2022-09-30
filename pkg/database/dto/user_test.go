@@ -45,13 +45,12 @@ func TestConvUserToUserResponse(t *testing.T) {
 			Approach: dbTypes.CertificationOptions["certified"],
 			Enroute:  dbTypes.CertificationOptions["cantrain"],
 		},
-		Rating:        "C1",
-		RemovalReason: "",
-		Roles:         []string{"admin", "user"},
-		Status:        dbTypes.ControllerStatusOptions["active"],
-		DiscordID:     "123456789",
-		CreatedAt:     "2020-01-01T00:00:00Z",
-		UpdatedAt:     "2020-01-01T00:00:00Z",
+		Rating:    "C1",
+		Roles:     []string{"admin", "user"},
+		Status:    dbTypes.ControllerStatusOptions["active"],
+		DiscordID: "123456789",
+		CreatedAt: "2020-01-01T00:00:00Z",
+		UpdatedAt: "2020-01-01T00:00:00Z",
 	}
 
 	userResponse := ConvUserToUserResponse(user)
@@ -64,7 +63,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 	tests := []struct {
 		Name           string
 		BaseUser       dbTypes.User
-		Patch          UserResponse
+		Patch          UserResponseAdmin
 		ExpectedUser   dbTypes.User
 		ExpectedErrors []string
 	}{
@@ -73,7 +72,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 			BaseUser: dbTypes.User{
 				OperatingInitials: "JD",
 			},
-			Patch: UserResponse{
+			Patch: UserResponseAdmin{
 				OperatingInitials: "FB",
 			},
 			ExpectedUser: dbTypes.User{
@@ -86,7 +85,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 			BaseUser: dbTypes.User{
 				OperatingInitials: "JD",
 			},
-			Patch: UserResponse{
+			Patch: UserResponseAdmin{
 				OperatingInitials: "ABC",
 			},
 			ExpectedUser: dbTypes.User{
@@ -99,7 +98,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 			BaseUser: dbTypes.User{
 				ControllerType: dbTypes.ControllerTypeOptions["home"],
 			},
-			Patch: UserResponse{
+			Patch: UserResponseAdmin{
 				ControllerType: dbTypes.ControllerTypeOptions["none"],
 			},
 			ExpectedUser: dbTypes.User{
@@ -112,7 +111,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 			BaseUser: dbTypes.User{
 				ControllerType: dbTypes.ControllerTypeOptions["home"],
 			},
-			Patch: UserResponse{
+			Patch: UserResponseAdmin{
 				ControllerType: "invalid",
 			},
 			ExpectedUser: dbTypes.User{
@@ -129,7 +128,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 				AppCertification: dbTypes.CertificationOptions["certified"],
 				CtrCertification: dbTypes.CertificationOptions["cantrain"],
 			},
-			Patch: UserResponse{
+			Patch: UserResponseAdmin{
 				Certiciations: UserResponseCertifications{
 					Delivery: dbTypes.CertificationOptions["none"],
 					Ground:   dbTypes.CertificationOptions["none"],
@@ -156,7 +155,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 				AppCertification: dbTypes.CertificationOptions["certified"],
 				CtrCertification: dbTypes.CertificationOptions["cantrain"],
 			},
-			Patch: UserResponse{
+			Patch: UserResponseAdmin{
 				Certiciations: UserResponseCertifications{
 					Delivery: "invalid",
 					Ground:   "invalid",
@@ -179,7 +178,7 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 			BaseUser: dbTypes.User{
 				DiscordID: "123456789",
 			},
-			Patch: UserResponse{
+			Patch: UserResponseAdmin{
 				DiscordID: "987654321",
 			},
 			ExpectedUser: dbTypes.User{

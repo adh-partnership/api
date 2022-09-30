@@ -65,7 +65,7 @@ func patchUser(c *gin.Context) {
 		cid = fmt.Sprint(user.CID)
 	}
 
-	var req dto.UserResponse
+	var req dto.UserResponseAdmin
 	if err := c.ShouldBind(&req); err != nil {
 		response.RespondError(c, http.StatusBadRequest, err.Error())
 		return
