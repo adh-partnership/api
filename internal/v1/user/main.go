@@ -18,7 +18,8 @@ func Routes(r *gin.RouterGroup) {
 	r.PATCH("/", auth.NotGuest, patchUser)
 	r.PATCH("/:cid", auth.NotGuest, patchUser)
 
-	r.GET("/all", getRoster)
+	r.GET("/all", getFullRoster)
+	r.GET("/roster", getRoster)
 	r.GET("/staff", getStaff)
 
 	r.GET("/roles", auth.NotGuest, getUserRoles)

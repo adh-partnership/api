@@ -14,6 +14,29 @@ import (
 	"github.com/kzdv/api/pkg/memcache"
 )
 
+// Get Full Roster
+// @Summary Get Full Roster
+// @Tags user
+// @Success 200 {object} []dto.UserResponse
+// @Failure 403 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/user/all [GET]
+func getFullRoster(c *gin.Context) {
+	users := []dbTypes.User{}
+	ret := []*dto.UserResponse{}
+
+	if err := database.DB.Preload(clause.Associations).Find(&users).Error; err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	for _, user := range users {
+		ret = append(ret, dto.ConvUserToUserResponse(&user))
+	}
+
+	response.Respond(c, http.StatusOK, ret)
+}
+
 // Get Facility Roster
 // @Summary Get Facility Roster
 // @Tags user

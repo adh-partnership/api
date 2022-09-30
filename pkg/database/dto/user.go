@@ -11,7 +11,6 @@ type UserResponse struct {
 	LastName          string                     `json:"last_name" yaml:"last_name" xml:"last_name"`
 	OperatingInitials string                     `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
 	ControllerType    string                     `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
-	RemovalReason     string                     `json:"removal_reason" yaml:"removal_reason" xml:"removal_reason"`
 	Certiciations     UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
 	Rating            string                     `json:"rating" yaml:"rating" xml:"rating"`
 	Status            string                     `json:"status" yaml:"status" xml:"status"`
