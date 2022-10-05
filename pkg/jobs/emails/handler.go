@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/kzdv/api/pkg/database"
-	"github.com/kzdv/api/pkg/email"
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/database"
+	"github.com/adh-partnership/api/pkg/email"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 var log = logger.Logger.WithField("component", "jobs/emails")

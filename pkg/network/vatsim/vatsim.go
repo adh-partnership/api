@@ -72,3 +72,23 @@ func GetLocation(cid string) (string, string, string, error) {
 
 	return division.Region, division.Division, division.Subdivision, nil
 }
+
+func GetData() (*VATSIMData, error) {
+	status, contents, err := handleData()
+	if err != nil {
+		return nil, err
+	}
+
+	if status > 299 {
+		log.Warnf("Failed to get data: %s", contents)
+		return nil, fmt.Errorf("invalid status code: %d", status)
+	}
+
+	data := &VATSIMData{}
+	err = json.Unmarshal(contents, &data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}

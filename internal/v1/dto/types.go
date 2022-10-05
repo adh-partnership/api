@@ -1,7 +1,7 @@
 package dto
 
 import (
-	dbTypes "github.com/kzdv/api/pkg/database/types"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
 )
 
 type StandardResponse struct {

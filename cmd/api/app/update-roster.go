@@ -3,12 +3,12 @@ package app
 import (
 	"github.com/urfave/cli/v2"
 
-	"github.com/kzdv/api/pkg/config"
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/discord"
-	"github.com/kzdv/api/pkg/jobs/roster"
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/config"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/discord"
+	"github.com/adh-partnership/api/pkg/jobs/roster"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 func newUpdateRosterCommand() *cli.Command {

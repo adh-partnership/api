@@ -6,7 +6,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 func UpdateCookie(c *gin.Context) {

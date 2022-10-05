@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 
-	"github.com/kzdv/api/pkg/config"
+	"github.com/adh-partnership/api/pkg/config"
 )
 
 type Client struct {

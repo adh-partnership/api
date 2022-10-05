@@ -6,12 +6,12 @@ import (
 	"github.com/go-co-op/gocron"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/facility"
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/network/global"
-	"github.com/kzdv/api/pkg/network/vatusa"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/facility"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/network/global"
+	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
 
 var log = logger.Logger.WithField("component", "job/roster")

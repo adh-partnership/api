@@ -5,10 +5,10 @@ import (
 
 	"github.com/go-co-op/gocron"
 
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/messaging"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/messaging"
 )
 
 var log = logger.Logger.WithField("component", "job/delayedjobs")

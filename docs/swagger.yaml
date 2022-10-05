@@ -129,7 +129,7 @@ definitions:
       local:
         type: string
     type: object
-  github.com_kzdv_api_internal_v1_overflight.Flightsv1:
+  github.com_adh-partnership_api_internal_v1_overflight.Flightsv1:
     properties:
       alt:
         example: 10500
@@ -364,8 +364,8 @@ info:
   description: Session Cookie
   license:
     name: Apache
-    url: https://github.com/kzdv/api2/blob/main/LICENSE
-  title: KZDV API
+    url: https://github.com/adh-partnership/api2/blob/main/LICENSE
+  title: ADH-PARTNERSHIP API
   version: "1.0"
 paths:
   /live/:facility:

@@ -1,8 +1,8 @@
 package global
 
 import (
-	"github.com/kzdv/api/pkg/network/vatsim"
-	"github.com/kzdv/api/pkg/network/vatusa"
+	"github.com/adh-partnership/api/pkg/network/vatsim"
+	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
 
 type Location struct {

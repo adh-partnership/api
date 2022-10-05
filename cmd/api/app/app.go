@@ -5,13 +5,13 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 func NewRootCommand() *cli.App {
 	return &cli.App{
 		Name:  "app",
-		Usage: "KZDV Monolithic API",
+		Usage: "ADH-PARTNERSHIP Monolithic API",
 		Commands: []*cli.Command{
 			newServerCommand(),
 			newRunnerCommand(),

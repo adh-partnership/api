@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/kzdv/api/cmd/api/app"
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/cmd/api/app"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 func main() {
@@ -16,15 +16,15 @@ func main() {
 	}
 }
 
-// @title KZDV API
+// @title ADH API
 // @version 1.0
-// @description KZDV API
+// @description ADH API
 
 // @contact.name Daniel Hawton
-// @contact.email wm@denartcc.org
+// @contact.email daniel@hawton.org
 
 // @license.name Apache
-// @license.URL https://github.com/kzdv/api2/blob/main/LICENSE
+// @license.URL https://github.com/adh-partnership/api/blob/main/LICENSE
 
 // @host network.denartcc.org
 // @BasePath /v1

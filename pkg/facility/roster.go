@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/discord"
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/network/global"
-	"github.com/kzdv/api/pkg/network/vatusa"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/discord"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/network/global"
+	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
 
 var log = logger.Logger.WithField("component", "facility")
@@ -46,7 +46,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 					msg := fmt.Sprintf("New user on roster, %s %s (%d), needs to be assigned an OI", user.FirstName, user.LastName, user.CID)
 					err := discord.SendWebhookMessage(
 						"seniorstaff",
-						"KZDV Web API",
+						"ADH-PARTNERSHIP Web API",
 						msg,
 					)
 					if err != nil {
@@ -70,7 +70,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 				user.Subdivision = controller.Facility
 
 				if controller.Facility == "ZAE" && isInDailyCheck() {
-					err := discord.SendWebhookMessage("seniorstaff", "KZDV Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, but is in %s, %s, %s -- verify eligibility",
+					err := discord.SendWebhookMessage("seniorstaff", "ADH-PARTNERSHIP Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, but is in %s, %s, %s -- verify eligibility",
 						user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))
 					if err != nil && err != discord.ErrWebhookNotConfigured && err != discord.ErrUsedDefaultWebhook {
 						log.Errorf("Error sending discord message: %s", err.Error())
@@ -94,7 +94,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 							"JUST transferred into VATUSA and the div sync job hasn't run yet)",
 							user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision)
 
-						err := discord.SendWebhookMessage("seniorstaff", "KZDV Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, VATSIM API indicates they are in %s, %s, %s "+
+						err := discord.SendWebhookMessage("seniorstaff", "ADH-PARTNERSHIP Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, VATSIM API indicates they are in %s, %s, %s "+
 							"but VATUSA has them in a non-member facility (ZZN) -- verify eligibility and raise to VATUSA's Tech Manager as this should not happen (unless they "+
 							"JUST transferred into VATUSA and the div sync job hasn't run yet)",
 							user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))

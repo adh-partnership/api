@@ -2,14 +2,14 @@
     "swagger": "2.0",
     "info": {
         "description": "Session Cookie",
-        "title": "KZDV API",
+        "title": "ADH-PARTNERSHIP API",
         "contact": {
             "name": "Daniel Hawton",
             "email": "wm@denartcc.org"
         },
         "license": {
             "name": "Apache",
-            "url": "https://github.com/kzdv/api2/blob/main/LICENSE"
+            "url": "https://github.com/adh-partnership/api2/blob/main/LICENSE"
         },
         "version": "1.0"
     },
@@ -931,7 +931,7 @@
                 }
             }
         },
-        "github.com_kzdv_api_internal_v1_overflight.Flightsv1": {
+        "github.com_adh-partnership_api_internal_v1_overflight.Flightsv1": {
             "type": "object",
             "properties": {
                 "alt": {

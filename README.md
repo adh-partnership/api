@@ -1,6 +1,6 @@
-# ZDV API
+# ADH-Parnership API
 
-The new ZDV Monolithic API.
+ADH Partnership Monolithic API.
 
 ## Introduction
 

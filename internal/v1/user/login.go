@@ -10,11 +10,11 @@ import (
 	"github.com/gin-gonic/gin"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 
-	"github.com/kzdv/api/internal/v1/dto"
-	"github.com/kzdv/api/pkg/config"
-	"github.com/kzdv/api/pkg/gin/response"
-	"github.com/kzdv/api/pkg/oauth"
-	"github.com/kzdv/api/pkg/utils"
+	"github.com/adh-partnership/api/internal/v1/dto"
+	"github.com/adh-partnership/api/pkg/config"
+	"github.com/adh-partnership/api/pkg/gin/response"
+	"github.com/adh-partnership/api/pkg/oauth"
+	"github.com/adh-partnership/api/pkg/utils"
 )
 
 // Login to account
@@ -65,7 +65,7 @@ func getLoginCallback(c *gin.Context) {
 	res, err := http.NewRequest("GET", fmt.Sprintf("%s%s", config.Cfg.OAuth.BaseURL, config.Cfg.OAuth.Endpoints.UserInfo), nil)
 	res.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token.AccessToken))
 	res.Header.Add("Accept", "application/json")
-	res.Header.Add("User-Agent", "kzdv-api")
+	res.Header.Add("User-Agent", "adh-partnership-api")
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return

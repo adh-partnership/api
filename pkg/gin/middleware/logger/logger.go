@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	loggr "github.com/kzdv/api/pkg/logger"
+	loggr "github.com/adh-partnership/api/pkg/logger"
 )
 
 func Logger(c *gin.Context) {

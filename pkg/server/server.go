@@ -12,19 +12,19 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	// For Swagger docs
-	_ "github.com/kzdv/api/docs"
-	"github.com/kzdv/api/internal/v1/router"
-	"github.com/kzdv/api/pkg/config"
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/discord"
-	"github.com/kzdv/api/pkg/gin/middleware/auth"
-	ginLogger "github.com/kzdv/api/pkg/gin/middleware/logger"
-	"github.com/kzdv/api/pkg/gin/response"
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/messaging"
-	"github.com/kzdv/api/pkg/oauth"
-	"github.com/kzdv/api/pkg/storage"
+	_ "github.com/adh-partnership/api/docs"
+	"github.com/adh-partnership/api/internal/v1/router"
+	"github.com/adh-partnership/api/pkg/config"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/discord"
+	"github.com/adh-partnership/api/pkg/gin/middleware/auth"
+	ginLogger "github.com/adh-partnership/api/pkg/gin/middleware/logger"
+	"github.com/adh-partnership/api/pkg/gin/response"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/messaging"
+	"github.com/adh-partnership/api/pkg/oauth"
+	"github.com/adh-partnership/api/pkg/storage"
 )
 
 type ServerStruct struct {

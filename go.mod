@@ -1,4 +1,4 @@
-module github.com/kzdv/api
+module github.com/adh-partnership/api
 
 go 1.19
 

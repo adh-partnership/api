@@ -16,7 +16,7 @@ const docTemplate = `{
         },
         "license": {
             "name": "Apache",
-            "url": "https://github.com/kzdv/api2/blob/main/LICENSE"
+            "url": "https://github.com/adh-partnership/api2/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },
@@ -938,7 +938,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github.com_kzdv_api_internal_v1_overflight.Flightsv1": {
+        "github.com_adh-partnership_api_internal_v1_overflight.Flightsv1": {
             "type": "object",
             "properties": {
                 "alt": {
@@ -1262,7 +1262,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "network.denartcc.org",
 	BasePath:         "/v1",
 	Schemes:          []string{},
-	Title:            "KZDV API",
+	Title:            "ADH-PARTNERSHIP API",
 	Description:      "Session Cookie",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

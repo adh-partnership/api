@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	dbTypes "github.com/kzdv/api/pkg/database/types"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
 )
 
 func TestConvUserToUserResponse(t *testing.T) {

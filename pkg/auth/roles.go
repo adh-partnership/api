@@ -1,7 +1,7 @@
 package auth
 
 import (
-	dbTypes "github.com/kzdv/api/pkg/database/types"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
 )
 
 type Role struct {

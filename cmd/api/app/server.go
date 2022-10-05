@@ -7,10 +7,13 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-co-op/gocron"
 	"github.com/urfave/cli/v2"
 
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/server"
+	"github.com/adh-partnership/api/pkg/jobs/flightparser"
+	"github.com/adh-partnership/api/pkg/jobs/roster"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/server"
 )
 
 var log = logger.Logger.WithField("component", "server")
@@ -27,7 +30,7 @@ func newServerCommand() *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			log.Info("Starting KZDV API")
+			log.Info("Starting ADH-PARTNERSHIP API")
 			log.Debugf("config=%s", c.String("config"))
 			srvr, err := server.NewServer(&server.ServerOpts{
 				ConfigFile: c.String("config"),
@@ -38,6 +41,22 @@ func newServerCommand() *cli.Command {
 
 			ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 			defer stop()
+
+			log.Info("Building scheduled jobs")
+			s := gocron.NewScheduler(time.UTC)
+			log.Info(" - Roster")
+			err = roster.ScheduleJobs(s)
+			if err != nil {
+				return err
+			}
+			log.Info(" - Flight Parser")
+			err = flightparser.Initialize(s)
+			if err != nil {
+				return err
+			}
+
+			log.Info("Starting scheduled jobs")
+			s.StartAsync()
 
 			log.Infof("Starting server on :%s", srvr.Config.Server.Port)
 			srv := &http.Server{

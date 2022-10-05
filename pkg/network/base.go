@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 // UserAgent is the user agent to pass in request headers
-var UserAgent = "kzdv-network"
+var UserAgent = "adh-partnership-network"
 
 var log = logger.Logger.WithField("component", "network")
 

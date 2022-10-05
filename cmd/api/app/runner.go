@@ -6,15 +6,15 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/urfave/cli/v2"
 
-	"github.com/kzdv/api/pkg/config"
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/discord"
-	"github.com/kzdv/api/pkg/jobs/delayedjobs"
-	"github.com/kzdv/api/pkg/jobs/emails"
-	"github.com/kzdv/api/pkg/jobs/roster"
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/messaging"
+	"github.com/adh-partnership/api/pkg/config"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/discord"
+	"github.com/adh-partnership/api/pkg/jobs/delayedjobs"
+	"github.com/adh-partnership/api/pkg/jobs/emails"
+	"github.com/adh-partnership/api/pkg/jobs/roster"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/messaging"
 )
 
 func newRunnerCommand() *cli.Command {

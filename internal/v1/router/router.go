@@ -3,10 +3,10 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/kzdv/api/internal/v1/overflight"
-	"github.com/kzdv/api/internal/v1/storage"
-	"github.com/kzdv/api/internal/v1/user"
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/internal/v1/overflight"
+	"github.com/adh-partnership/api/internal/v1/storage"
+	"github.com/adh-partnership/api/internal/v1/user"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 var routeGroups map[string]func(*gin.RouterGroup)

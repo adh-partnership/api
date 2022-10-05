@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/kzdv/api/pkg/config"
-	"github.com/kzdv/api/pkg/database"
+	"github.com/adh-partnership/api/pkg/config"
+	"github.com/adh-partnership/api/pkg/database"
 )
 
 func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, error) {

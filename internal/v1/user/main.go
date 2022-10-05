@@ -3,8 +3,8 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/kzdv/api/pkg/gin/middleware/auth"
-	"github.com/kzdv/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/gin/middleware/auth"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 var log = logger.Logger.WithField("component", "v1/user")

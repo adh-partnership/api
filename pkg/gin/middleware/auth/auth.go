@@ -6,12 +6,12 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	"github.com/kzdv/api/pkg/auth"
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/gin/response"
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/utils"
+	"github.com/adh-partnership/api/pkg/auth"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/gin/response"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/utils"
 )
 
 var log = logger.Logger.WithField("component", "middleware/auth")

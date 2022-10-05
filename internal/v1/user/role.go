@@ -5,11 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/kzdv/api/pkg/auth"
-	"github.com/kzdv/api/pkg/database"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/gin/response"
-	"github.com/kzdv/api/pkg/memcache"
+	"github.com/adh-partnership/api/pkg/auth"
+	"github.com/adh-partnership/api/pkg/database"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/gin/response"
+	"github.com/adh-partnership/api/pkg/memcache"
 )
 
 // Get User Information

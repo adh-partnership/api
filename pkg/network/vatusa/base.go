@@ -3,9 +3,9 @@ package vatusa
 import (
 	"net/url"
 
-	"github.com/kzdv/api/pkg/config"
-	"github.com/kzdv/api/pkg/logger"
-	"github.com/kzdv/api/pkg/network"
+	"github.com/adh-partnership/api/pkg/config"
+	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/network"
 )
 
 const (

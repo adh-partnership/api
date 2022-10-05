@@ -7,12 +7,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/kzdv/api/pkg/auth"
-	"github.com/kzdv/api/pkg/database"
-	"github.com/kzdv/api/pkg/database/dto"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/gin/response"
-	"github.com/kzdv/api/pkg/network/vatusa"
+	"github.com/adh-partnership/api/pkg/auth"
+	"github.com/adh-partnership/api/pkg/database"
+	"github.com/adh-partnership/api/pkg/database/dto"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/gin/response"
+	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
 
 // Get User Information

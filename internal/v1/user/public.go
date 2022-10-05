@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
 
-	"github.com/kzdv/api/pkg/database"
-	"github.com/kzdv/api/pkg/database/dto"
-	dbTypes "github.com/kzdv/api/pkg/database/types"
-	"github.com/kzdv/api/pkg/gin/response"
-	"github.com/kzdv/api/pkg/memcache"
+	"github.com/adh-partnership/api/pkg/database"
+	"github.com/adh-partnership/api/pkg/database/dto"
+	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/gin/response"
+	"github.com/adh-partnership/api/pkg/memcache"
 )
 
 // Get Full Roster
