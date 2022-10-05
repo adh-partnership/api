@@ -60,11 +60,11 @@ jobs:
     if : ${{ github.event_name == 'push' && contains(fromJson('["refs/heads/dev", "refs/heads/main"]'), github.ref) }}
 
     steps:
-    - name: Checkout Repo
+    - name: Checkout KZDV Gitops Repo
       uses: actions/checkout@v3
       with:
         token: ${{ secrets.GH_PIPELINE_PAT }}
-        repository: 'adh-partnership/devops'
+        repository: 'kzdv/devops'
         path: gitops
     - name: Configure git
       run: |-
