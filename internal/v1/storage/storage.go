@@ -140,7 +140,7 @@ func deleteStorage(c *gin.Context) {
 			err := storagePackage.Storage("uploads").DeleteObject(slug)
 			if err != nil {
 				log.Errorf("Error deleting object from storage: %s", err.Error())
-				_ = discord.SendWebhookMessage("uploads", "ADH-PARTNERSHIP API", fmt.Sprintf("Error deleting object %s from uploads storage: %v", slug, err))
+				_ = discord.SendWebhookMessage("uploads", "API", fmt.Sprintf("Error deleting object %s from uploads storage: %v", slug, err))
 			}
 		}
 	}(s.URL)
@@ -187,7 +187,7 @@ func putStorageFile(c *gin.Context) {
 		err := storagePackage.Storage("uploads").DeleteObject(slug)
 		if err != nil {
 			log.Errorf("Error deleting object from storage: %s", err.Error())
-			_ = discord.SendWebhookMessage("uploads", "ADH-PARTNERSHIP API", fmt.Sprintf("Error deleting object %s from uploads storage: %v", slug, err))
+			_ = discord.SendWebhookMessage("uploads", "API", fmt.Sprintf("Error deleting object %s from uploads storage: %v", slug, err))
 		}
 	}
 	fileSlug := fmt.Sprintf("%s.%s", utils.StringToSlug(s.Name), filepath.Ext(file.Filename))
@@ -201,7 +201,7 @@ func putStorageFile(c *gin.Context) {
 	err = storagePackage.Storage("uploads").PutObject(fileSlug, file.Filename, false, file.Size, mtype.String())
 	if err != nil {
 		log.Errorf("Error uploading file to storage: %s", err.Error())
-		_ = discord.SendWebhookMessage("uploads", "ADH-PARTNERSHIP API", fmt.Sprintf("Error uploading file %s to uploads storage: %v", fileSlug, err))
+		_ = discord.SendWebhookMessage("uploads", "API", fmt.Sprintf("Error uploading file %s to uploads storage: %v", fileSlug, err))
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
@@ -213,7 +213,7 @@ func putStorageFile(c *gin.Context) {
 		return
 	}
 
-	_ = discord.SendWebhookMessage("uploads", "ADH-PARTNERSHIP API", fmt.Sprintf("Uploaded file %s to uploads storage", fileSlug))
+	_ = discord.SendWebhookMessage("uploads", "API", fmt.Sprintf("Uploaded file %s to uploads storage", fileSlug))
 
 	response.RespondBlank(c, http.StatusNoContent)
 }

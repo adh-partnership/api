@@ -70,7 +70,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 				user.Subdivision = controller.Facility
 
 				if controller.Facility == "ZAE" && isInDailyCheck() {
-					err := discord.SendWebhookMessage("seniorstaff", "ADH-PARTNERSHIP Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, but is in %s, %s, %s -- verify eligibility",
+					err := discord.SendWebhookMessage("seniorstaff", "Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, but is in %s, %s, %s -- verify eligibility",
 						user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))
 					if err != nil && err != discord.ErrWebhookNotConfigured && err != discord.ErrUsedDefaultWebhook {
 						log.Errorf("Error sending discord message: %s", err.Error())
@@ -94,7 +94,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 							"JUST transferred into VATUSA and the div sync job hasn't run yet)",
 							user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision)
 
-						err := discord.SendWebhookMessage("seniorstaff", "ADH-PARTNERSHIP Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, VATSIM API indicates they are in %s, %s, %s "+
+						err := discord.SendWebhookMessage("seniorstaff", "Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, VATSIM API indicates they are in %s, %s, %s "+
 							"but VATUSA has them in a non-member facility (ZZN) -- verify eligibility and raise to VATUSA's Tech Manager as this should not happen (unless they "+
 							"JUST transferred into VATUSA and the div sync job hasn't run yet)",
 							user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))
