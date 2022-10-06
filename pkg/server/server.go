@@ -16,7 +16,7 @@ import (
 	"github.com/adh-partnership/api/internal/v1/router"
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/gin/middleware/auth"
 	ginLogger "github.com/adh-partnership/api/pkg/gin/middleware/logger"
@@ -66,13 +66,13 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Running migrations...")
 	err = database.DB.AutoMigrate(
-		&dbTypes.APIKeys{},
-		&dbTypes.Document{},
-		&dbTypes.EmailTemplate{},
-		&dbTypes.Flights{},
-		&dbTypes.Rating{},
-		&dbTypes.Role{},
-		&dbTypes.User{},
+		&models.APIKeys{},
+		&models.Document{},
+		&models.EmailTemplate{},
+		&models.Flights{},
+		&models.Rating{},
+		&models.Role{},
+		&models.User{},
 	)
 	if err != nil {
 		log.Errorf("Failed to run migrations: %v", err)

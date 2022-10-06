@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/geo"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/network/vatsim"
@@ -69,11 +69,11 @@ func HandleParseFlights() {
 		return
 	}
 
-	go database.DB.Where("updated_at < ?", time.Now().Add((time.Minute*5)*-1)).Delete(&dbTypes.Flights{})
+	go database.DB.Where("updated_at < ?", time.Now().Add((time.Minute*5)*-1)).Delete(&models.Flights{})
 
 	for i := 0; i < len(vatsimData.Flights); i++ {
 		flight := vatsimData.Flights[i]
-		f := &dbTypes.Flights{}
+		f := &models.Flights{}
 		if err := database.DB.Where("callsign = ?", flight.Callsign).First(f).Error; err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				log.Errorf("Error looking up flight (%s): %v", flight.Callsign, err)

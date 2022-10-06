@@ -10,7 +10,7 @@ import (
 	"github.com/adh-partnership/api/pkg/auth"
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
@@ -25,7 +25,7 @@ import (
 // @Router /v1/user/:cid [GET]
 func getUser(c *gin.Context) {
 	var err error
-	user := c.MustGet("x-user").(*dbTypes.User)
+	user := c.MustGet("x-user").(*models.User)
 
 	if c.Param("cid") != "" {
 		user, err = database.FindUserByCID(c.Param("cid"))
@@ -55,7 +55,7 @@ func getUser(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/user/:cid [PATCH]
 func patchUser(c *gin.Context) {
-	user := c.MustGet("x-user").(*dbTypes.User)
+	user := c.MustGet("x-user").(*models.User)
 	status := 200
 
 	// If cid is set to 0 or not defined, user is patching their own information
@@ -123,8 +123,8 @@ func patchUser(c *gin.Context) {
 	}
 
 	if req.ControllerType != oldUser.ControllerType {
-		if (oldUser.ControllerType == dbTypes.ControllerTypeOptions["home"] ||
-			oldUser.ControllerType == dbTypes.ControllerTypeOptions["visitor"]) &&
+		if (oldUser.ControllerType == models.ControllerTypeOptions["home"] ||
+			oldUser.ControllerType == models.ControllerTypeOptions["visitor"]) &&
 			req.RemovalReason == "" {
 
 			response.RespondError(c, http.StatusBadRequest, "Removal reason required")
@@ -134,11 +134,11 @@ func patchUser(c *gin.Context) {
 		var status int
 		var err error
 
-		if oldUser.ControllerType == dbTypes.ControllerTypeOptions["home"] {
+		if oldUser.ControllerType == models.ControllerTypeOptions["home"] {
 			status, err = vatusa.RemoveController(c.Param("cid"), user.CID, req.RemovalReason)
-		} else if oldUser.ControllerType == dbTypes.ControllerTypeOptions["visitor"] {
+		} else if oldUser.ControllerType == models.ControllerTypeOptions["visitor"] {
 			status, err = vatusa.RemoveVisitingController(c.Param("cid"), user.CID, req.RemovalReason)
-		} else if req.ControllerType == dbTypes.ControllerTypeOptions["visitor"] {
+		} else if req.ControllerType == models.ControllerTypeOptions["visitor"] {
 			status, err = vatusa.AddVisitingController(c.Param("cid"))
 		} else {
 			log.Errorf("Unknown controller type: %s", oldUser.ControllerType)

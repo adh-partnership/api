@@ -3,20 +3,20 @@ package auth
 import (
 	"testing"
 
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 )
 
 func TestCanUserModifyRole(t *testing.T) {
 	tests := []struct {
 		Name     string
-		User     *dbTypes.User
+		User     *models.User
 		Role     string
 		Expected bool
 	}{
 		{
 			Name: "ATM can modify ATM",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "atm",
 					},
@@ -27,8 +27,8 @@ func TestCanUserModifyRole(t *testing.T) {
 		},
 		{
 			Name: "EC cannot modify ATM",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "ec",
 					},
@@ -51,14 +51,14 @@ func TestCanUserModifyRole(t *testing.T) {
 func TestInGrou(t *testing.T) {
 	tests := []struct {
 		Name     string
-		User     *dbTypes.User
+		User     *models.User
 		Group    string
 		Expected bool
 	}{
 		{
 			Name: "ATM is in admin",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "atm",
 					},
@@ -69,8 +69,8 @@ func TestInGrou(t *testing.T) {
 		},
 		{
 			Name: "EC is not in admin",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "ec",
 					},
@@ -93,14 +93,14 @@ func TestInGrou(t *testing.T) {
 func TestHasRoleList(t *testing.T) {
 	tests := []struct {
 		Name     string
-		User     *dbTypes.User
+		User     *models.User
 		Roles    []string
 		Expected bool
 	}{
 		{
 			Name: "ATM has ATM",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "atm",
 					},
@@ -111,8 +111,8 @@ func TestHasRoleList(t *testing.T) {
 		},
 		{
 			Name: "ATM does not have EC",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "atm",
 					},
@@ -123,8 +123,8 @@ func TestHasRoleList(t *testing.T) {
 		},
 		{
 			Name: "ATM does not have EC, TA, or WM",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "atm",
 					},
@@ -147,14 +147,14 @@ func TestHasRoleList(t *testing.T) {
 func TestHasRole(t *testing.T) {
 	tests := []struct {
 		Name     string
-		User     *dbTypes.User
+		User     *models.User
 		Role     string
 		Expected bool
 	}{
 		{
 			Name: "ATM has ATM",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "atm",
 					},
@@ -165,8 +165,8 @@ func TestHasRole(t *testing.T) {
 		},
 		{
 			Name: "ATM does not have EC",
-			User: &dbTypes.User{
-				Roles: []*dbTypes.Role{
+			User: &models.User{
+				Roles: []*models.Role{
 					{
 						Name: "atm",
 					},

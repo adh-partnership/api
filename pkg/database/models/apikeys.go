@@ -1,4 +1,4 @@
-package types
+package models
 
 type APIKeys struct {
 	ID   int    `json:"id" example:"1"`

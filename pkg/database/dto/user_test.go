@@ -5,25 +5,25 @@ import (
 	"testing"
 	"time"
 
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 )
 
 func TestConvUserToUserResponse(t *testing.T) {
 	tim, _ := time.Parse("2006-01-02 15:04:05", "2020-01-01 00:00:00")
-	user := &dbTypes.User{
+	user := &models.User{
 		CID:               123,
 		FirstName:         "John",
 		LastName:          "Doe",
 		OperatingInitials: "JD",
-		ControllerType:    dbTypes.ControllerTypeOptions["home"],
-		DelCertification:  dbTypes.CertificationOptions["training"],
-		GndCertification:  dbTypes.CertificationOptions["major"],
-		LclCertification:  dbTypes.CertificationOptions["solo"],
-		AppCertification:  dbTypes.CertificationOptions["certified"],
-		CtrCertification:  dbTypes.CertificationOptions["cantrain"],
-		Rating:            dbTypes.Rating{Short: "C1", Long: "Controller"},
-		Status:            dbTypes.ControllerStatusOptions["active"],
-		Roles: []*dbTypes.Role{
+		ControllerType:    models.ControllerTypeOptions["home"],
+		DelCertification:  models.CertificationOptions["training"],
+		GndCertification:  models.CertificationOptions["major"],
+		LclCertification:  models.CertificationOptions["solo"],
+		AppCertification:  models.CertificationOptions["certified"],
+		CtrCertification:  models.CertificationOptions["cantrain"],
+		Rating:            models.Rating{Short: "C1", Long: "Controller"},
+		Status:            models.ControllerStatusOptions["active"],
+		Roles: []*models.Role{
 			{Name: "admin"},
 			{Name: "user"},
 		},
@@ -37,17 +37,17 @@ func TestConvUserToUserResponse(t *testing.T) {
 		FirstName:         "John",
 		LastName:          "Doe",
 		OperatingInitials: "JD",
-		ControllerType:    dbTypes.ControllerTypeOptions["home"],
+		ControllerType:    models.ControllerTypeOptions["home"],
 		Certiciations: UserResponseCertifications{
-			Delivery: dbTypes.CertificationOptions["training"],
-			Ground:   dbTypes.CertificationOptions["major"],
-			Local:    dbTypes.CertificationOptions["solo"],
-			Approach: dbTypes.CertificationOptions["certified"],
-			Enroute:  dbTypes.CertificationOptions["cantrain"],
+			Delivery: models.CertificationOptions["training"],
+			Ground:   models.CertificationOptions["major"],
+			Local:    models.CertificationOptions["solo"],
+			Approach: models.CertificationOptions["certified"],
+			Enroute:  models.CertificationOptions["cantrain"],
 		},
 		Rating:    "C1",
 		Roles:     []string{"admin", "user"},
-		Status:    dbTypes.ControllerStatusOptions["active"],
+		Status:    models.ControllerStatusOptions["active"],
 		DiscordID: "123456789",
 		CreatedAt: "2020-01-01T00:00:00Z",
 		UpdatedAt: "2020-01-01T00:00:00Z",
@@ -62,98 +62,98 @@ func TestConvUserToUserResponse(t *testing.T) {
 func TestPatchUserFromUserResponse(t *testing.T) {
 	tests := []struct {
 		Name           string
-		BaseUser       dbTypes.User
+		BaseUser       models.User
 		Patch          UserResponseAdmin
-		ExpectedUser   dbTypes.User
+		ExpectedUser   models.User
 		ExpectedErrors []string
 	}{
 		{
 			Name: "Patch OI",
-			BaseUser: dbTypes.User{
+			BaseUser: models.User{
 				OperatingInitials: "JD",
 			},
 			Patch: UserResponseAdmin{
 				OperatingInitials: "FB",
 			},
-			ExpectedUser: dbTypes.User{
+			ExpectedUser: models.User{
 				OperatingInitials: "FB",
 			},
 			ExpectedErrors: []string{},
 		},
 		{
 			Name: "Invalid OI",
-			BaseUser: dbTypes.User{
+			BaseUser: models.User{
 				OperatingInitials: "JD",
 			},
 			Patch: UserResponseAdmin{
 				OperatingInitials: "ABC",
 			},
-			ExpectedUser: dbTypes.User{
+			ExpectedUser: models.User{
 				OperatingInitials: "JD",
 			},
 			ExpectedErrors: []string{ErrInvalidOperatingInitials},
 		},
 		{
 			Name: "Patch ControllerType",
-			BaseUser: dbTypes.User{
-				ControllerType: dbTypes.ControllerTypeOptions["home"],
+			BaseUser: models.User{
+				ControllerType: models.ControllerTypeOptions["home"],
 			},
 			Patch: UserResponseAdmin{
-				ControllerType: dbTypes.ControllerTypeOptions["none"],
+				ControllerType: models.ControllerTypeOptions["none"],
 			},
-			ExpectedUser: dbTypes.User{
-				ControllerType: dbTypes.ControllerTypeOptions["none"],
+			ExpectedUser: models.User{
+				ControllerType: models.ControllerTypeOptions["none"],
 			},
 			ExpectedErrors: []string{},
 		},
 		{
 			Name: "Invalid ControllerType",
-			BaseUser: dbTypes.User{
-				ControllerType: dbTypes.ControllerTypeOptions["home"],
+			BaseUser: models.User{
+				ControllerType: models.ControllerTypeOptions["home"],
 			},
 			Patch: UserResponseAdmin{
 				ControllerType: "invalid",
 			},
-			ExpectedUser: dbTypes.User{
-				ControllerType: dbTypes.ControllerTypeOptions["home"],
+			ExpectedUser: models.User{
+				ControllerType: models.ControllerTypeOptions["home"],
 			},
 			ExpectedErrors: []string{ErrInvalidControllerType},
 		},
 		{
 			Name: "Patch Certification",
-			BaseUser: dbTypes.User{
-				DelCertification: dbTypes.CertificationOptions["training"],
-				GndCertification: dbTypes.CertificationOptions["major"],
-				LclCertification: dbTypes.CertificationOptions["solo"],
-				AppCertification: dbTypes.CertificationOptions["certified"],
-				CtrCertification: dbTypes.CertificationOptions["cantrain"],
+			BaseUser: models.User{
+				DelCertification: models.CertificationOptions["training"],
+				GndCertification: models.CertificationOptions["major"],
+				LclCertification: models.CertificationOptions["solo"],
+				AppCertification: models.CertificationOptions["certified"],
+				CtrCertification: models.CertificationOptions["cantrain"],
 			},
 			Patch: UserResponseAdmin{
 				Certiciations: UserResponseCertifications{
-					Delivery: dbTypes.CertificationOptions["none"],
-					Ground:   dbTypes.CertificationOptions["none"],
-					Local:    dbTypes.CertificationOptions["none"],
-					Approach: dbTypes.CertificationOptions["none"],
-					Enroute:  dbTypes.CertificationOptions["none"],
+					Delivery: models.CertificationOptions["none"],
+					Ground:   models.CertificationOptions["none"],
+					Local:    models.CertificationOptions["none"],
+					Approach: models.CertificationOptions["none"],
+					Enroute:  models.CertificationOptions["none"],
 				},
 			},
-			ExpectedUser: dbTypes.User{
-				DelCertification: dbTypes.CertificationOptions["none"],
-				GndCertification: dbTypes.CertificationOptions["none"],
-				LclCertification: dbTypes.CertificationOptions["none"],
-				AppCertification: dbTypes.CertificationOptions["none"],
-				CtrCertification: dbTypes.CertificationOptions["none"],
+			ExpectedUser: models.User{
+				DelCertification: models.CertificationOptions["none"],
+				GndCertification: models.CertificationOptions["none"],
+				LclCertification: models.CertificationOptions["none"],
+				AppCertification: models.CertificationOptions["none"],
+				CtrCertification: models.CertificationOptions["none"],
 			},
 			ExpectedErrors: []string{},
 		},
 		{
 			Name: "Invalid Certification",
-			BaseUser: dbTypes.User{
-				DelCertification: dbTypes.CertificationOptions["training"],
-				GndCertification: dbTypes.CertificationOptions["major"],
-				LclCertification: dbTypes.CertificationOptions["solo"],
-				AppCertification: dbTypes.CertificationOptions["certified"],
-				CtrCertification: dbTypes.CertificationOptions["cantrain"],
+			BaseUser: models.User{
+				DelCertification: models.CertificationOptions["training"],
+				GndCertification: models.CertificationOptions["major"],
+				LclCertification: models.CertificationOptions["solo"],
+				AppCertification: models.CertificationOptions["certified"],
+				CtrCertification: models.CertificationOptions["cantrain"],
 			},
 			Patch: UserResponseAdmin{
 				Certiciations: UserResponseCertifications{
@@ -164,24 +164,24 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 					Enroute:  "invalid",
 				},
 			},
-			ExpectedUser: dbTypes.User{
-				DelCertification: dbTypes.CertificationOptions["training"],
-				GndCertification: dbTypes.CertificationOptions["major"],
-				LclCertification: dbTypes.CertificationOptions["solo"],
-				AppCertification: dbTypes.CertificationOptions["certified"],
-				CtrCertification: dbTypes.CertificationOptions["cantrain"],
+			ExpectedUser: models.User{
+				DelCertification: models.CertificationOptions["training"],
+				GndCertification: models.CertificationOptions["major"],
+				LclCertification: models.CertificationOptions["solo"],
+				AppCertification: models.CertificationOptions["certified"],
+				CtrCertification: models.CertificationOptions["cantrain"],
 			},
 			ExpectedErrors: []string{ErrInvalidCertification, ErrInvalidCertification, ErrInvalidCertification, ErrInvalidCertification, ErrInvalidCertification},
 		},
 		{
 			Name: "Patch DiscordID",
-			BaseUser: dbTypes.User{
+			BaseUser: models.User{
 				DiscordID: "123456789",
 			},
 			Patch: UserResponseAdmin{
 				DiscordID: "987654321",
 			},
-			ExpectedUser: dbTypes.User{
+			ExpectedUser: models.User{
 				DiscordID: "987654321",
 			},
 			ExpectedErrors: []string{},
