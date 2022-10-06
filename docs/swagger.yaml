@@ -1,5 +1,12 @@
 basePath: /v1
 definitions:
+  dto.EventPositionRequest:
+    properties:
+      cid:
+        type: integer
+      position:
+        type: string
+    type: object
   dto.EventRequest:
     properties:
       banner:
@@ -11,6 +18,17 @@ definitions:
       start_date:
         type: string
       title:
+        type: string
+    type: object
+  dto.EventSignupRequest:
+    properties:
+      choice1:
+        type: string
+      choice2:
+        type: string
+      choice3:
+        type: string
+      notes:
         type: string
     type: object
   dto.FacilityStaffResponse:
@@ -316,8 +334,6 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/models.User'
-      userID:
-        type: integer
     type: object
   models.Rating:
     properties:
@@ -576,6 +592,202 @@ paths:
       summary: Patch Event
       tags:
       - Events
+  /events/{id}/positions:
+    get:
+      description: Get Positions for an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EventPosition'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Event Positions
+      tags:
+      - Events
+    post:
+      description: Add a position to an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Position. CID 0 means unassigned.
+        in: body
+        name: position
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EventPositionRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Add Event Position
+      tags:
+      - Events
+  /events/{id}/positions/{position}:
+    delete:
+      description: Delete a position from an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Position Name
+        in: path
+        name: position
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Delete Event Position
+      tags:
+      - Events
+    put:
+      description: Update a position for an event.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Position Name
+        in: path
+        name: position
+        required: true
+        type: string
+      - description: Position. CID 0 means unassigned.
+        in: body
+        name: position
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EventPositionRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Update Event Position
+      tags:
+      - Events
+  /events/{id}/signup:
+    delete:
+      description: Delete User Signup. This will only work for the logged in user.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Delete User Signup
+      tags:
+      - Events
+    post:
+      description: Create/Edit User Signup for Event. This will only work for the
+        logged in user.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Signup
+        in: body
+        name: signup
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EventSignupRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Create/Edit User Signup for Event
+      tags:
+      - Events
   /live/:facility:
     get:
       parameters:
@@ -588,7 +800,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -609,7 +821,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -630,7 +842,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error

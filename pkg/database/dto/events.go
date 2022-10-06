@@ -14,6 +14,18 @@ type EventRequest struct {
 	EndDate     *time.Time `json:"end_date"`
 }
 
+type EventPositionRequest struct {
+	Position string `json:"position"`
+	UserID   uint   `json:"cid"`
+}
+
+type EventSignupRequest struct {
+	Choice1 string `json:"choice1"`
+	Choice2 string `json:"choice2"`
+	Choice3 string `json:"choice3"`
+	Notes   string `json:"notes"`
+}
+
 func PatchEventRequest(base *models.Event, patch EventRequest) *models.Event {
 	if patch.Title != "" {
 		base.Title = patch.Title
