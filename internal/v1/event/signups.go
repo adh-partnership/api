@@ -22,7 +22,7 @@ import (
 // @Failure 403 {object} response.R
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id}/signup [post]
+// @Router /v1/events/{id}/signup [post]
 func postEventSignup(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {
@@ -83,7 +83,7 @@ func postEventSignup(c *gin.Context) {
 // @Failure 403 {object} response.R
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id}/signup [delete]
+// @Router /v1/events/{id}/signup [delete]
 func deleteEventSignup(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {

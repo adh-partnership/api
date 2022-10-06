@@ -18,7 +18,7 @@ import (
 // @Param limit query number false "Limit to X events, default 5 (max 10)"
 // @Success 200 {object} models.Event[]
 // @Failure 500 {object} response.R
-// @Router /events [get]
+// @Router /v1/events [get]
 func getEvents(c *gin.Context) {
 	var limit uint
 	if c.Query("limit") == "" {
@@ -48,7 +48,7 @@ func getEvents(c *gin.Context) {
 // @Success 200 {object} models.Event
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id} [get]
+// @Router /v1/events/{id} [get]
 func getEvent(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {
@@ -74,7 +74,7 @@ func getEvent(c *gin.Context) {
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events [post]
+// @Router /v1/events [post]
 func postEvent(c *gin.Context) {
 	var dto dto.EventRequest
 	if err := c.ShouldBindJSON(&dto); err != nil {
@@ -110,7 +110,7 @@ func postEvent(c *gin.Context) {
 // @Failure 403 {object} response.R
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id} [patch]
+// @Router /v1/events/{id} [patch]
 func patchEvent(c *gin.Context) {
 	var data dto.EventRequest
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -150,7 +150,7 @@ func patchEvent(c *gin.Context) {
 // @Failure 403 {object} response.R
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id} [delete]
+// @Router /v1/events/{id} [delete]
 func deleteEvent(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {

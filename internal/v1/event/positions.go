@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} models.EventPosition[]
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id}/positions [get]
+// @Router /v1/events/{id}/positions [get]
 func getEventPositions(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {
@@ -50,7 +50,7 @@ func getEventPositions(c *gin.Context) {
 // @Failure 404 {object} response.R
 // @Failure 409 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id}/positions [post]
+// @Router /v1/events/{id}/positions [post]
 func addEventPosition(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {
@@ -114,7 +114,7 @@ func addEventPosition(c *gin.Context) {
 // @Failure 400 {object} response.R
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id}/positions/{position} [put]
+// @Router /v1/events/{id}/positions/{position} [put]
 func updateEventPosition(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {
@@ -182,7 +182,7 @@ func updateEventPosition(c *gin.Context) {
 // @Success 204
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /events/{id}/positions/{position} [delete]
+// @Router /v1/events/{id}/positions/{position} [delete]
 func deleteEventPosition(c *gin.Context) {
 	event, err := database.GetEvent(c.Param("id"))
 	if err != nil {
