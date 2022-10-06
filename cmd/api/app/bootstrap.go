@@ -165,7 +165,7 @@ func newBootstrapCommand() *cli.Command {
 			}
 
 			for _, seed := range seeds {
-				log.Info("Seed: %+v", seed)
+				log.Infof("Seed: %+v", seed)
 				if err := database.DB.FirstOrCreate(seed, seed).Error; err != nil {
 					return err
 				}

@@ -66,7 +66,7 @@ To run locally, you'll need to setup a MySQL instance.
 
 4. Is there Swagger/OpenAPI documentation available?
 
-Yes, we have Swagger (OpenAPI 2.0) documentation available. When you start the API, the documentation can be found by visiting the root directory.  For example, if you are running the API on localhost on port 3000, you can visit http://localhost:3000/ to view the documentation.
+Yes, we have Swagger (OpenAPI 2.0) documentation available. When you start the API, the documentation can be found by visiting the root directory.  For example, if you are running the API on localhost on port 3000, you can visit <http://localhost:3000/> to view the documentation.
 
 ## License
 
