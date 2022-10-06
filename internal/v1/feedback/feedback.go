@@ -7,7 +7,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
@@ -22,7 +22,7 @@ import (
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
 func getFeedback(c *gin.Context) {
-	var feedback []dbTypes.Feedback
+	var feedback []models.Feedback
 
 	res := database.DB
 	if c.Query("cid") != "" {
@@ -55,13 +55,13 @@ func postFeedback(c *gin.Context) {
 		return
 	}
 
-	if !dbTypes.IsValidFeedbackRating(dto.Rating) {
+	if !models.IsValidFeedbackRating(dto.Rating) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid rating")
 		return
 	}
 
-	user := c.MustGet("x-user").(*dbTypes.User)
-	feedback := &dbTypes.Feedback{
+	user := c.MustGet("x-user").(*models.User)
+	feedback := &models.Feedback{
 		SubmitterCID:   user.CID,
 		SubmitterName:  user.FirstName + " " + user.LastName,
 		SubmitterEmail: user.Email,
@@ -69,7 +69,7 @@ func postFeedback(c *gin.Context) {
 		FlightCallsign: dto.FlightCallsign,
 		FlightDate:     dto.FlightDate,
 		Comments:       dto.Comments,
-		Status:         dbTypes.FeedbackStatus["pending"],
+		Status:         models.FeedbackStatus["pending"],
 		Rating:         dto.Rating,
 	}
 
@@ -99,12 +99,12 @@ func patchFeedback(c *gin.Context) {
 		return
 	}
 
-	if !dbTypes.IsValidFeedbackStatus(dtoFeedback.Status) {
+	if !models.IsValidFeedbackStatus(dtoFeedback.Status) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid status")
 		return
 	}
 
-	feedback := &dbTypes.Feedback{}
+	feedback := &models.Feedback{}
 	if err := database.DB.Where("id = ?", c.Param("id")).First(feedback).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return

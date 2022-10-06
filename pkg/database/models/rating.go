@@ -1,4 +1,4 @@
-package types
+package models
 
 type Rating struct {
 	ID    int    `json:"id" example:"1"`

@@ -10,7 +10,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	storagePackage "github.com/adh-partnership/api/pkg/storage"
@@ -21,14 +21,14 @@ import (
 // @Summary Get Storage Listing
 // @Tags storage
 // @Param category path string false "Category, if applicable"
-// @Success 200 {object} []dbTypes.Document
+// @Success 200 {object} []models.Document
 // @Failure 500 {object} response.R
 // @Router /v1/storage/:category [GET]
 func getStorage(c *gin.Context) {
-	storage := []dbTypes.Document{}
+	storage := []models.Document{}
 
 	if c.Param("category") != "" {
-		if err := database.DB.Where(dbTypes.Document{Category: c.Param("Category")}).Find(&storage).Error; err != nil {
+		if err := database.DB.Where(models.Document{Category: c.Param("Category")}).Find(&storage).Error; err != nil {
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
@@ -46,7 +46,7 @@ func getStorage(c *gin.Context) {
 // @Summary Create storage object
 // @Tags storage
 // @Param storage body dto.StorageRequest true "Storage Object"
-// @Success 201 {object} dbTypes.Document
+// @Success 201 {object} models.Document
 // @Failure 400 {object} response.R
 // @Failure 401 {object} response.R
 // @Failure 403 {object} response.R
@@ -59,12 +59,12 @@ func postStorage(c *gin.Context) {
 		return
 	}
 
-	s := &dbTypes.Document{
+	s := &models.Document{
 		Category:    storageRequest.Category,
 		Name:        storageRequest.Name,
 		Description: storageRequest.Description,
-		CreatedBy:   *c.MustGet("x-user").(*dbTypes.User),
-		UpdatedBy:   *c.MustGet("x-user").(*dbTypes.User),
+		CreatedBy:   *c.MustGet("x-user").(*models.User),
+		UpdatedBy:   *c.MustGet("x-user").(*models.User),
 	}
 
 	if err := database.DB.Create(&s).Error; err != nil {
@@ -79,7 +79,7 @@ func postStorage(c *gin.Context) {
 // @Tags storage
 // @Param storage body dto.StorageRequest true "Storage Object"
 // @Param id path int true "Storage ID"
-// @Success 200 {object} dbTypes.Document
+// @Success 200 {object} models.Document
 // @Failure 400 {object} response.R
 // @Failure 401 {object} response.R
 // @Failure 403 {object} response.R
@@ -93,17 +93,17 @@ func putStorage(c *gin.Context) {
 		return
 	}
 
-	s := &dbTypes.Document{}
+	s := &models.Document{}
 	if err := database.DB.First(&s, c.Param("id")).Error; err != nil {
 		response.RespondError(c, http.StatusNotFound, "Not Found")
 		return
 	}
 
-	if err := database.DB.Model(&s).Updates(dbTypes.Document{
+	if err := database.DB.Model(&s).Updates(models.Document{
 		Category:    storageRequest.Category,
 		Name:        storageRequest.Name,
 		Description: storageRequest.Description,
-		UpdatedBy:   *c.MustGet("x-user").(*dbTypes.User),
+		UpdatedBy:   *c.MustGet("x-user").(*models.User),
 	}).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -123,7 +123,7 @@ func putStorage(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/storage/:id [DELETE]
 func deleteStorage(c *gin.Context) {
-	s := &dbTypes.Document{}
+	s := &models.Document{}
 	if err := database.DB.First(&s, c.Param("id")).Error; err != nil {
 		response.RespondError(c, http.StatusNotFound, "Not Found")
 		return
@@ -161,7 +161,7 @@ func deleteStorage(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/storage/:id/file [PUT]
 func putStorageFile(c *gin.Context) {
-	s := &dbTypes.Document{}
+	s := &models.Document{}
 	if err := database.DB.First(&s, c.Param("id")).Error; err != nil {
 		response.RespondError(c, http.StatusNotFound, "Not Found")
 		return
@@ -206,7 +206,7 @@ func putStorageFile(c *gin.Context) {
 		return
 	}
 
-	s.UpdatedBy = *c.MustGet("x-user").(*dbTypes.User)
+	s.UpdatedBy = *c.MustGet("x-user").(*models.User)
 	s.URL = GenerateURL(fileSlug)
 	if err := database.DB.Save(&s).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")

@@ -5,7 +5,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/jobs/roster"
 	"github.com/adh-partnership/api/pkg/logger"
@@ -51,9 +51,9 @@ func newUpdateRosterCommand() *cli.Command {
 
 			log.Info("Running database migrations")
 			err = database.DB.AutoMigrate(
-				&dbTypes.DelayedJob{},
-				&dbTypes.EmailTemplate{},
-				&dbTypes.User{},
+				&models.DelayedJob{},
+				&models.EmailTemplate{},
+				&models.User{},
 			)
 			if err != nil {
 				return err

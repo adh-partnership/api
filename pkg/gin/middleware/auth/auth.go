@@ -8,7 +8,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/auth"
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/utils"
@@ -58,7 +58,7 @@ func NotGuest(c *gin.Context) {
 
 func HasRole(roles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user := c.MustGet("x-user").(*dbTypes.User)
+		user := c.MustGet("x-user").(*models.User)
 		if auth.HasRoleList(user, roles) {
 			c.Next()
 			return
@@ -70,7 +70,7 @@ func HasRole(roles ...string) gin.HandlerFunc {
 
 func InGroup(group ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user := c.MustGet("x-user").(*dbTypes.User)
+		user := c.MustGet("x-user").(*models.User)
 		for _, g := range group {
 			if auth.InGroup(user, g) {
 				c.Next()

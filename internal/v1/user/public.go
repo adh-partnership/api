@@ -9,7 +9,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/memcache"
 )
@@ -22,7 +22,7 @@ import (
 // @Failure 500 {object} response.R
 // @Router /v1/user/all [GET]
 func getFullRoster(c *gin.Context) {
-	users := []dbTypes.User{}
+	users := []models.User{}
 	ret := []*dto.UserResponse{}
 
 	if err := database.DB.Preload(clause.Associations).Find(&users).Error; err != nil {
@@ -45,10 +45,10 @@ func getFullRoster(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/user/roster [GET]
 func getRoster(c *gin.Context) {
-	users := []dbTypes.User{}
+	users := []models.User{}
 	ret := []*dto.UserResponse{}
 
-	if err := database.DB.Preload(clause.Associations).Not(&dbTypes.User{Status: dbTypes.ControllerStatusOptions["none"]}).Find(&users).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Not(&models.User{Status: models.ControllerStatusOptions["none"]}).Find(&users).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}

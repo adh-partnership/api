@@ -1,8 +1,6 @@
 package auth
 
-import (
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
-)
+import "github.com/adh-partnership/api/pkg/database/models"
 
 type Role struct {
 	Name        string
@@ -156,14 +154,14 @@ var Roles = map[string]Role{
 	},
 }
 
-func CanUserModifyRole(user *dbTypes.User, role string) bool {
+func CanUserModifyRole(user *models.User, role string) bool {
 	if _, ok := Roles[role]; !ok {
 		return false
 	}
 	return HasRoleList(user, Roles[role].RolesCanAdd)
 }
 
-func InGroup(user *dbTypes.User, group string) bool {
+func InGroup(user *models.User, group string) bool {
 	if _, ok := Groups[group]; !ok {
 		return false
 	}
@@ -171,7 +169,7 @@ func InGroup(user *dbTypes.User, group string) bool {
 	return HasRoleList(user, Groups[group])
 }
 
-func HasRoleList(user *dbTypes.User, roles []string) bool {
+func HasRoleList(user *models.User, roles []string) bool {
 	for _, r := range roles {
 		if HasRole(user, r) {
 			return true
@@ -180,7 +178,7 @@ func HasRoleList(user *dbTypes.User, roles []string) bool {
 	return false
 }
 
-func HasRole(user *dbTypes.User, role string) bool {
+func HasRole(user *models.User, role string) bool {
 	for _, r := range user.Roles {
 		if r.Name == role {
 			return true

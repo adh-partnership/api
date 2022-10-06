@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
@@ -36,14 +36,14 @@ type Flightsv1 struct {
 // @Router /v1/overflight [GET]
 // @Router /v1/overflight/:facility [GET]
 func getOverflights(c *gin.Context) {
-	var flights []dbTypes.Flights
+	var flights []models.Flights
 
 	facility := c.Param("fac")
 	if facility == "" {
 		facility = "ZDV"
 	}
 
-	if err := database.DB.Where(dbTypes.Flights{Facility: facility}).Find(&flights).Error; err != nil {
+	if err := database.DB.Where(models.Flights{Facility: facility}).Find(&flights).Error; err != nil {
 		log.Errorf("Error getting flights for facility %s: %s", facility, err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -80,14 +80,14 @@ func getOverflights(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /live/:facility [GET]
 func GetOverflightsLegacy(c *gin.Context) {
-	var flights []dbTypes.Flights
+	var flights []models.Flights
 
 	facility := c.Param("fac")
 	if facility == "" {
 		facility = "ZDV"
 	}
 
-	if err := database.DB.Where(dbTypes.Flights{Facility: facility}).Find(&flights).Error; err != nil {
+	if err := database.DB.Where(models.Flights{Facility: facility}).Find(&flights).Error; err != nil {
 		log.Errorf("Error getting flights for facility %s: %s", facility, err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return

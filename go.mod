@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
-	github.com/aws/aws-sdk-go v1.44.111
+	github.com/aws/aws-sdk-go v1.44.112
 	github.com/gabriel-vasile/mimetype v1.4.1
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/sessions v0.0.5
@@ -17,7 +17,6 @@ require (
 	github.com/imdario/mergo v0.3.13
 	github.com/jellydator/ttlcache/v3 v3.0.0
 	github.com/matoous/go-nanoid/v2 v2.0.0
-	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.0
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
@@ -73,10 +72,11 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
-	golang.org/x/crypto v0.0.0-20220924013350-4ba4fb4dd9e7 // indirect
-	golang.org/x/net v0.0.0-20220923203811-8be639271d50 // indirect
-	golang.org/x/sync v0.0.0-20220923202941-7f9b1623fab7 // indirect
-	golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 // indirect
+	go.uber.org/goleak v1.1.12 // indirect
+	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b // indirect
+	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
+	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
+	golang.org/x/sys v0.0.0-20220928140112-f11e5e49a4ec // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

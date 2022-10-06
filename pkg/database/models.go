@@ -7,13 +7,13 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
 var log = logger.Logger.WithField("component", "database")
 
-func AddRoleToUser(user *dbTypes.User, role *dbTypes.Role) error {
+func AddRoleToUser(user *models.User, role *models.Role) error {
 	if err := DB.Model(user).Association("Roles").Append(role); err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func AddRoleToUser(user *dbTypes.User, role *dbTypes.Role) error {
 	return nil
 }
 
-func RemoveRoleFromUser(user *dbTypes.User, role *dbTypes.Role) error {
+func RemoveRoleFromUser(user *models.User, role *models.Role) error {
 	if err := DB.Model(user).Association("Roles").Delete(role); err != nil {
 		return err
 	}
@@ -29,9 +29,9 @@ func RemoveRoleFromUser(user *dbTypes.User, role *dbTypes.Role) error {
 	return nil
 }
 
-func FindEmailTemplate(name string) (*dbTypes.EmailTemplate, error) {
-	template := &dbTypes.EmailTemplate{}
-	if err := DB.Where(dbTypes.EmailTemplate{Name: name}).First(template).Error; err != nil {
+func FindEmailTemplate(name string) (*models.EmailTemplate, error) {
+	template := &models.EmailTemplate{}
+	if err := DB.Where(models.EmailTemplate{Name: name}).First(template).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -41,11 +41,11 @@ func FindEmailTemplate(name string) (*dbTypes.EmailTemplate, error) {
 	return template, nil
 }
 
-func FindRole(name string) (*dbTypes.Role, error) {
-	role := &dbTypes.Role{}
-	if err := DB.Where(dbTypes.Role{Name: name}).First(role).Error; err != nil {
+func FindRole(name string) (*models.Role, error) {
+	role := &models.Role{}
+	if err := DB.Where(models.Role{Name: name}).First(role).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			role = &dbTypes.Role{
+			role = &models.Role{
 				Name: name,
 			}
 			if err := DB.Create(role).Error; err != nil {
@@ -59,8 +59,8 @@ func FindRole(name string) (*dbTypes.Role, error) {
 	return role, nil
 }
 
-func FindUsersWithRole(role string) ([]dbTypes.User, error) {
-	var users []dbTypes.User
+func FindUsersWithRole(role string) ([]models.User, error) {
+	var users []models.User
 
 	r, err := FindRole(role)
 	if err != nil {
@@ -74,9 +74,9 @@ func FindUsersWithRole(role string) ([]dbTypes.User, error) {
 	return users, nil
 }
 
-func FindUserByCID(cid string) (*dbTypes.User, error) {
-	user := &dbTypes.User{}
-	if err := DB.Preload(clause.Associations).Where(dbTypes.User{CID: atou(cid)}).First(&user).Error; err != nil {
+func FindUserByCID(cid string) (*models.User, error) {
+	user := &models.User{}
+	if err := DB.Preload(clause.Associations).Where(models.User{CID: atou(cid)}).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -86,9 +86,9 @@ func FindUserByCID(cid string) (*dbTypes.User, error) {
 	return user, nil
 }
 
-func FindOI(user *dbTypes.User) (string, error) {
+func FindOI(user *models.User) (string, error) {
 	oi := string(user.FirstName[0]) + string(user.LastName[0])
-	if err := DB.Where(dbTypes.User{OperatingInitials: oi}).First(&dbTypes.User{}).Error; err != nil {
+	if err := DB.Where(models.User{OperatingInitials: oi}).First(&models.User{}).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return oi, nil
 		}
@@ -98,9 +98,9 @@ func FindOI(user *dbTypes.User) (string, error) {
 	return "", nil
 }
 
-func FindRatingByShort(short string) (*dbTypes.Rating, error) {
-	rating := &dbTypes.Rating{}
-	if err := DB.Where(dbTypes.Rating{Short: short}).First(rating).Error; err != nil {
+func FindRatingByShort(short string) (*models.Rating, error) {
+	rating := &models.Rating{}
+	if err := DB.Where(models.Rating{Short: short}).First(rating).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -111,7 +111,7 @@ func FindRatingByShort(short string) (*dbTypes.Rating, error) {
 }
 
 func AddDelayedJob(queue, body string, duration time.Duration) error {
-	djob := &dbTypes.DelayedJob{
+	djob := &models.DelayedJob{
 		Queue:     queue,
 		Body:      body,
 		NotBefore: time.Now().Add(duration),

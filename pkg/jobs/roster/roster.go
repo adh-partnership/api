@@ -7,7 +7,7 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/facility"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/network/global"
@@ -45,10 +45,10 @@ func UpdateRoster() error {
 	}
 
 	// Users not part of the VATUSA roster will be removed from our roster
-	if err := database.DB.Model(&dbTypes.User{}).Not(dbTypes.User{UpdateID: updateid}).
+	if err := database.DB.Model(&models.User{}).Not(models.User{UpdateID: updateid}).
 		Or("update_id IS NULL").
-		Updates(dbTypes.User{
-			ControllerType: dbTypes.ControllerTypeOptions["none"],
+		Updates(models.User{
+			ControllerType: models.ControllerTypeOptions["none"],
 			UpdateID:       updateid,
 		}).Error; err != nil {
 		return err
@@ -59,10 +59,10 @@ func UpdateRoster() error {
 
 func UpdateForeignRoster() {
 	// Update foreign visitors
-	var users []dbTypes.User
+	var users []models.User
 	if err := database.DB.
-		Where(dbTypes.User{ControllerType: dbTypes.ControllerTypeOptions["visit"]}).
-		Not(dbTypes.User{Region: "AMAS", Division: "USA"}).Find(&users).Error; err != nil {
+		Where(models.User{ControllerType: models.ControllerTypeOptions["visit"]}).
+		Not(models.User{Region: "AMAS", Division: "USA"}).Find(&users).Error; err != nil {
 		log.Errorf("Error getting foreign visitors: %s", err)
 	}
 	for _, user := range users {

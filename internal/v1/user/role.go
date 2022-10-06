@@ -7,7 +7,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/auth"
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	models "github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/memcache"
 )
@@ -22,7 +22,7 @@ import (
 // @Router /v1/user/:cid/roles [GET]
 func getUserRoles(c *gin.Context) {
 	var err error
-	user := c.MustGet("x-user").(*dbTypes.User)
+	user := c.MustGet("x-user").(*models.User)
 
 	if c.Param("cid") != "" {
 		user, err = database.FindUserByCID(c.Param("cid"))
@@ -56,7 +56,7 @@ func getUserRoles(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/user/:cid/roles/:role [PUT]
 func putUserRoles(c *gin.Context) {
-	reqUser := c.MustGet("x-user").(*dbTypes.User)
+	reqUser := c.MustGet("x-user").(*models.User)
 
 	user, err := database.FindUserByCID(c.Param("cid"))
 	if err != nil {
@@ -116,7 +116,7 @@ func putUserRoles(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/user/:cid/roles/:role [DELETE]
 func deleteUserRoles(c *gin.Context) {
-	reqUser := c.MustGet("x-user").(*dbTypes.User)
+	reqUser := c.MustGet("x-user").(*models.User)
 
 	user, err := database.FindUserByCID(c.Param("cid"))
 	if err != nil {

@@ -2,7 +2,7 @@ package dto
 
 import (
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 )
 
 type UserResponse struct {
@@ -53,7 +53,7 @@ type FacilityStaffResponse struct {
 	WM   []*UserResponse `json:"wm" yaml:"wm" xml:"wm"`
 }
 
-func ConvUserToUserResponse(user *dbTypes.User) *UserResponse {
+func ConvUserToUserResponse(user *models.User) *UserResponse {
 	roles := []string{}
 	if user.Roles != nil {
 		for _, role := range user.Roles {
@@ -91,7 +91,7 @@ const (
 	ErrInvalidStatus            = "invalid status"
 )
 
-func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmin) []string {
+func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin) []string {
 	var errs []string
 
 	if len(userResponse.OperatingInitials) != 2 && userResponse.OperatingInitials != "" {
@@ -101,7 +101,7 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmi
 	}
 
 	if userResponse.ControllerType != "" {
-		if _, ok := dbTypes.ControllerTypeOptions[userResponse.ControllerType]; !ok {
+		if _, ok := models.ControllerTypeOptions[userResponse.ControllerType]; !ok {
 			errs = append(errs, ErrInvalidControllerType)
 		} else {
 			user.ControllerType = userResponse.ControllerType
@@ -109,7 +109,7 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmi
 	}
 
 	if userResponse.Certiciations.Delivery != "" {
-		if _, ok := dbTypes.CertificationOptions[userResponse.Certiciations.Delivery]; !ok {
+		if _, ok := models.CertificationOptions[userResponse.Certiciations.Delivery]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
 			user.DelCertification = userResponse.Certiciations.Delivery
@@ -117,7 +117,7 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmi
 	}
 
 	if userResponse.Certiciations.Ground != "" {
-		if _, ok := dbTypes.CertificationOptions[userResponse.Certiciations.Ground]; !ok {
+		if _, ok := models.CertificationOptions[userResponse.Certiciations.Ground]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
 			user.GndCertification = userResponse.Certiciations.Ground
@@ -125,7 +125,7 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmi
 	}
 
 	if userResponse.Certiciations.Local != "" {
-		if _, ok := dbTypes.CertificationOptions[userResponse.Certiciations.Local]; !ok {
+		if _, ok := models.CertificationOptions[userResponse.Certiciations.Local]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
 			user.LclCertification = userResponse.Certiciations.Local
@@ -133,7 +133,7 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmi
 	}
 
 	if userResponse.Certiciations.Approach != "" {
-		if _, ok := dbTypes.CertificationOptions[userResponse.Certiciations.Approach]; !ok {
+		if _, ok := models.CertificationOptions[userResponse.Certiciations.Approach]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
 			user.AppCertification = userResponse.Certiciations.Approach
@@ -141,7 +141,7 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmi
 	}
 
 	if userResponse.Certiciations.Enroute != "" {
-		if _, ok := dbTypes.CertificationOptions[userResponse.Certiciations.Enroute]; !ok {
+		if _, ok := models.CertificationOptions[userResponse.Certiciations.Enroute]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
 			user.CtrCertification = userResponse.Certiciations.Enroute
@@ -153,7 +153,7 @@ func PatchUserFromUserResponse(user *dbTypes.User, userResponse UserResponseAdmi
 	}
 
 	if userResponse.Status != "" {
-		if _, ok := dbTypes.ControllerStatusOptions[userResponse.Status]; !ok {
+		if _, ok := models.ControllerStatusOptions[userResponse.Status]; !ok {
 			errs = append(errs, ErrInvalidStatus)
 		} else {
 			user.Status = userResponse.Status

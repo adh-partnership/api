@@ -1,8 +1,6 @@
 package dto
 
-import (
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
-)
+import "github.com/adh-partnership/api/pkg/database/models"
 
 type FeedbackRequest struct {
 	FlightDate     string `json:"flight_date"`
@@ -33,7 +31,7 @@ type FeedbackResponse struct {
 	CreatedAt        string `json:"created_at"`
 }
 
-func ConvertFeedbacktoResponse(feedback []dbTypes.Feedback) []FeedbackResponse {
+func ConvertFeedbacktoResponse(feedback []models.Feedback) []FeedbackResponse {
 	var ret []FeedbackResponse
 
 	for _, f := range feedback {

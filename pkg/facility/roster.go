@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/adh-partnership/api/pkg/database"
-	dbTypes "github.com/adh-partnership/api/pkg/database/types"
+	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/network/global"
@@ -25,16 +25,16 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 		if user == nil {
 			log.Infof("New user on roster: %d", controller.CID)
 			create = true
-			user = &dbTypes.User{
+			user = &models.User{
 				CID:              uint(controller.CID),
 				FirstName:        controller.FirstName,
 				LastName:         controller.LastName,
-				ControllerType:   dbTypes.ControllerTypeOptions["none"],
-				DelCertification: dbTypes.CertificationOptions["none"],
-				GndCertification: dbTypes.CertificationOptions["none"],
-				LclCertification: dbTypes.CertificationOptions["none"],
-				AppCertification: dbTypes.CertificationOptions["none"],
-				CtrCertification: dbTypes.CertificationOptions["none"],
+				ControllerType:   models.ControllerTypeOptions["none"],
+				DelCertification: models.CertificationOptions["none"],
+				GndCertification: models.CertificationOptions["none"],
+				LclCertification: models.CertificationOptions["none"],
+				AppCertification: models.CertificationOptions["none"],
+				CtrCertification: models.CertificationOptions["none"],
 			}
 			oi, err := database.FindOI(user)
 			if err != nil {
@@ -106,12 +106,12 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 					}
 				}
 			}
-			user.Status = dbTypes.ControllerTypeOptions["visitor"]
+			user.Status = models.ControllerTypeOptions["visitor"]
 		} else if controller.Membership == "home" {
-			user.Status = dbTypes.ControllerTypeOptions["home"]
+			user.Status = models.ControllerTypeOptions["home"]
 		} else {
 			// This shouldn't happen... but...
-			user.Status = dbTypes.ControllerTypeOptions["none"]
+			user.Status = models.ControllerTypeOptions["none"]
 		}
 
 		if create {
