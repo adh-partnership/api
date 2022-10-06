@@ -29,6 +29,30 @@ func RemoveRoleFromUser(user *models.User, role *models.Role) error {
 	return nil
 }
 
+func GetEvents(limit int) ([]models.Event, error) {
+	var events []models.Event
+
+	c := DB.Preload(clause.Associations).Where("start_date > ?", time.Now()).Order("start_date asc")
+	if limit > 0 {
+		c = c.Limit(limit)
+	}
+
+	if err := c.Find(&events).Error; err != nil {
+		return nil, err
+	}
+
+	return events, nil
+}
+
+func GetEvent(id string) (*models.Event, error) {
+	event := &models.Event{}
+	if err := DB.Preload(clause.Associations).Where(models.Event{ID: atou(id)}).First(event).Error; err != nil {
+		return nil, err
+	}
+
+	return event, nil
+}
+
 func FindEmailTemplate(name string) (*models.EmailTemplate, error) {
 	template := &models.EmailTemplate{}
 	if err := DB.Where(models.EmailTemplate{Name: name}).First(template).Error; err != nil {
@@ -131,4 +155,8 @@ func atou(a string) uint {
 		return 0
 	}
 	return uint(i)
+}
+
+func Atou(a string) uint {
+	return atou(a)
 }

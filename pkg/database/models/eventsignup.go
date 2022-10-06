@@ -3,9 +3,9 @@ package models
 import "time"
 
 type EventSignup struct {
-	ID        int   `json:"id" gorm:"primaryKey"`
-	EventID   int   `json:"-"`
-	Event     Event `json:"-"`
+	ID        uint  `json:"id" gorm:"primaryKey"`
+	EventID   uint  `json:"-"`
+	Event     Event `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	UserID    uint
 	User      User      `json:"user"`
 	Choice1   string    `json:"choice1" gorm:"type:varchar(25)"`

@@ -3,9 +3,9 @@ package models
 import "time"
 
 type EventPosition struct {
-	ID        int       `json:"id"`
-	EventID   int       `json:"-" gorm:"index:event_position"`
-	Event     Event     `json:"event"`
+	ID        uint      `json:"id"`
+	EventID   uint      `json:"-" gorm:"index:event_position"`
+	Event     Event     `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Position  string    `json:"position" gorm:"index:event_position"`
 	UserID    uint      `json:"-"`
 	User      User      `json:"user"`

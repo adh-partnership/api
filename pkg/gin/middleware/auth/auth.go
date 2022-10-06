@@ -59,7 +59,7 @@ func NotGuest(c *gin.Context) {
 func HasRole(roles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user := c.MustGet("x-user").(*models.User)
-		if auth.HasRoleList(user, roles) {
+		if auth.HasRoleList(user, roles) || auth.InGroup(user, "admin") {
 			c.Next()
 			return
 		}
@@ -72,11 +72,12 @@ func InGroup(group ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user := c.MustGet("x-user").(*models.User)
 		for _, g := range group {
-			if auth.InGroup(user, g) {
+			if auth.InGroup(user, g) || auth.InGroup(user, "admin") {
 				c.Next()
 				return
 			}
 		}
+
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		c.Abort()
 	}

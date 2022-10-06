@@ -1,9 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Event struct {
-	ID          int             `json:"id" gorm:"primaryKey"`
+	ID          uint            `json:"id" gorm:"primaryKey"`
 	Title       string          `json:"title"`
 	Description string          `json:"description"`
 	Banner      string          `json:"banner"`

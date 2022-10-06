@@ -5,8 +5,6 @@ type Config struct {
 	Database ConfigDatabase `json:"database"`
 	Discord  ConfigDiscord  `json:"discord"`
 	Email    ConfigEmail    `json:"email"`
-	RabbitMQ ConfigRabbitMQ `json:"rabbitmq"`
-	Redis    ConfigRedis    `json:"redis"`
 	Session  ConfigSession  `json:"session"`
 	OAuth    ConfigOAuth    `json:"oauth"`
 	VATUSA   ConfigVATUSA   `json:"vatusa"`
@@ -37,22 +35,6 @@ type ConfigEmail struct {
 	User     string `json:"user"`
 	Password string `json:"password"`
 	From     string `json:"from"`
-}
-
-type ConfigRabbitMQ struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	User     string `json:"user"`
-	Password string `json:"password"`
-}
-
-type ConfigRedis struct {
-	Password      string   `json:"password"`
-	Database      int      `json:"database"`
-	Address       string   `json:"address"`
-	Sentinel      bool     `json:"sentinel"`
-	MasterName    string   `json:"master_name"`
-	SentinelAddrs []string `json:"sentinel_addrs"`
 }
 
 type ConfigSession struct {

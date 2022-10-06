@@ -1,5 +1,18 @@
 basePath: /v1
 definitions:
+  dto.EventRequest:
+    properties:
+      banner:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      start_date:
+        type: string
+      title:
+        type: string
+    type: object
   dto.FacilityStaffResponse:
     properties:
       atm:
@@ -104,8 +117,6 @@ definitions:
       operating_initials:
         type: string
       rating:
-        type: string
-      removal_reason:
         type: string
       roles:
         items:
@@ -213,13 +224,7 @@ definitions:
         example: C208
         type: string
     type: object
-  response.R:
-    properties:
-      data: {}
-      status:
-        type: string
-    type: object
-  types.Document:
+  models.Document:
     properties:
       category:
         example: sops
@@ -228,7 +233,7 @@ definitions:
         example: "2020-01-01T00:00:00Z"
         type: string
       created_by:
-        $ref: '#/definitions/types.User'
+        $ref: '#/definitions/models.User'
       created_by_id:
         example: 1
         type: integer
@@ -245,7 +250,7 @@ definitions:
         example: "2020-01-01T00:00:00Z"
         type: string
       updated_by:
-        $ref: '#/definitions/types.User'
+        $ref: '#/definitions/models.User'
       updated_by_id:
         example: 1
         type: integer
@@ -253,7 +258,68 @@ definitions:
         example: https://www.example.com/document.pdf
         type: string
     type: object
-  types.Rating:
+  models.Event:
+    properties:
+      banner:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: integer
+      positions:
+        items:
+          $ref: '#/definitions/models.EventPosition'
+        type: array
+      signups:
+        items:
+          $ref: '#/definitions/models.EventSignup'
+        type: array
+      start_date:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.EventPosition:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      position:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
+  models.EventSignup:
+    properties:
+      choice1:
+        type: string
+      choice2:
+        type: string
+      choice3:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      notes:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      userID:
+        type: integer
+    type: object
+  models.Rating:
     properties:
       id:
         example: 1
@@ -265,7 +331,7 @@ definitions:
         example: OBS
         type: string
     type: object
-  types.Role:
+  models.Role:
     properties:
       created_at:
         type: string
@@ -279,10 +345,10 @@ definitions:
         type: string
       users:
         items:
-          $ref: '#/definitions/types.User'
+          $ref: '#/definitions/models.User'
         type: array
     type: object
-  types.User:
+  models.User:
     properties:
       appCertification:
         description: 'Must be one of : none, training, solo, certified, major, cantrain'
@@ -333,13 +399,13 @@ definitions:
         example: DH
         type: string
       rating:
-        $ref: '#/definitions/types.Rating'
+        $ref: '#/definitions/models.Rating'
       region:
         example: AMAS
         type: string
       roles:
         items:
-          $ref: '#/definitions/types.Role'
+          $ref: '#/definitions/models.Role'
         type: array
       status:
         description: 'Must be one of: none, active, inactive, loa'
@@ -356,18 +422,160 @@ definitions:
         description: Internally used identifier during scheduled updates for removals
         type: string
     type: object
+  response.R:
+    properties:
+      data: {}
+      status:
+        type: string
+    type: object
 host: network.denartcc.org
 info:
   contact:
-    email: wm@denartcc.org
+    email: daniel@hawton.org
     name: Daniel Hawton
   description: Session Cookie
   license:
     name: Apache
-    url: https://github.com/adh-partnership/api2/blob/main/LICENSE
-  title: ADH-PARTNERSHIP API
+    url: https://github.com/adh-partnership/api/blob/main/LICENSE
+  title: ADH API
   version: "1.0"
 paths:
+  /events:
+    get:
+      description: Get Upcoming Events
+      parameters:
+      - description: Limit to X events, default 5 (max 10)
+        in: query
+        name: limit
+        type: number
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Events
+      tags:
+      - Events
+    post:
+      description: Create an event
+      parameters:
+      - description: Event Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EventRequest'
+      responses:
+        "201":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Create Event
+      tags:
+      - Events
+  /events/{id}:
+    delete:
+      description: Delete an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Delete Event
+      tags:
+      - Events
+    get:
+      description: Get an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Event
+      tags:
+      - Events
+    patch:
+      description: Patch an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Event Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EventRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Patch Event
+      tags:
+      - Events
   /live/:facility:
     get:
       parameters:
@@ -444,7 +652,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Document'
+            $ref: '#/definitions/models.Document'
         "400":
           description: Bad Request
           schema:
@@ -476,7 +684,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Document'
+              $ref: '#/definitions/models.Document'
             type: array
         "500":
           description: Internal Server Error
@@ -538,7 +746,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Document'
+            $ref: '#/definitions/models.Document'
         "400":
           description: Bad Request
           schema:
@@ -750,6 +958,26 @@ paths:
           schema:
             $ref: '#/definitions/response.R'
       summary: Add User Role
+      tags:
+      - user
+  /v1/user/all:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.UserResponse'
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Full Roster
       tags:
       - user
   /v1/user/login:

@@ -49,7 +49,6 @@ fi
 pushd $dir/..
 
 make test
-make docs
 go get -v ./...
 make docs
 make build

@@ -12,17 +12,223 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "Daniel Hawton",
-            "email": "wm@denartcc.org"
+            "email": "daniel@hawton.org"
         },
         "license": {
             "name": "Apache",
-            "url": "https://github.com/adh-partnership/api2/blob/main/LICENSE"
+            "url": "https://github.com/adh-partnership/api/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/events": {
+            "get": {
+                "description": "Get Upcoming Events",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get Events",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "Limit to X events, default 5 (max 10)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Event"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create an event",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Create Event",
+                "parameters": [
+                    {
+                        "description": "Event Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.EventRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "description": "Get an event",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get Event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Event"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an event",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Delete Event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Patch an event",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Patch Event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Event Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.EventRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Event"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/live/:facility": {
             "get": {
                 "tags": [
@@ -143,7 +349,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Document"
+                            "$ref": "#/definitions/models.Document"
                         }
                     },
                     "400": {
@@ -193,7 +399,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Document"
+                                "$ref": "#/definitions/models.Document"
                             }
                         }
                     },
@@ -234,7 +440,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Document"
+                            "$ref": "#/definitions/models.Document"
                         }
                     },
                     "400": {
@@ -611,6 +817,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/user/all": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get Full Roster",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.UserResponse"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/user/login": {
             "get": {
                 "tags": [
@@ -741,6 +978,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.EventRequest": {
+            "type": "object",
+            "properties": {
+                "banner": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.FacilityStaffResponse": {
             "type": "object",
             "properties": {
@@ -901,9 +1158,6 @@ const docTemplate = `{
                 "rating": {
                     "type": "string"
                 },
-                "removal_reason": {
-                    "type": "string"
-                },
                 "roles": {
                     "type": "array",
                     "items": {
@@ -1052,16 +1306,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.R": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.Document": {
+        "models.Document": {
             "type": "object",
             "properties": {
                 "category": {
@@ -1073,7 +1318,7 @@ const docTemplate = `{
                     "example": "2020-01-01T00:00:00Z"
                 },
                 "created_by": {
-                    "$ref": "#/definitions/types.User"
+                    "$ref": "#/definitions/models.User"
                 },
                 "created_by_id": {
                     "type": "integer",
@@ -1096,7 +1341,7 @@ const docTemplate = `{
                     "example": "2020-01-01T00:00:00Z"
                 },
                 "updated_by": {
-                    "$ref": "#/definitions/types.User"
+                    "$ref": "#/definitions/models.User"
                 },
                 "updated_by_id": {
                     "type": "integer",
@@ -1108,7 +1353,100 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Rating": {
+        "models.Event": {
+            "type": "object",
+            "properties": {
+                "banner": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "positions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.EventPosition"
+                    }
+                },
+                "signups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.EventSignup"
+                    }
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EventPosition": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                }
+            }
+        },
+        "models.EventSignup": {
+            "type": "object",
+            "properties": {
+                "choice1": {
+                    "type": "string"
+                },
+                "choice2": {
+                    "type": "string"
+                },
+                "choice3": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Rating": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1125,7 +1463,7 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Role": {
+        "models.Role": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -1145,12 +1483,12 @@ const docTemplate = `{
                 "users": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/types.User"
+                        "$ref": "#/definitions/models.User"
                     }
                 }
             }
         },
-        "types.User": {
+        "models.User": {
             "type": "object",
             "properties": {
                 "appCertification": {
@@ -1216,7 +1554,7 @@ const docTemplate = `{
                     "example": "DH"
                 },
                 "rating": {
-                    "$ref": "#/definitions/types.Rating"
+                    "$ref": "#/definitions/models.Rating"
                 },
                 "region": {
                     "type": "string",
@@ -1225,7 +1563,7 @@ const docTemplate = `{
                 "roles": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/types.Role"
+                        "$ref": "#/definitions/models.Role"
                     }
                 },
                 "status": {
@@ -1247,6 +1585,15 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "response.R": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "status": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -1262,7 +1609,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "network.denartcc.org",
 	BasePath:         "/v1",
 	Schemes:          []string{},
-	Title:            "ADH-PARTNERSHIP API",
+	Title:            "ADH API",
 	Description:      "Session Cookie",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
