@@ -6,10 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/adh-partnership/api/pkg/database"
-	// Needed for docs
 	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
-	_ "github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
