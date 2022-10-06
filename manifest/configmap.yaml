@@ -14,35 +14,34 @@ data:
       password: {{.DB_PASSWORD | default "root"}}
       database: {{.DB_DATABASE | default "zdv"}}
       automigrate: true
-    discord:
-      webhooks:
-        events: {{.DISCORD_WEBHOOK_EVENTS}}
-        seniorstaff: {{.DISCORD_WEBHOOK_SENIORSTAFF}}
-        staffup: {{.DISCORD_WEBHOOK_STAFFUP}}
-        training: {{.DISCORD_WEBHOOK_TRAINING}}
-        default: {{.DISCORD_WEBHOOK_DEFAULT}}
-    redis:
-      address: {{.REDIS_HOST | default "redis.redis.svc.cluster.local:6379"}}
-      database: 0
-      password: {{.REDIS_PASSWORD | default "secret"}}
-      sentinel: {{.REDIS_SENTINEL | default false}}
-      master_name: {{.REDIS_MASTER_NAME | default "master"}}
-      # sentinel_addrs is an array that cannot be easily expressed in shell... use config map
-      sentinel_addrs:
-        - "{{.REDIS_SENTINEL_HOST | default "redis.redis.svc.cluster.local:26379"}}"
+    email:
+      host: {{.EMAIL_HOST | default "localhost"}}
+      port: {{.EMAIL_PORT | default "25"}}
+      user: {{.EMAIL_USER | default "root"}}
+      password: {{.EMAIL_PASSWORD | default "root"}}
+      from: {{.EMAIL_FROM | default "root@localhost"}}
     session:
       cookie:
         name: "zdv_session"
-        secret: "{{.SESSION_SECRET | default "secret"}}"
+        key: "{{.SESSION_KEY | default "zdv_session"}}"
         max_age: 604800
-        domain: ".denartcc.org"
+        domain: "{{.SESSION_DOMAIN | default ".denartcc.org"}}"
         path: "/"
+    storage:
+      access_key: {{.STORAGE_ACCESS_KEY | default "12345"}}
+      secret_key: {{.STORAGE_SECRET_KEY | default "12345"}}
+      bucket: {{.STORAGE_BUCKET | default "denartcc"}}
+      region: {{.STORAGE_REGION | default "us-east-1"}}
+      endpoint: {{.STORAGE_ENDPOINT | default ""}}
     oauth:
-      base_URL: "https://auth.denartcc.org"
+      base_URL: "{{.OAUTH_BASEURL | default "https://auth.denartcc.org" }}"
       endpoints:
         token: "/oauth/token"
-        user: "/v1/user"
+        user: "/oauth/user"
         authorize: "/oauth/authorize"
       client_id: "{{.OAUTH_CLIENT_ID | default "zdv"}}"
       client_secret: "{{.OAUTH_CLIENT_SECRET | default "zdv"}}"
-      my_base_URL: "https://api.denartcc.org"
+      my_base_URL: "{{.OAUTH_MY_BASE_URL | default "https://api.dev.denartcc.org" }}"
+    vatusa:
+      facility: "{{.VATUSA_FACILITY | default "ZDV"}}"
+      api_key: "{{.VATUSA_API_KEY | default "zdv"}}"

@@ -32,7 +32,7 @@ func GetLocation(cid string) (Location, error) {
 	// We cannot query VATCAN without being a VATCAN FIR, so we will
 	// just report VATCAN as "AMAS, CAN, ''" for Canadians.
 	if loc.Region == "AMAS" && loc.Division == "USA" {
-		sub, err := vatusa.GetFacility(cid)
+		sub, err := vatusa.GetUserFacility(cid)
 		if err != nil {
 			return Location{}, err
 		}
