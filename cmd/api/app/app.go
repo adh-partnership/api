@@ -14,7 +14,6 @@ func NewRootCommand() *cli.App {
 		Usage: "ADH-PARTNERSHIP Monolithic API",
 		Commands: []*cli.Command{
 			newServerCommand(),
-			newRunnerCommand(),
 			newUpdateRosterCommand(),
 		},
 		Flags: []cli.Flag{

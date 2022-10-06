@@ -22,7 +22,6 @@ import (
 	ginLogger "github.com/adh-partnership/api/pkg/gin/middleware/logger"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/logger"
-	"github.com/adh-partnership/api/pkg/messaging"
 	"github.com/adh-partnership/api/pkg/oauth"
 	"github.com/adh-partnership/api/pkg/storage"
 )
@@ -67,8 +66,12 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Running migrations...")
 	err = database.DB.AutoMigrate(
+		&dbTypes.APIKeys{},
 		&dbTypes.Document{},
+		&dbTypes.EmailTemplate{},
 		&dbTypes.Flights{},
+		&dbTypes.Rating{},
+		&dbTypes.Role{},
 		&dbTypes.User{},
 	)
 	if err != nil {
@@ -78,23 +81,6 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Configuring Discord package")
 	discord.SetupWebhooks(cfg.Discord.Webhooks)
-
-	log.Info("Configuring RabbitMQ")
-	messaging.Setup(cfg.RabbitMQ.Host, cfg.RabbitMQ.Port, cfg.RabbitMQ.User, cfg.RabbitMQ.Password)
-
-	/*
-		Commented out while we plan for Redis and possible RabbitMQ
-
-			log.Info("Connecting to redis")
-			database.ConnectRedis(database.RedisOptions{
-				Password:      cfg.Redis.Password,
-				DB:            cfg.Redis.Database,
-				Sentinel:      cfg.Redis.Sentinel,
-				MasterName:    cfg.Redis.MasterName,
-				SentinelAddrs: cfg.Redis.SentinelAddrs,
-				Addr:          cfg.Redis.Address,
-			})
-	*/
 
 	log.Info("Building OAuth2 Client")
 	oauth.Build(
