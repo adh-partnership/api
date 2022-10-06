@@ -35,7 +35,14 @@ jobs:
       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Set branch
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: |-
+        # Set default branch name for PRs, as we still want to test build an image on PRs
+        # but we have no branch to set a tag for.
+        branch="test"
+        if [[ "$GITHUB_REF" == "refs/heads/*" ]]; then
+          branch="${GITHUB_REF#refs/heads/}"
+        fi
+        echo "::set-output name=branch::${branch}"
       id: extract_branch
     - name: Setup Go
       uses: actions/setup-go@v3
