@@ -82,14 +82,17 @@ func GetFacility(id string) (*VATUSAFacility, error) {
 		return nil, fmt.Errorf("invalid status code: %d", status)
 	}
 
-	var facility VATUSAFacility
+	type response struct {
+		Facility *VATUSAFacility `json:"data"`
+	}
 
-	err = json.Unmarshal(content, &facility)
+	r := response{}
+	err = json.Unmarshal(content, &r)
 	if err != nil {
 		return nil, err
 	}
 
-	return &facility, nil
+	return r.Facility, nil
 }
 
 // GetFacilityRoster will grab the facility roster from VATUSA. If membership is not specified, or it is not "home" or
