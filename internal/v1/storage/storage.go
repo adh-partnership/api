@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"github.com/gabriel-vasile/mimetype"
@@ -137,7 +138,7 @@ func deleteStorage(c *gin.Context) {
 	go func(url string) {
 		if url != "" {
 			slug := GetSlugFromURL(url)
-			err := storagePackage.Storage("uploads").DeleteObject(slug)
+			err := storagePackage.Storage("uploads").DeleteObject("uploads/" + slug)
 			if err != nil {
 				log.Errorf("Error deleting object from storage: %s", err.Error())
 				_ = discord.SendWebhookMessage("uploads", "API", fmt.Sprintf("Error deleting object %s from uploads storage: %v", slug, err))
@@ -169,6 +170,7 @@ func putStorageFile(c *gin.Context) {
 
 	file, err := c.FormFile("file")
 	if err != nil {
+		log.Warnf("Error getting file from request: %s", err.Error())
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
@@ -190,17 +192,33 @@ func putStorageFile(c *gin.Context) {
 			_ = discord.SendWebhookMessage("uploads", "API", fmt.Sprintf("Error deleting object %s from uploads storage: %v", slug, err))
 		}
 	}
-	fileSlug := fmt.Sprintf("%s.%s", utils.StringToSlug(s.Name), filepath.Ext(file.Filename))
+	fileSlug := fmt.Sprintf("uploads/%s%s", utils.StringToSlug(s.Name), filepath.Ext(file.Filename))
 
-	mtype, err := mimetype.DetectFile(file.Filename)
+	tmp, err := os.CreateTemp("", "storage")
 	if err != nil {
+		log.Errorf("Error creating temp file: %s", err.Error())
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+	err = c.SaveUploadedFile(file, tmp.Name())
+	if err != nil {
+		log.Errorf("Error saving uploaded file: %s", err.Error())
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	mtype, err := mimetype.DetectFile(tmp.Name())
+	if err != nil {
+		log.Warnf("Error detecting file mimetype: %s", err.Error())
+		os.Remove(tmp.Name())
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
 
-	err = storagePackage.Storage("uploads").PutObject(fileSlug, file.Filename, false, file.Size, mtype.String())
+	err = storagePackage.Storage("uploads").PutObject(fileSlug, tmp.Name(), false, file.Size, mtype.String())
 	if err != nil {
 		log.Errorf("Error uploading file to storage: %s", err.Error())
+		os.Remove(tmp.Name())
 		_ = discord.SendWebhookMessage("uploads", "API", fmt.Sprintf("Error uploading file %s to uploads storage: %v", fileSlug, err))
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -208,6 +226,7 @@ func putStorageFile(c *gin.Context) {
 
 	s.UpdatedBy = *c.MustGet("x-user").(*models.User)
 	s.URL = GenerateURL(fileSlug)
+	os.Remove(tmp.Name())
 	if err := database.DB.Save(&s).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return

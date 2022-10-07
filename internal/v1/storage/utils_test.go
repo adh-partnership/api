@@ -7,7 +7,7 @@ import (
 )
 
 func TestGenerateURL(t *testing.T) {
-	assert.Equal(t, "https://cdn.denartcc.org/uploads/test", GenerateURL("test"))
+	assert.Equal(t, "https://cdn.denartcc.org/test", GenerateURL("test"))
 }
 
 func TestGetSlugFromURL(t *testing.T) {
