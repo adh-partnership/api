@@ -37,4 +37,5 @@ oauth:
   client_secret: "{{.OAUTH_CLIENT_SECRET | default "zdv"}}"
   my_base_URL: "{{.OAUTH_MY_BASE_URL | default "https://api.dev.denartcc.org" }}"
 vatusa:
+  facility: "{{.VATUSA_FACILITY | default "ZDV"}}"
   api_key: "{{.VATUSA_API_KEY | default "zdv"}}"

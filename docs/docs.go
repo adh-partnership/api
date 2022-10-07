@@ -23,7 +23,40 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/events": {
+        "/live/:facility": {
+            "get": {
+                "tags": [
+                    "overflight"
+                ],
+                "summary": "Get Overflights for Facility [Legacy/Deprecated]",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Facility, defaults to ZDV if no facility id provided",
+                        "name": "fac",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/events": {
             "get": {
                 "description": "Get Upcoming Events",
                 "tags": [
@@ -95,7 +128,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/events/{id}": {
+        "/v1/events/{id}": {
             "get": {
                 "description": "Get an event",
                 "tags": [
@@ -229,7 +262,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/events/{id}/positions": {
+        "/v1/events/{id}/positions": {
             "get": {
                 "description": "Get Positions for an event",
                 "tags": [
@@ -324,7 +357,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/events/{id}/positions/{position}": {
+        "/v1/events/{id}/positions/{position}": {
             "put": {
                 "description": "Update a position for an event.",
                 "tags": [
@@ -424,7 +457,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/events/{id}/signup": {
+        "/v1/events/{id}/signup": {
             "post": {
                 "description": "Create/Edit User Signup for Event. This will only work for the logged in user.",
                 "tags": [
@@ -511,39 +544,6 @@ const docTemplate = `{
                         "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/live/:facility": {
-            "get": {
-                "tags": [
-                    "overflight"
-                ],
-                "summary": "Get Overflights for Facility [Legacy/Deprecated]",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Facility, defaults to ZDV if no facility id provided",
-                        "name": "fac",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
-                            }
                         }
                     },
                     "500": {

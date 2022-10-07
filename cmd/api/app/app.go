@@ -13,6 +13,8 @@ func NewRootCommand() *cli.App {
 		Name:  "app",
 		Usage: "ADH-PARTNERSHIP Monolithic API",
 		Commands: []*cli.Command{
+			newAddRoleCommand(),
+			newBootstrapCommand(),
 			newServerCommand(),
 			newUpdateRosterCommand(),
 		},
