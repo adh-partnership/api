@@ -456,7 +456,28 @@ info:
   title: ADH API
   version: "1.0"
 paths:
-  /events:
+  /live/:facility:
+    get:
+      parameters:
+      - description: Facility, defaults to ZDV if no facility id provided
+        in: path
+        name: fac
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Overflights for Facility [Legacy/Deprecated]
+      tags:
+      - overflight
+  /v1/events:
     get:
       description: Get Upcoming Events
       parameters:
@@ -503,7 +524,7 @@ paths:
       summary: Create Event
       tags:
       - Events
-  /events/{id}:
+  /v1/events/{id}:
     delete:
       description: Delete an event
       parameters:
@@ -592,7 +613,7 @@ paths:
       summary: Patch Event
       tags:
       - Events
-  /events/{id}/positions:
+  /v1/events/{id}/positions:
     get:
       description: Get Positions for an event
       parameters:
@@ -655,7 +676,7 @@ paths:
       summary: Add Event Position
       tags:
       - Events
-  /events/{id}/positions/{position}:
+  /v1/events/{id}/positions/{position}:
     delete:
       description: Delete a position from an event
       parameters:
@@ -722,7 +743,7 @@ paths:
       summary: Update Event Position
       tags:
       - Events
-  /events/{id}/signup:
+  /v1/events/{id}/signup:
     delete:
       description: Delete User Signup. This will only work for the logged in user.
       parameters:
@@ -788,27 +809,6 @@ paths:
       summary: Create/Edit User Signup for Event
       tags:
       - Events
-  /live/:facility:
-    get:
-      parameters:
-      - description: Facility, defaults to ZDV if no facility id provided
-        in: path
-        name: fac
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Overflights for Facility [Legacy/Deprecated]
-      tags:
-      - overflight
   /v1/overflight:
     get:
       parameters:

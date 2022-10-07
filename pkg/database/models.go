@@ -13,6 +13,15 @@ import (
 
 var log = logger.Logger.WithField("component", "database")
 
+func AddRoleStringToUser(user *models.User, role string) error {
+	r, err := FindRole(role)
+	if err != nil {
+		return err
+	}
+
+	return AddRoleToUser(user, r)
+}
+
 func AddRoleToUser(user *models.User, role *models.Role) error {
 	if err := DB.Model(user).Association("Roles").Append(role); err != nil {
 		return err

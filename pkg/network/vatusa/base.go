@@ -12,10 +12,7 @@ const (
 	baseURL = "https://api.vatusa.net/v2"
 )
 
-var (
-	FacilityID = "ZDV"
-	log        = logger.Logger.WithField("component", "network/vatusa")
-)
+var log = logger.Logger.WithField("component", "network/vatusa")
 
 func handle(method, endpoint string, formdata map[string]string) (int, []byte, error) {
 	data := url.Values{}
