@@ -17,3 +17,7 @@ func Routes(r *gin.RouterGroup) {
 
 	r.PUT("/:id/file", auth.NotGuest, auth.InGroup("files"), putStorageFile)
 }
+
+func SetBase(b string) {
+	base = b
+}

@@ -70,6 +70,7 @@ type ConfigVATUSA struct {
 }
 
 type ConfigStorage struct {
+	BaseURL   string `json:"base_URL"`
 	AccessKey string `json:"access_key"`
 	SecretKey string `json:"secret_key"`
 	Bucket    string `json:"bucket"`

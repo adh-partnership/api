@@ -14,6 +14,7 @@ import (
 	// For Swagger docs
 	_ "github.com/adh-partnership/api/docs"
 	"github.com/adh-partnership/api/internal/v1/router"
+	v1storage "github.com/adh-partnership/api/internal/v1/storage"
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
@@ -100,6 +101,10 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	_, err = storage.Configure(cfg.Storage, "uploads")
 	if err != nil {
 		return nil, err
+	}
+	if cfg.Storage.BaseURL != "" {
+		log.Infof(" - Setting BaseURL to %s", cfg.Storage.BaseURL)
+		v1storage.SetBase(cfg.Storage.BaseURL)
 	}
 
 	log.Info("Building gin engine")

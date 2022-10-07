@@ -1,11 +1,11 @@
 package storage
 
-const base = "https://cdn.denartcc.org/uploads/"
+var base = "https://cdn.denartcc.org/"
 
 func GenerateURL(slug string) string {
 	return base + slug
 }
 
 func GetSlugFromURL(url string) string {
-	return url[len(base):]
+	return url[len(base+"uploads/"):]
 }
