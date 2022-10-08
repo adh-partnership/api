@@ -17,7 +17,13 @@ email:
   user: {{.EMAIL_USER | default "root"}}
   password: {{.EMAIL_PASSWORD | default "root"}}
   from: {{.EMAIL_FROM | default "root@localhost"}}
+  cc:
+  - "atm@denartcc.org"
+  - "datm@denartcc.org"
 facility:
+  visiting:
+    discord_webhook_name: "visitor"
+    rating_min: S1
   stats:
     enabled: true
     discord_broadcast: true

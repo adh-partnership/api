@@ -3,6 +3,7 @@ package vatsim
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 var Ratings = [13]string{
@@ -44,6 +45,30 @@ func GetRating(cid string) (int, error) {
 	}
 
 	return rating.Rating, nil
+}
+
+// GetDateOfRatingChange returns the date of the last rating change of a VATSIM CID from the VATSIM API.
+func GetDateOfRatingChange(cid string) (*time.Time, error) {
+	status, contents, err := handle("GET", "/ratings/"+cid+"/", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if status > 299 {
+		log.Warnf("Failed to get rating for %s: %s", cid, contents)
+		return nil, fmt.Errorf("invalid status code: %d", status)
+	}
+
+	type rating struct {
+		LastRatingChange time.Time `json:"lastratingchange"`
+	}
+	ret := &rating{}
+	err = json.Unmarshal(contents, ret)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ret.LastRatingChange, nil
 }
 
 // GetLocation returns the Region, Division and Subdivision of a VATSIM CID

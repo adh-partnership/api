@@ -6,6 +6,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/database/models/constants"
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/network/global"
@@ -29,7 +30,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 				CID:              uint(controller.CID),
 				FirstName:        controller.FirstName,
 				LastName:         controller.LastName,
-				ControllerType:   models.ControllerTypeOptions["none"],
+				ControllerType:   constants.ControllerTypeNone,
 				DelCertification: models.CertificationOptions["none"],
 				GndCertification: models.CertificationOptions["none"],
 				LclCertification: models.CertificationOptions["none"],
@@ -106,12 +107,12 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 					}
 				}
 			}
-			user.Status = models.ControllerTypeOptions["visitor"]
+			user.Status = constants.ControllerTypeVisitor
 		} else if controller.Membership == "home" {
-			user.Status = models.ControllerTypeOptions["home"]
+			user.Status = constants.ControllerTypeHome
 		} else {
 			// This shouldn't happen... but...
-			user.Status = models.ControllerTypeOptions["none"]
+			user.Status = constants.ControllerTypeNone
 		}
 
 		if create {

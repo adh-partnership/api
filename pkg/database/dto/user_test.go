@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/database/models/constants"
 )
 
 func TestConvUserToUserResponse(t *testing.T) {
@@ -15,14 +16,14 @@ func TestConvUserToUserResponse(t *testing.T) {
 		FirstName:         "John",
 		LastName:          "Doe",
 		OperatingInitials: "JD",
-		ControllerType:    models.ControllerTypeOptions["home"],
+		ControllerType:    constants.ControllerTypeHome,
 		DelCertification:  models.CertificationOptions["training"],
 		GndCertification:  models.CertificationOptions["major"],
 		LclCertification:  models.CertificationOptions["solo"],
 		AppCertification:  models.CertificationOptions["certified"],
 		CtrCertification:  models.CertificationOptions["cantrain"],
 		Rating:            models.Rating{Short: "C1", Long: "Controller"},
-		Status:            models.ControllerStatusOptions["active"],
+		Status:            constants.ControllerStatusActive,
 		Roles: []*models.Role{
 			{Name: "admin"},
 			{Name: "user"},
@@ -37,7 +38,7 @@ func TestConvUserToUserResponse(t *testing.T) {
 		FirstName:         "John",
 		LastName:          "Doe",
 		OperatingInitials: "JD",
-		ControllerType:    models.ControllerTypeOptions["home"],
+		ControllerType:    constants.ControllerTypeHome,
 		Certiciations: UserResponseCertifications{
 			Delivery: models.CertificationOptions["training"],
 			Ground:   models.CertificationOptions["major"],
@@ -47,7 +48,7 @@ func TestConvUserToUserResponse(t *testing.T) {
 		},
 		Rating:    "C1",
 		Roles:     []string{"admin", "user"},
-		Status:    models.ControllerStatusOptions["active"],
+		Status:    constants.ControllerStatusActive,
 		DiscordID: "123456789",
 		CreatedAt: "2020-01-01T00:00:00Z",
 		UpdatedAt: "2020-01-01T00:00:00Z",
@@ -96,26 +97,26 @@ func TestPatchUserFromUserResponse(t *testing.T) {
 		{
 			Name: "Patch ControllerType",
 			BaseUser: models.User{
-				ControllerType: models.ControllerTypeOptions["home"],
+				ControllerType: constants.ControllerTypeHome,
 			},
 			Patch: UserResponseAdmin{
-				ControllerType: models.ControllerTypeOptions["none"],
+				ControllerType: constants.ControllerTypeNone,
 			},
 			ExpectedUser: models.User{
-				ControllerType: models.ControllerTypeOptions["none"],
+				ControllerType: constants.ControllerTypeNone,
 			},
 			ExpectedErrors: []string{},
 		},
 		{
 			Name: "Invalid ControllerType",
 			BaseUser: models.User{
-				ControllerType: models.ControllerTypeOptions["home"],
+				ControllerType: constants.ControllerTypeHome,
 			},
 			Patch: UserResponseAdmin{
 				ControllerType: "invalid",
 			},
 			ExpectedUser: models.User{
-				ControllerType: models.ControllerTypeOptions["home"],
+				ControllerType: constants.ControllerTypeHome,
 			},
 			ExpectedErrors: []string{ErrInvalidControllerType},
 		},
