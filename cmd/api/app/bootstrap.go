@@ -52,6 +52,7 @@ func newBootstrapCommand() *cli.Command {
 			log.Info("Running database migrations")
 			err = database.DB.AutoMigrate(
 				&models.APIKeys{},
+				&models.ControllerStat{},
 				&models.DelayedJob{},
 				&models.Document{},
 				&models.EmailTemplate{},
@@ -65,7 +66,9 @@ func newBootstrapCommand() *cli.Command {
 				&models.OAuthRefresh{},
 				&models.Rating{},
 				&models.Role{},
+				&models.TrainingNote{},
 				&models.User{},
+				&models.VisitorApplication{},
 			)
 			if err != nil {
 				return err

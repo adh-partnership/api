@@ -3,6 +3,7 @@ package dataparser
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/geo"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/network/vatsim"
@@ -94,11 +96,35 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 		}
 
 		c := &models.OnlineController{}
-		if err := database.DB.Where("position = ?", controller.Callsign).First(c).Error; err != nil {
+		if err := database.DB.Where("position = ?", controller.Callsign).FirstOrCreate(c).Error; err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				log.Errorf("Error looking up controller (%s): %v", controller.Callsign, err)
 				continue
 			}
+		}
+
+		if c.Position == "" {
+			// Safe to assume this is a new controller
+			go func() {
+				user, err := database.FindUserByCID(fmt.Sprint(controller.CID))
+				if err != nil || user == nil {
+					log.Errorf("Error finding user with CID %d: %v", controller.CID, err)
+					return
+				}
+				err = discord.SendWebhookMessage("online",
+					"Web API",
+					fmt.Sprintf(
+						"Controller Online! %s %s (%s) is now online as %s",
+						user.FirstName,
+						user.LastName,
+						user.OperatingInitials,
+						controller.Callsign,
+					),
+				)
+				if err != nil {
+					log.Errorf("Error sending discord webhook: %v", err)
+				}
+			}()
 		}
 
 		c.UserID = uint(controller.CID)
@@ -140,7 +166,7 @@ func parseFlights(flightDone chan bool, flights []*vatsim.VATSIMFlight) {
 
 	for _, flight := range flights {
 		f := &models.Flights{}
-		if err := database.DB.Where("callsign = ?", flight.Callsign).First(f).Error; err != nil {
+		if err := database.DB.Where("callsign = ?", flight.Callsign).FirstOrCreate(f).Error; err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				log.Errorf("Error looking up flight (%s): %v", flight.Callsign, err)
 				continue

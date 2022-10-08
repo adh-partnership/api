@@ -31,6 +31,14 @@ or [stretchr/testify](https://github.com/stretchr/testify).
 
 There are a few ways to use this... the preferred is using a Kubernetes deployment (see the manifests directory). However, you can also run this locally.
 
+### Hard Coded Discord Webhook Names
+
+These should be configured in the config.yaml file with appropriate webhook URLs.  The webhook names are:
+
+- online - Webhook for displaying online controllers
+- seniorstaff - Webhook for displaying senior staff messages
+- uploads - Action logs for uploaded files
+
 ### Kubernetes
 
 The `manifests/deployment.yaml` is an example of the deployment. We use an init-container to do environment variable substitution using notation similar to that of Helm.
