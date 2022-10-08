@@ -1,7 +1,19 @@
 package vatsim
 
+import "time"
+
 type VATSIMData struct {
-	Flights []VATSIMFlight `json:"pilots"`
+	Controllers []*VATSIMController `json:"controllers"`
+	Flights     []*VATSIMFlight     `json:"pilots"`
+}
+
+type VATSIMController struct {
+	CID       int        `json:"cid"`
+	Callsign  string     `json:"callsign"`
+	Frequency string     `json:"frequency"`
+	Facility  int        `json:"facility"`
+	Rating    int        `json:"rating"`
+	LogonTime *time.Time `json:"logon_time"`
 }
 
 type VATSIMFlight struct {

@@ -28,8 +28,9 @@ import (
 )
 
 type ServerStruct struct {
-	Engine *gin.Engine
-	Config *config.Config
+	Engine          *gin.Engine
+	Config          *config.Config
+	TrackedPrefixes map[string]bool
 }
 
 var Server *ServerStruct
@@ -50,6 +51,12 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	}
 	s.Config = cfg
 	config.Cfg = cfg
+
+	s.TrackedPrefixes = make(map[string]bool)
+
+	for _, prefix := range cfg.Facility.Stats.Prefixes {
+		s.TrackedPrefixes[prefix] = true
+	}
 
 	log.Info("Connecting to database")
 	err = database.Connect(database.DBOptions{
@@ -148,6 +155,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Registering routes")
 	router.SetupRoutes(s.Engine)
+	s.Engine.HandleMethodNotAllowed = true
 
 	Server = s
 
