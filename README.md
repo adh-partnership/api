@@ -35,6 +35,7 @@ There are a few ways to use this... the preferred is using a Kubernetes deployme
 
 These should be configured in the config.yaml file with appropriate webhook URLs.  The webhook names are:
 
+- default - If the webhook name is not found, this is used.. if not set, will be logged to console only.
 - online - Webhook for displaying online controllers
 - seniorstaff - Webhook for displaying senior staff messages
 - uploads - Action logs for uploaded files
