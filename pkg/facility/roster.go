@@ -31,11 +31,11 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 				FirstName:        controller.FirstName,
 				LastName:         controller.LastName,
 				ControllerType:   constants.ControllerTypeNone,
-				DelCertification: models.CertificationOptions["none"],
-				GndCertification: models.CertificationOptions["none"],
-				LclCertification: models.CertificationOptions["none"],
-				AppCertification: models.CertificationOptions["none"],
-				CtrCertification: models.CertificationOptions["none"],
+				DelCertification: constants.CertificationNone,
+				GndCertification: constants.CertificationNone,
+				LclCertification: constants.CertificationNone,
+				AppCertification: constants.CertificationNone,
+				CtrCertification: constants.CertificationNone,
 			}
 			oi, err := database.FindOI(user)
 			if err != nil {

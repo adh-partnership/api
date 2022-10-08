@@ -75,15 +75,23 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	log.Info("Running migrations...")
 	err = database.DB.AutoMigrate(
 		&models.APIKeys{},
+		&models.ControllerStat{},
+		&models.DelayedJob{},
 		&models.Document{},
 		&models.EmailTemplate{},
-		&models.Event{},
 		&models.EventPosition{},
+		&models.Event{},
 		&models.EventSignup{},
+		&models.Feedback{},
 		&models.Flights{},
+		&models.OAuthClient{},
+		&models.OAuthLogin{},
+		&models.OAuthRefresh{},
 		&models.Rating{},
 		&models.Role{},
+		&models.TrainingNote{},
 		&models.User{},
+		&models.VisitorApplication{},
 	)
 	if err != nil {
 		log.Errorf("Failed to run migrations: %v", err)
