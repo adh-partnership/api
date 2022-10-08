@@ -1,4 +1,4 @@
-package flightparser
+package dataparser
 
 import "github.com/adh-partnership/api/pkg/geo"
 

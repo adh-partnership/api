@@ -1,13 +1,15 @@
-package flightparser
+package dataparser
 
 import (
 	"encoding/json"
 	"errors"
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/go-co-op/gocron"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"gorm.io/gorm"
 
 	"github.com/adh-partnership/api/pkg/database"
@@ -15,6 +17,7 @@ import (
 	"github.com/adh-partnership/api/pkg/geo"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/network/vatsim"
+	"github.com/adh-partnership/api/pkg/server"
 )
 
 var fac []Facility
@@ -22,7 +25,7 @@ var fac []Facility
 var log = logger.Logger.WithField("component", "job/flightparser")
 
 func Initialize(cron *gocron.Scheduler) error {
-	_, err := cron.Every(1).Minute().SingletonMode().Do(HandleParseFlights)
+	_, err := cron.Every(1).Minute().SingletonMode().Do(handle)
 	if err != nil {
 		log.Errorf("Error scheduling ParseFlights: %v", err)
 		return err
@@ -60,7 +63,7 @@ func Initialize(cron *gocron.Scheduler) error {
 	return nil
 }
 
-func HandleParseFlights() {
+func handle() {
 	log.Debug("Handling parse flights")
 
 	vatsimData, err := vatsim.GetData()
@@ -69,10 +72,73 @@ func HandleParseFlights() {
 		return
 	}
 
-	go database.DB.Where("updated_at < ?", time.Now().Add((time.Minute*5)*-1)).Delete(&models.Flights{})
+	flightDone := make(chan bool)
+	atcDone := make(chan bool)
 
-	for i := 0; i < len(vatsimData.Flights); i++ {
-		flight := vatsimData.Flights[i]
+	go parseFlights(flightDone, vatsimData.Flights)
+	go parseATC(atcDone, vatsimData.Controllers)
+
+	<-flightDone
+	<-atcDone
+}
+
+func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
+	updateid, _ := gonanoid.New(24)
+
+	for _, controller := range controllers {
+		prefix := strings.Split(controller.Callsign, "_")[0]
+
+		// Check if we are tracking this prefix, if so, add it to the database
+		if !server.Server.TrackedPrefixes[prefix] {
+			continue
+		}
+
+		c := &models.OnlineController{}
+		if err := database.DB.Where("position = ?", controller.Callsign).First(c).Error; err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Errorf("Error looking up controller (%s): %v", controller.Callsign, err)
+				continue
+			}
+		}
+
+		c.UserID = uint(controller.CID)
+		c.Position = controller.Callsign
+		c.Frequency = controller.Frequency
+		c.LogonTime = *controller.LogonTime
+		c.UpdateID = updateid
+
+		if err := database.DB.Save(&c).Error; err != nil {
+			log.Error("Error saving controller information for " + c.Position + " to database: " + err.Error())
+		}
+	}
+
+	var oldControllers []models.OnlineController
+	if err := database.DB.Where("update_id != ?", updateid).Find(&oldControllers).Error; err != nil {
+		log.Errorf("Error looking up old controllers: %v", err)
+	}
+
+	for _, controller := range oldControllers {
+		stat := &models.ControllerStat{
+			UserID:    controller.UserID,
+			Position:  controller.Position,
+			LogonTime: controller.LogonTime,
+			Duration:  int(controller.UpdatedAt.Sub(controller.LogonTime) / time.Second),
+		}
+		if err := database.DB.Create(&stat).Error; err != nil {
+			log.Errorf("Error creating controller stat: %v", err)
+		}
+		if err := database.DB.Delete(&controller).Error; err != nil {
+			log.Errorf("Error deleting old controller entry: %v", err)
+		}
+	}
+
+	atcDone <- true
+}
+
+func parseFlights(flightDone chan bool, flights []*vatsim.VATSIMFlight) {
+	updateid, _ := gonanoid.New(24)
+
+	for _, flight := range flights {
 		f := &models.Flights{}
 		if err := database.DB.Where("callsign = ?", flight.Callsign).First(f).Error; err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -93,6 +159,7 @@ func HandleParseFlights() {
 		f.Arrival = flight.FlightPlan.Arrival
 		f.Route = flight.FlightPlan.Route
 		f.Facility = ""
+		f.UpdateID = updateid
 
 		if f.Latitude < 75.0 && f.Latitude > 21.0 && f.Longitude < -50.0 && f.Longitude > -179.0 {
 			for j := 0; j < len(fac); j++ {
@@ -109,4 +176,10 @@ func HandleParseFlights() {
 			log.Error("Error saving flight information for " + f.Callsign + " to database: " + err.Error())
 		}
 	}
+
+	if err := database.DB.Where("update_id != ?", updateid).Delete(&models.Flights{}).Error; err != nil {
+		log.Errorf("Error deleting old flights: %v", err)
+	}
+
+	flightDone <- true
 }

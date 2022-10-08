@@ -169,3 +169,12 @@ func atou(a string) uint {
 func Atou(a string) uint {
 	return atou(a)
 }
+
+func Atoi(a string) int {
+	i, err := strconv.Atoi(a)
+	if err != nil {
+		log.Warnf("Error converting string (%s) to int: %v", a, err)
+		return 0
+	}
+	return i
+}

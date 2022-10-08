@@ -16,6 +16,7 @@ type Flights struct {
 	Departure   string    `json:"departure" gorm:"type:varchar(4)"`
 	Arrival     string    `json:"arrival" gorm:"type:varchar(4)"`
 	Route       string    `json:"route" gorm:"type:text"`
+	UpdateID    string    `json:"update_id" gorm:"type:varchar(36)"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/urfave/cli/v2"
 
-	"github.com/adh-partnership/api/pkg/jobs/flightparser"
+	"github.com/adh-partnership/api/pkg/jobs/dataparser"
 	"github.com/adh-partnership/api/pkg/jobs/roster"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/server"
@@ -49,8 +49,8 @@ func newServerCommand() *cli.Command {
 			if err != nil {
 				return err
 			}
-			log.Info(" - Flight Parser")
-			err = flightparser.Initialize(s)
+			log.Info(" - VATSIM Data Parser")
+			err = dataparser.Initialize(s)
 			if err != nil {
 				return err
 			}

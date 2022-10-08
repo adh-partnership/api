@@ -8,6 +8,7 @@ type Config struct {
 	Session  ConfigSession  `json:"session"`
 	OAuth    ConfigOAuth    `json:"oauth"`
 	VATUSA   ConfigVATUSA   `json:"vatusa"`
+	Facility ConfigFacility `json:"facility"`
 	Storage  ConfigStorage  `json:"storage"`
 }
 
@@ -76,4 +77,15 @@ type ConfigStorage struct {
 	Bucket    string `json:"bucket"`
 	Region    string `json:"region"`
 	Endpoint  string `json:"endpoint"`
+}
+
+type ConfigFacility struct {
+	Stats ConfigFacilityStats `json:"stats"`
+}
+
+type ConfigFacilityStats struct {
+	Enabled                     bool     `json:"enabled"`
+	DiscordBroadcast            bool     `json:"discord_broadcast"`
+	DiscordBroadcastWebhookName string   `json:"discord_broadcast_webhook_name"`
+	Prefixes                    []string `json:"prefixes"`
 }
