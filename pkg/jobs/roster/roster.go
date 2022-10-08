@@ -8,6 +8,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/database/models/constants"
 	"github.com/adh-partnership/api/pkg/facility"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/network/global"
@@ -48,7 +49,7 @@ func UpdateRoster() error {
 	if err := database.DB.Model(&models.User{}).Not(models.User{UpdateID: updateid}).
 		Or("update_id IS NULL").
 		Updates(models.User{
-			ControllerType: models.ControllerTypeOptions["none"],
+			ControllerType: constants.ControllerTypeNone,
 			UpdateID:       updateid,
 		}).Error; err != nil {
 		return err

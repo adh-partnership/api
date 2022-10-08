@@ -10,6 +10,7 @@ import (
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/database/models/constants"
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
@@ -59,7 +60,7 @@ func getHistoricalStats(c *gin.Context) {
 	}
 
 	var ret []dto.ControllerStats
-	if err := database.DB.Preload(clause.Associations).Not(&models.User{Status: models.ControllerStatusOptions["none"]}).Find(&users).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Not(&models.User{Status: constants.ControllerStatusNone}).Find(&users).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
