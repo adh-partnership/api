@@ -48,26 +48,26 @@ OUTER:
 			month := lastMonth.AddDate(0, -i, 0)
 			cab, tracon, enroute, err := database.GetStatsForUserAndMonth(controller, int(lastMonth.Month()), lastMonth.Year())
 			if err != nil {
-				log.Errorf("Failed to get stats for %s: %s", controller.CID, err)
+				log.Errorf("Failed to get stats for %d: %s", controller.CID, err)
 				continue OUTER
 			}
 			sum = cab + tracon + enroute
-			log.Debugf("Controller %s - %s: %f", controller.CID, month.Format("2006-01"), sum)
+			log.Debugf("Controller %d - %s: %f", controller.CID, month.Format("2006-01"), sum)
 			if sum >= float32(config.Cfg.Facility.Activity.MinHours) {
-				log.Debugf("Controller %s has %f hours, enough for activity", controller.CID, sum)
+				log.Debugf("Controller %d has %f hours, enough for activity", controller.CID, sum)
 				continue OUTER
 			}
 		}
 
 		// They did not have enough hours for the past (config period) months
-		log.Debugf("Controller %s has %f hours, not enough for activity", controller.CID, sum)
+		log.Debugf("Controller %d has %f hours, not enough for activity", controller.CID, sum)
 		controller.Status = constants.ControllerStatusInactive
 		if err := database.DB.Save(controller).Error; err != nil {
 			log.Errorf("Failed to save controller: %s", err)
 			continue
 		}
 
-		log.Infof("Controller %s is now inactive", controller.CID)
+		log.Infof("Controller %d is now inactive", controller.CID)
 		err := email.Send(
 			controller.Email,
 			"",
