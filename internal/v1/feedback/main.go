@@ -9,5 +9,5 @@ import (
 func Routes(r *gin.RouterGroup) {
 	r.GET("", getFeedback)
 	r.POST("", auth.NotGuest, postFeedback)
-	r.PATCH("", auth.NotGuest, auth.InGroup("admin"), patchFeedback)
+	r.PATCH("/:id", auth.NotGuest, auth.InGroup("admin"), patchFeedback)
 }

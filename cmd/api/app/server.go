@@ -10,6 +10,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/urfave/cli/v2"
 
+	"github.com/adh-partnership/api/pkg/jobs/activity"
 	"github.com/adh-partnership/api/pkg/jobs/dataparser"
 	"github.com/adh-partnership/api/pkg/jobs/roster"
 	"github.com/adh-partnership/api/pkg/logger"
@@ -44,6 +45,13 @@ func newServerCommand() *cli.Command {
 
 			log.Info("Building scheduled jobs")
 			s := gocron.NewScheduler(time.UTC)
+			if srvr.Config.Facility.Activity.Enabled {
+				log.Info(" - Activity")
+				err = activity.ScheduleJobs(s)
+				if err != nil {
+					return err
+				}
+			}
 			log.Info(" - Roster")
 			err = roster.ScheduleJobs(s)
 			if err != nil {

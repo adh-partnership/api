@@ -77,6 +77,37 @@ To run locally, you'll need to setup a MySQL instance.
 
 Yes, we have Swagger (OpenAPI 2.0) documentation available. When you start the API, the documentation can be found by visiting the root directory.  For example, if you are running the API on localhost on port 3000, you can visit <http://localhost:3000/> to view the documentation.
 
+## Email Templates
+
+The following are the coded email templates and available variables:
+
+- activity_warning
+  - FirstName
+  - LastName
+- visitor_accepted
+  - FirstName
+  - LastName
+  - Rating
+- visitor_denied
+  - FirstName
+  - LastName
+  - Rating
+  - Reason
+
+### Email Template Format
+
+We use Go's templating engine to generate emails. More information can be found at:
+
+- [Go html/template](https://pkg.go.dev/html/template)
+- [Building Web Applications](https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/07.4.html)
+
+Emails send in HTML format.
+
+### Email Template Functions
+
+- findRoles - Returns an array of names for a given role in signature form ("First Last, Role")
+- urlEscape - Returns a URL escaped string
+
 ## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
