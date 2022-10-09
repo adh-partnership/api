@@ -31,12 +31,11 @@ type ConfigDatabase struct {
 }
 
 type ConfigEmail struct {
-	Host     string   `json:"host"`
-	Port     string   `json:"port"`
-	User     string   `json:"user"`
-	Password string   `json:"password"`
-	From     string   `json:"from"`
-	CC       []string `json:"cc"`
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	From     string `json:"from"`
 }
 
 type ConfigSession struct {
@@ -81,6 +80,7 @@ type ConfigStorage struct {
 }
 
 type ConfigFacility struct {
+	Activity ConfigFacilityActivity `json:"activity"`
 	Feedback ConfigFacilityFeedback `json:"feedback"`
 	Stats    ConfigFacilityStats    `json:"stats"`
 	Visiting ConfigFacilityVisiting `json:"visiting"`
@@ -100,4 +100,13 @@ type ConfigFacilityVisiting struct {
 
 type ConfigFacilityFeedback struct {
 	DiscordWebhookName string `json:"discord_webhook_name"`
+}
+
+type ConfigFacilityActivity struct {
+	Enabled     bool `json:"enabled"`
+	MinHours    int  `json:"min_hours"`
+	Period      int  `json:"period"`
+	RunOnDay    int  `json:"run_on_day"`
+	RunAtHour   int  `json:"run_at_hour"`
+	RunAtMinute int  `json:"run_at_minute"`
 }

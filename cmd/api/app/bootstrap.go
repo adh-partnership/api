@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/urfave/cli/v2"
 
@@ -164,6 +165,78 @@ func newBootstrapCommand() *cli.Command {
 				},
 				&models.Role{
 					Name: "mtr",
+				},
+				&models.EmailTemplate{
+					Name:    "activity_warning",
+					Subject: "Inactivity Warning",
+					Body: `<p>Hello {{.FirstName}} {{.LastName}},</p>
+
+<p>This is a warning that you have not met the activity requirements as set forth under the facility policy as of today. 
+If you do not meet the requirements by the 1st of the following month, you may be removed from the facility due to inactivity.</p>
+
+<p>Obviously, we understand this is a hobby and that sometimes real life gets in the way. If this is the case, please reach out 
+to the senior staff and let us know.</p>
+
+<p>Thank you for your time and we hope to see you on the network soon!</p>
+
+<p>Best Regards,<br>
+{{range .findRole "atm"}}
+{{.}}<br>
+{{end}}
+{{range .findRole "datm"}}
+{{.}}<br>
+{{end}}</p>`,
+					EditGroup: "admin",
+					CC:        "atm@denartcc.org, datm@denartcc.org",
+					CreatedAt: time.Now(),
+					UpdatedAt: time.Now(),
+				},
+				&models.EmailTemplate{
+					Name:    "visitor_accepted",
+					Subject: "Visitor Application Accepted",
+					Body: `<p>Hello {{.FirstName}} {{.LastName}},</p>
+
+<p>Your visitor application has been accepted. Shortly, the staff will be adding you to the roster.</p>
+
+<p>Please ensure you read and adhere to our facility SOPs and join our Discord server to stay up to date with the latest 
+information. The invite for this can be found on our website.</p>
+
+<p>Thank you for your time and we hope to see you on the network soon!</p>
+
+<p>Best Regards,<br>
+{{range .findRole "atm"}}
+{{.}}<br>
+{{end}}
+{{range .findRole "datm"}}
+{{.}}<br>
+{{end}}</p>`,
+					EditGroup: "admin",
+					CC:        "atm@denartcc.org, datm@denartcc.org",
+					CreatedAt: time.Now(),
+					UpdatedAt: time.Now(),
+				},
+				&models.EmailTemplate{
+					Name:    "visitor_denied",
+					Subject: "Visitor Application Denied",
+					Body: `<p>Hello {{.FirstName}} {{.LastName}},</p>
+
+<p>We regret to inform you that your visiting application has been denied.</p>
+
+<p>The reason for the denial is: {{.Reason}}</p>
+
+<p>If you have any questions about the reason for this denial, please do not hesitate to contact the senior staff.</p>
+
+<p>Best Regards,<br>
+{{range .findRole "atm"}}
+{{.}}<br>
+{{end}}
+{{range .findRole "datm"}}
+{{.}}<br>
+{{end}}</p>`,
+					EditGroup: "admin",
+					CC:        "atm@denartcc.org, datm@denartcc.org",
+					CreatedAt: time.Now(),
+					UpdatedAt: time.Now(),
 				},
 			}
 

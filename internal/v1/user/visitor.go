@@ -118,7 +118,6 @@ func putVisitor(c *gin.Context) {
 				app.User.Email,
 				"",
 				"Visitor Application Accepted",
-				config.Cfg.Email.CC,
 				[]string{},
 				"visitor_accepted",
 				map[string]interface{}{
@@ -163,7 +162,6 @@ func putVisitor(c *gin.Context) {
 				app.User.Email,
 				"",
 				"Visitor Application Denied",
-				config.Cfg.Email.CC,
 				[]string{},
 				"visitor_denied",
 				map[string]interface{}{

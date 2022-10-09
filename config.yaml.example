@@ -17,10 +17,14 @@ email:
   user: {{.EMAIL_USER | default "root"}}
   password: {{.EMAIL_PASSWORD | default "root"}}
   from: {{.EMAIL_FROM | default "root@localhost"}}
-  cc:
-  - "atm@denartcc.org"
-  - "datm@denartcc.org"
 facility:
+  activity:
+    enabled: false
+    min_hours: 2
+    period: 2
+    run_on_day : 1
+    run_at_hour: 0
+    run_at_minute: 0
   feedback:
     discord_webhook_name: "feedback"
   visiting:

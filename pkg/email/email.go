@@ -12,34 +12,45 @@ import (
 	"github.com/adh-partnership/api/pkg/database"
 )
 
-func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, error) {
+func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string, string, error) {
 	templ, err := database.FindEmailTemplate(name)
 	if err != nil {
-		return nil, err
+		return nil, "", "", err
 	}
 
 	t, err := template.New(name).Funcs(template.FuncMap{
 		"urlEscape": url.QueryEscape,
+		"fetchRole": func(role string) []string {
+			var ret []string
+			users, err := database.FindUsersWithRole(role)
+			if err != nil {
+				return ret
+			}
+			for _, user := range users {
+				ret = append(ret, fmt.Sprintf("%s %s, %s", user.FirstName, user.LastName, strings.ToUpper(role)))
+			}
+			return ret
+		},
 	}).Parse(templ.Body)
 	if err != nil {
-		return nil, err
+		return nil, "", "", err
 	}
 
 	out := new(bytes.Buffer)
 	err = t.Execute(out, data)
 	if err != nil {
-		return nil, err
+		return nil, "", "", err
 	}
 
-	return out, nil
+	return out, templ.Subject, templ.CC, nil
 }
 
-func BuildEmail(from, to, subject string, cc []string, body *bytes.Buffer) []byte {
+func BuildEmail(from, to, subject string, cc string, body *bytes.Buffer) []byte {
 	var msg string
 	msg = "To: " + to + "\r\n"
 	msg += "From: " + from + "\r\n"
 	if len(cc) > 0 {
-		msg += "Cc: " + strings.Join(cc, ", ") + "\n"
+		msg += "Cc: " + cc + "\n"
 	}
 	msg += "Subject: " + subject + "\r\n"
 	msg += fmt.Sprintf(`MIME-Version: 1.0
@@ -50,8 +61,8 @@ Content-Transfer-Encoding: quoted-printable
 	return []byte(msg)
 }
 
-func Send(to, from, subject string, cc []string, bcc []string, template string, data map[string]interface{}) error {
-	body, err := BuildBody(template, data)
+func Send(to, from, subject string, bcc []string, template string, data map[string]interface{}) error {
+	body, subj, cc, err := BuildBody(template, data)
 	if err != nil {
 		return err
 	}
@@ -60,12 +71,16 @@ func Send(to, from, subject string, cc []string, bcc []string, template string, 
 		from = config.Cfg.Email.From
 	}
 
+	if subject == "" {
+		subject = subj
+	}
+
 	msg := BuildEmail(from, to, subject, cc, body)
 
 	var tolist []string
 	tolist = append(tolist, to)
 	if len(cc) > 0 {
-		tolist = append(tolist, cc...)
+		tolist = append(tolist, strings.Split(cc, ", ")...)
 	}
 	if len(bcc) > 0 {
 		tolist = append(tolist, bcc...)
