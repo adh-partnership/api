@@ -96,7 +96,7 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 		}
 
 		c := &models.OnlineController{}
-		if err := database.DB.Where("position = ?", controller.Callsign).FirstOrCreate(c).Error; err != nil {
+		if err := database.DB.Where("position = ?", controller.Callsign).First(&c).Error; err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				log.Errorf("Error looking up controller (%s): %v", controller.Callsign, err)
 				continue
@@ -166,7 +166,7 @@ func parseFlights(flightDone chan bool, flights []*vatsim.VATSIMFlight) {
 
 	for _, flight := range flights {
 		f := &models.Flights{}
-		if err := database.DB.Where("callsign = ?", flight.Callsign).FirstOrCreate(f).Error; err != nil {
+		if err := database.DB.Where("callsign = ?", flight.Callsign).First(&f).Error; err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				log.Errorf("Error looking up flight (%s): %v", flight.Callsign, err)
 				continue
