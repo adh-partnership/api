@@ -81,6 +81,7 @@ type ConfigStorage struct {
 }
 
 type ConfigFacility struct {
+	Feedback ConfigFacilityFeedback `json:"feedback"`
 	Stats    ConfigFacilityStats    `json:"stats"`
 	Visiting ConfigFacilityVisiting `json:"visiting"`
 }
@@ -95,4 +96,8 @@ type ConfigFacilityStats struct {
 type ConfigFacilityVisiting struct {
 	DiscordWebhookName string `json:"discord_webhook_name"`
 	MinRating          string `json:"min_rating"`
+}
+
+type ConfigFacilityFeedback struct {
+	DiscordWebhookName string `json:"discord_webhook_name"`
 }
