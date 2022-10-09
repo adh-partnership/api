@@ -21,6 +21,8 @@ email:
   - "atm@denartcc.org"
   - "datm@denartcc.org"
 facility:
+  feedback:
+    discord_webhook_name: "feedback"
   visiting:
     discord_webhook_name: "visitor"
     rating_min: S1

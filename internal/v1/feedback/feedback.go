@@ -1,13 +1,18 @@
 package feedback
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/adh-partnership/api/pkg/auth"
+	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/database/models/constants"
+	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
@@ -22,7 +27,7 @@ import (
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
 func getFeedback(c *gin.Context) {
-	var feedback []models.Feedback
+	var feedback []*models.Feedback
 
 	res := database.DB
 	if c.Query("cid") != "" {
@@ -36,7 +41,12 @@ func getFeedback(c *gin.Context) {
 		return
 	}
 
-	response.Respond(c, http.StatusOK, dto.ConvertFeedbacktoResponse(feedback))
+	includeEmail := false
+	if auth.InGroup(c.MustGet("x-user").(*models.User), "admin") {
+		includeEmail = true
+	}
+
+	response.Respond(c, http.StatusOK, dto.ConvertFeedbacktoResponse(feedback, includeEmail))
 }
 
 // Submit Pilot Feedback
@@ -61,16 +71,24 @@ func postFeedback(c *gin.Context) {
 	}
 
 	user := c.MustGet("x-user").(*models.User)
+	var controller *models.User
+	var err error
+	if dto.Controller != "" {
+		controller, err = database.FindUserByCID(dto.Controller)
+		if err != nil {
+			response.RespondError(c, http.StatusBadRequest, "Invalid controller")
+			return
+		}
+	}
 	feedback := &models.Feedback{
-		SubmitterCID:   user.CID,
-		SubmitterName:  user.FirstName + " " + user.LastName,
-		SubmitterEmail: user.Email,
-		ControllerID:   dto.Controller,
-		FlightCallsign: dto.FlightCallsign,
-		FlightDate:     dto.FlightDate,
-		Comments:       dto.Comments,
-		Status:         models.FeedbackStatus["pending"],
-		Rating:         dto.Rating,
+		Submitter:    user,
+		Controller:   controller,
+		Rating:       dto.Rating,
+		Comments:     dto.Comments,
+		Position:     dto.Position,
+		Callsign:     dto.Callsign,
+		Status:       constants.FeedbackStatusPending,
+		ContactEmail: user.Email,
 	}
 
 	if err := database.DB.Create(feedback).Error; err != nil {
@@ -78,7 +96,18 @@ func postFeedback(c *gin.Context) {
 		return
 	}
 
-	// @TODO Send to rabbitmq for bot messaging
+	_ = discord.SendWebhookMessage(
+		config.Cfg.Facility.Feedback.DiscordWebhookName,
+		"Web API",
+		fmt.Sprintf(
+			"New feedback submitted for %s on %s by %s (%d)",
+			feedback.Controller.FirstName+" "+feedback.Controller.LastName,
+			feedback.Position,
+			feedback.Submitter.FirstName+" "+feedback.Submitter.LastName,
+			feedback.Submitter.CID,
+		),
+	)
+
 	response.RespondBlank(c, http.StatusCreated)
 }
 

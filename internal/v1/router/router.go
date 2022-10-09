@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/adh-partnership/api/internal/v1/event"
+	"github.com/adh-partnership/api/internal/v1/feedback"
 	"github.com/adh-partnership/api/internal/v1/overflight"
 	"github.com/adh-partnership/api/internal/v1/storage"
 	"github.com/adh-partnership/api/internal/v1/training"
@@ -18,6 +19,7 @@ var log = logger.Logger.WithField("component", "router/v1")
 func init() {
 	routeGroups = make(map[string]func(*gin.RouterGroup))
 	routeGroups["/events"] = event.Routes
+	routeGroups["/feedback"] = feedback.Routes
 	routeGroups["/overflight"] = overflight.Routes
 	routeGroups["/storage"] = storage.Routes
 	routeGroups["/training"] = training.Routes

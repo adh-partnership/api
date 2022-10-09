@@ -1,14 +1,17 @@
 package dto
 
-import "github.com/adh-partnership/api/pkg/database/models"
+import (
+	"time"
+
+	"github.com/adh-partnership/api/pkg/database/models"
+)
 
 type FeedbackRequest struct {
-	FlightDate     string `json:"flight_date"`
-	FlightCallsign string `json:"flight_callsign"`
-	Controller     uint   `json:"controller"`
-	Rating         string `json:"rating"`
-	Position       string `json:"position"`
-	Comments       string `json:"comments"`
+	Controller string `json:"controller" binding:"required"`
+	Callsign   string `json:"callsign" binding:"required"`
+	Position   string `json:"position" binding:"required"`
+	Rating     string `json:"rating" binding:"required"`
+	Comments   string `json:"comments" binding:"required"`
 }
 
 type FeedbackPatchRequest struct {
@@ -16,40 +19,39 @@ type FeedbackPatchRequest struct {
 }
 
 type FeedbackResponse struct {
-	ID               int    `json:"id"`
-	SubmitterCID     uint   `json:"submitter"`
-	SubmitterName    string `json:"submitter_name"`
-	FlightDate       string `json:"flight_date"`
-	FlightCallsign   string `json:"flight_callsign"`
-	Rating           string `json:"rating"`
-	Position         string `json:"position"`
-	ControllerID     uint   `json:"controller_cid"`
-	ControllerName   string `json:"controller_name"`
-	ControllerRating string `json:"controller_rating"`
-	Comments         string `json:"comments"`
-	Status           string `json:"status"`
-	CreatedAt        string `json:"created_at"`
+	ID           int          `json:"id"`
+	Submitter    *models.User `json:"submitter"`
+	Controller   *models.User `json:"controller"`
+	Rating       string       `json:"rating"`
+	Status       string       `json:"status"`
+	Position     string       `json:"position"`
+	Callsign     string       `json:"callsign"`
+	Comments     string       `json:"comments"`
+	ContactEmail string       `json:"contact_email"`
+	CreatedAt    *time.Time   `json:"created_at"`
 }
 
-func ConvertFeedbacktoResponse(feedback []models.Feedback) []FeedbackResponse {
+func ConvertFeedbacktoResponse(feedback []*models.Feedback, includeEmail bool) []FeedbackResponse {
 	var ret []FeedbackResponse
 
 	for _, f := range feedback {
-		ret = append(ret, FeedbackResponse{
-			ID:               f.ID,
-			SubmitterCID:     f.SubmitterCID,
-			SubmitterName:    f.SubmitterName,
-			FlightDate:       f.FlightDate,
-			FlightCallsign:   f.FlightCallsign,
-			Rating:           f.Rating,
-			Position:         f.Position,
-			ControllerID:     f.Controller.CID,
-			ControllerName:   f.Controller.FirstName + " " + f.Controller.LastName,
-			ControllerRating: f.Controller.Rating.Short,
-			Comments:         f.Comments,
-			Status:           f.Status,
-			CreatedAt:        f.CreatedAt.Format("2006-01-02"),
-		})
+		fdbk := &FeedbackResponse{
+			ID:         f.ID,
+			Submitter:  f.Submitter,
+			Controller: f.Controller,
+			Rating:     f.Rating,
+			Position:   f.Position,
+			Callsign:   f.Callsign,
+			Comments:   f.Comments,
+			Status:     f.Status,
+			CreatedAt:  f.CreatedAt,
+		}
+
+		if includeEmail {
+			fdbk.ContactEmail = f.ContactEmail
+		}
+
+		ret = append(ret, *fdbk)
 	}
 
 	return ret
