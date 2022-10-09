@@ -45,10 +45,12 @@ func newServerCommand() *cli.Command {
 
 			log.Info("Building scheduled jobs")
 			s := gocron.NewScheduler(time.UTC)
-			log.Info(" - Activity")
-			err = activity.ScheduleJobs(s)
-			if err != nil {
-				return err
+			if srvr.Config.Facility.Activity.Enabled {
+				log.Info(" - Activity")
+				err = activity.ScheduleJobs(s)
+				if err != nil {
+					return err
+				}
 			}
 			log.Info(" - Roster")
 			err = roster.ScheduleJobs(s)
