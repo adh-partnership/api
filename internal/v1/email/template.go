@@ -23,7 +23,7 @@ import (
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /email/templates/:name? [get]
+// @Router /email/templates/:name [get]
 func getTemplate(c *gin.Context) {
 	var templates []*models.EmailTemplate
 
