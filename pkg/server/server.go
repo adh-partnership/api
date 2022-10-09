@@ -87,6 +87,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		&models.OAuthClient{},
 		&models.OAuthLogin{},
 		&models.OAuthRefresh{},
+		&models.OnlineController{},
 		&models.Rating{},
 		&models.Role{},
 		&models.TrainingNote{},
