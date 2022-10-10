@@ -60,7 +60,7 @@ func getHistoricalStats(c *gin.Context) {
 	}
 
 	var ret []dto.ControllerStats
-	if err := database.DB.Preload(clause.Associations).Not(&models.User{Status: constants.ControllerStatusNone}).Find(&users).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Not(&models.User{ControllerType: constants.ControllerTypeNone}).Find(&users).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
