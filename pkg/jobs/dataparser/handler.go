@@ -90,6 +90,24 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 	for _, controller := range controllers {
 		prefix := strings.Split(controller.Callsign, "_")[0]
 
+		// Ignore observers
+		if controller.Facility == 0 {
+			continue
+		}
+
+		allowedSuffixes := []string{"_DEL","_GND","_TWR","_APP","_DEP","_CTR","_FSS"}
+		isAllowed := false
+		for _, suffix := range allowedSuffixes {
+			if strings.HasSuffix(controller.Callsign, suffix) {
+				isAllowed = true
+				break
+			}
+		}
+		if !isAllowed {
+			log.Tracef("Skipping %s, disallowed suffix", controller.Callsign)
+			continue
+		}
+
 		// Check if we are tracking this prefix, if so, add it to the database
 		if !server.Server.TrackedPrefixes[prefix] {
 			continue
