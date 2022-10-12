@@ -93,27 +93,37 @@ func patchUser(c *gin.Context) {
 		return
 	}
 
-	if req.Certiciations.Delivery != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+	if req.Certifications.Ground != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 
-	if req.Certiciations.Ground != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+	if req.Certifications.MajorGround != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 
-	if req.Certiciations.Local != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+	if req.Certifications.Local != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 
-	if req.Certiciations.Approach != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+	if req.Certifications.MajorLocal != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
 
-	if req.Certiciations.Enroute != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+	if req.Certifications.Approach != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		return
+	}
+
+	if req.Certifications.MajorApproach != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		return
+	}
+
+	if req.Certifications.Enroute != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}

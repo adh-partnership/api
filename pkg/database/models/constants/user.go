@@ -5,8 +5,6 @@ const (
 	CertificationTraining  = "training"
 	CertificationSolo      = "solo"
 	CertificationCertified = "certified"
-	CertificationMajorSolo = "major-solo"
-	CertificationMajor     = "major"
 	CertificationCanTrain  = "cantrain"
 
 	ControllerStatusNone     = "none"

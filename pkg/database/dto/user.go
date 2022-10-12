@@ -11,7 +11,7 @@ type UserResponse struct {
 	LastName          string                     `json:"last_name" yaml:"last_name" xml:"last_name"`
 	OperatingInitials string                     `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
 	ControllerType    string                     `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
-	Certiciations     UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
+	Certifications    UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
 	Rating            string                     `json:"rating" yaml:"rating" xml:"rating"`
 	Status            string                     `json:"status" yaml:"status" xml:"status"`
 	Roles             []string                   `json:"roles" yaml:"roles" xml:"roles"`
@@ -26,7 +26,7 @@ type UserResponseAdmin struct {
 	LastName          string                     `json:"last_name" yaml:"last_name" xml:"last_name"`
 	OperatingInitials string                     `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
 	ControllerType    string                     `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
-	Certiciations     UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
+	Certifications    UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
 	RemovalReason     string                     `json:"removal_reason" yaml:"removal_reason" xml:"removal_reason"`
 	Rating            string                     `json:"rating" yaml:"rating" xml:"rating"`
 	Status            string                     `json:"status" yaml:"status" xml:"status"`
@@ -37,11 +37,13 @@ type UserResponseAdmin struct {
 }
 
 type UserResponseCertifications struct {
-	Delivery string `json:"delivery" yaml:"delivery" xml:"delivery"`
-	Ground   string `json:"ground" yaml:"ground" xml:"ground"`
-	Local    string `json:"local" yaml:"local" xml:"local"`
-	Approach string `json:"approach" yaml:"approach" xml:"approach"`
-	Enroute  string `json:"enroute" yaml:"enroute" xml:"enroute"`
+	Ground        string `json:"ground" yaml:"ground" xml:"ground"`
+	MajorGround   string `json:"major_ground" yaml:"major_ground" xml:"major_ground"`
+	Local         string `json:"local" yaml:"local" xml:"local"`
+	MajorLocal    string `json:"major_local" yaml:"major_local" xml:"major_local"`
+	Approach      string `json:"approach" yaml:"approach" xml:"approach"`
+	MajorApproach string `json:"major_approach" yaml:"major_approach" xml:"major_approach"`
+	Enroute       string `json:"enroute" yaml:"enroute" xml:"enroute"`
 }
 
 type FacilityStaffResponse struct {
@@ -67,12 +69,14 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 		LastName:          user.LastName,
 		OperatingInitials: user.OperatingInitials,
 		ControllerType:    user.ControllerType,
-		Certiciations: UserResponseCertifications{
-			Delivery: user.DelCertification,
-			Ground:   user.GndCertification,
-			Local:    user.LclCertification,
-			Approach: user.AppCertification,
-			Enroute:  user.CtrCertification,
+		Certifications: UserResponseCertifications{
+			Ground:        user.GndCertification,
+			MajorGround:   user.MajorGndCertification,
+			Local:         user.LclCertification,
+			MajorLocal:    user.MajorLclCertification,
+			Approach:      user.AppCertification,
+			MajorApproach: user.MajorAppCertification,
+			Enroute:       user.CtrCertification,
 		},
 		Roles:     roles,
 		Rating:    user.Rating.Short,
@@ -108,43 +112,59 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 		}
 	}
 
-	if userResponse.Certiciations.Delivery != "" {
-		if _, ok := models.CertificationOptions[userResponse.Certiciations.Delivery]; !ok {
+	if userResponse.Certifications.Ground != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.Ground]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
-			user.DelCertification = userResponse.Certiciations.Delivery
+			user.GndCertification = userResponse.Certifications.Ground
 		}
 	}
 
-	if userResponse.Certiciations.Ground != "" {
-		if _, ok := models.CertificationOptions[userResponse.Certiciations.Ground]; !ok {
+	if userResponse.Certifications.MajorGround != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.MajorGround]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
-			user.GndCertification = userResponse.Certiciations.Ground
+			user.MajorGndCertification = userResponse.Certifications.MajorGround
 		}
 	}
 
-	if userResponse.Certiciations.Local != "" {
-		if _, ok := models.CertificationOptions[userResponse.Certiciations.Local]; !ok {
+	if userResponse.Certifications.Local != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.Local]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
-			user.LclCertification = userResponse.Certiciations.Local
+			user.LclCertification = userResponse.Certifications.Local
 		}
 	}
 
-	if userResponse.Certiciations.Approach != "" {
-		if _, ok := models.CertificationOptions[userResponse.Certiciations.Approach]; !ok {
+	if userResponse.Certifications.MajorLocal != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.MajorLocal]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
-			user.AppCertification = userResponse.Certiciations.Approach
+			user.MajorLclCertification = userResponse.Certifications.MajorLocal
 		}
 	}
 
-	if userResponse.Certiciations.Enroute != "" {
-		if _, ok := models.CertificationOptions[userResponse.Certiciations.Enroute]; !ok {
+	if userResponse.Certifications.Approach != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.Approach]; !ok {
 			errs = append(errs, ErrInvalidCertification)
 		} else {
-			user.CtrCertification = userResponse.Certiciations.Enroute
+			user.AppCertification = userResponse.Certifications.Approach
+		}
+	}
+
+	if userResponse.Certifications.MajorApproach != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.MajorApproach]; !ok {
+			errs = append(errs, ErrInvalidCertification)
+		} else {
+			user.MajorAppCertification = userResponse.Certifications.MajorApproach
+		}
+	}
+
+	if userResponse.Certifications.Enroute != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.Enroute]; !ok {
+			errs = append(errs, ErrInvalidCertification)
+		} else {
+			user.CtrCertification = userResponse.Certifications.Enroute
 		}
 	}
 

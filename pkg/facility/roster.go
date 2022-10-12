@@ -27,15 +27,17 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			log.Infof("New user on roster: %d", controller.CID)
 			create = true
 			user = &models.User{
-				CID:              uint(controller.CID),
-				FirstName:        controller.FirstName,
-				LastName:         controller.LastName,
-				ControllerType:   constants.ControllerTypeNone,
-				DelCertification: constants.CertificationNone,
-				GndCertification: constants.CertificationNone,
-				LclCertification: constants.CertificationNone,
-				AppCertification: constants.CertificationNone,
-				CtrCertification: constants.CertificationNone,
+				CID:                   uint(controller.CID),
+				FirstName:             controller.FirstName,
+				LastName:              controller.LastName,
+				ControllerType:        constants.ControllerTypeNone,
+				GndCertification:      constants.CertificationNone,
+				MajorGndCertification: constants.CertificationNone,
+				LclCertification:      constants.CertificationNone,
+				MajorLclCertification: constants.CertificationNone,
+				AppCertification:      constants.CertificationNone,
+				MajorAppCertification: constants.CertificationNone,
+				CtrCertification:      constants.CertificationNone,
 			}
 			oi, err := database.FindOI(user)
 			if err != nil {
@@ -109,6 +111,9 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			}
 			user.Status = constants.ControllerTypeVisitor
 		} else if controller.Membership == "home" {
+			user.Region = "AMAS"
+			user.Division = "USA"
+			user.Subdivision = controller.Facility
 			user.Status = constants.ControllerTypeHome
 		} else {
 			// This shouldn't happen... but...

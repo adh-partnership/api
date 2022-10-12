@@ -12,15 +12,19 @@ type User struct {
 	OperatingInitials string `json:"oi" gorm:"type:varchar(2)" example:"DH"`
 	// Must be one of: none, active, inactive, loa
 	ControllerType string `json:"controllerType" gorm:"type:varchar(10)" example:"home"`
-	// Must be one of : none, training, solo, certified, major, cantrain
-	DelCertification string `json:"delCertification" gorm:"type:varchar(15)" example:"certified"`
-	// Must be one of : none, training, solo, certified, major, cantrain
+	// Must be one of : none, training, solo, certified, cantrain
 	GndCertification string `json:"gndCertification" gorm:"type:varchar(15)" example:"certified"`
-	// Must be one of : none, training, solo, certified, major, cantrain
+	// Must be one of : none, training, solo, certified, cantrain
+	MajorGndCertification string `json:"majgndCertification" gorm:"type:varchar(15)" example:"certified"`
+	// Must be one of : none, training, solo, certified, cantrain
 	LclCertification string `json:"lclCertification" gorm:"type:varchar(15)" example:"certified"`
-	// Must be one of : none, training, solo, certified, major, cantrain
+	// Must be one of : none, training, solo, certified, cantrain
+	MajorLclCertification string `json:"majorlclCertification" gorm:"type:varchar(15)" example:"certified"`
+	// Must be one of : none, training, solo, certified, cantrain
 	AppCertification string `json:"appCertification" gorm:"type:varchar(15)" example:"certified"`
-	// Must be one of : none, training, solo, certified, major, cantrain
+	// Must be one of : none, training, solo, certified, cantrain
+	MajorAppCertification string `json:"majorappCertification" gorm:"type:varchar(15)" example:"certified"`
+	// Must be one of : none, training, solo, certified, cantrain
 	CtrCertification string `json:"ctrCertification" gorm:"type:varchar(15)" example:"none"`
 	RatingID         int    `json:"-"`
 	Rating           Rating `json:"rating"`
@@ -39,13 +43,11 @@ type User struct {
 }
 
 var CertificationOptions = map[string]string{
-	"none":       "none",
-	"training":   "training",
-	"solo":       "solo",
-	"certified":  "certified",
-	"major-solo": "major-solo",
-	"major":      "major",
-	"cantrain":   "cantrain",
+	"none":      "none",
+	"training":  "training",
+	"solo":      "solo",
+	"certified": "certified",
+	"cantrain":  "cantrain",
 }
 
 var ControllerTypeOptions = map[string]string{
