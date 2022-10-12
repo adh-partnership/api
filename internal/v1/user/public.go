@@ -2,7 +2,6 @@ package user
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
@@ -12,7 +11,6 @@ import (
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
 	"github.com/adh-partnership/api/pkg/gin/response"
-	"github.com/adh-partnership/api/pkg/memcache"
 )
 
 // Get Full Roster
@@ -69,20 +67,11 @@ func getRoster(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/user/staff [GET]
 func getStaff(c *gin.Context) {
-	if memcache.Cache.Get("staff") != nil {
-		response.Respond(c, http.StatusOK, memcache.Cache.Get("staff"))
-		return
-	}
-
 	staff, err := dto.GetStaffResponse()
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
-
-	// Cache for an hour, we do delete this cache if roles change.. so this should be okay to do
-	// without worrying about stale lists
-	memcache.Cache.Set("staff", staff, 1*time.Hour)
 
 	response.Respond(c, http.StatusOK, staff)
 }
