@@ -95,7 +95,7 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 			continue
 		}
 
-		allowedSuffixes := []string{"_DEL","_GND","_TWR","_APP","_DEP","_CTR","_FSS"}
+		allowedSuffixes := []string{"_DEL", "_GND", "_TWR", "_APP", "_DEP", "_CTR", "_FSS"}
 		isAllowed := false
 		for _, suffix := range allowedSuffixes {
 			if strings.HasSuffix(controller.Callsign, suffix) {
