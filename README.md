@@ -18,7 +18,7 @@ The API follows standard RESTful API designs. The API documentation is accessibl
 
 ## Tests
 
-Tests are a good thing and should be written were practical.  To run tests:
+Tests are a good thing and should be written where practical.  To run tests:
 
 ```bash
 make test
