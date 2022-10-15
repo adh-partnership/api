@@ -15,6 +15,9 @@ type UserResponse struct {
 	Rating            string                     `json:"rating" yaml:"rating" xml:"rating"`
 	Status            string                     `json:"status" yaml:"status" xml:"status"`
 	Roles             []string                   `json:"roles" yaml:"roles" xml:"roles"`
+	Region            string                     `json:"region" yaml:"region" xml:"region"`
+	Division          string                     `json:"division" yaml:"division" xml:"division"`
+	Subdivision       string                     `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
 	DiscordID         string                     `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
 	CreatedAt         string                     `json:"created_at" yaml:"created_at" xml:"created_at"`
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
@@ -31,6 +34,9 @@ type UserResponseAdmin struct {
 	Rating            string                     `json:"rating" yaml:"rating" xml:"rating"`
 	Status            string                     `json:"status" yaml:"status" xml:"status"`
 	Roles             []string                   `json:"roles" yaml:"roles" xml:"roles"`
+	Region            string                     `json:"region" yaml:"region" xml:"region"`
+	Division          string                     `json:"division" yaml:"division" xml:"division"`
+	Subdivision       string                     `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
 	DiscordID         string                     `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
 	CreatedAt         string                     `json:"created_at" yaml:"created_at" xml:"created_at"`
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
@@ -78,12 +84,15 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 			MajorApproach: user.MajorAppCertification,
 			Enroute:       user.CtrCertification,
 		},
-		Roles:     roles,
-		Rating:    user.Rating.Short,
-		Status:    user.Status,
-		DiscordID: user.DiscordID,
-		CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05Z"),
-		UpdatedAt: user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
+		Roles:       roles,
+		Rating:      user.Rating.Short,
+		Status:      user.Status,
+		DiscordID:   user.DiscordID,
+		Region:      user.Region,
+		Division:    user.Division,
+		Subdivision: user.Subdivision,
+		CreatedAt:   user.CreatedAt.Format("2006-01-02T15:04:05Z"),
+		UpdatedAt:   user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
 	}
 }
 
