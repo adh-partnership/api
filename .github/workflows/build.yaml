@@ -149,4 +149,4 @@ jobs:
     - name: Push to gitops repo
       run: |
         cd $GITHUB_WORKSPACE/gitops-paza
-        git push origin master
+        git push origin main
