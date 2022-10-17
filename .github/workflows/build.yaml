@@ -60,7 +60,7 @@ jobs:
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }} -t ${{ secrets.DOCKER_USERNAME }}/api:${{ env.sha_short }} .
     - name: Push Image
       if: ${{ github.event_name == 'push' }}
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }} ${{ secrets.DOCKER_USERNAME }}/api:${{ env.sha_short }}
+      run: docker push --all-tags ${{ secrets.DOCKER_USERNAME }}/api
   deploy-kzdv:
     name: Update KZDV GitOps Repo
     runs-on: ubuntu-latest
