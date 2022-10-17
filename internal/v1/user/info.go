@@ -134,7 +134,10 @@ func patchUser(c *gin.Context) {
 	}
 
 	if req.ControllerType != "" && req.ControllerType != oldUser.ControllerType {
-		if req.ControllerType == constants.ControllerTypeNone && req.RemovalReason == "" {
+		if (oldUser.ControllerType == constants.ControllerTypeHome ||
+			oldUser.ControllerType == constants.ControllerTypeVisitor) &&
+			req.RemovalReason == "" {
+
 			response.RespondError(c, http.StatusBadRequest, "Removal reason required")
 			return
 		}
