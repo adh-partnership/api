@@ -133,7 +133,7 @@ func patchUser(c *gin.Context) {
 		return
 	}
 
-	if req.ControllerType != oldUser.ControllerType {
+	if req.ControllerType != "" && req.ControllerType != oldUser.ControllerType {
 		if (oldUser.ControllerType == constants.ControllerTypeHome ||
 			oldUser.ControllerType == constants.ControllerTypeVisitor) &&
 			req.RemovalReason == "" {
