@@ -109,7 +109,7 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 
 	if len(userResponse.OperatingInitials) != 2 && userResponse.OperatingInitials != "" {
 		errs = append(errs, ErrInvalidOperatingInitials)
-	} else {
+	} else if userResponse.OperatingInitials != "" {
 		user.OperatingInitials = userResponse.OperatingInitials
 	}
 
