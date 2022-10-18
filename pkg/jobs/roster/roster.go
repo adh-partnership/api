@@ -47,8 +47,8 @@ func UpdateRoster() error {
 
 	// Cleanup operating initials from controllers that are gone
 	if err := database.DB.Model(&models.User{}).Where(models.User{ControllerType: constants.ControllerTypeNone}).
-		Updates(models.User{
-			OperatingInitials: "",
+		Updates(map[string]interface{}{
+			"operating_initials": "",
 		}).Error; err != nil {
 		return err
 	}
