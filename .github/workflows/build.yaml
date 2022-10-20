@@ -1,4 +1,4 @@
-name: Test
+name: Build and Deploy
 on:
   push:
     branches:
@@ -146,4 +146,48 @@ jobs:
     - name: Push to gitops repo
       run: |
         cd $GITHUB_WORKSPACE/gitops-paza
+        git push origin main
+
+  deploy-phzh:
+    name: Update PHZH GitOps Repo
+    runs-on: ubuntu-latest
+    needs: build
+    if : ${{ github.event_name == 'push' && contains(fromJson('["refs/heads/dev", "refs/heads/main"]'), github.ref) }}
+
+    steps:
+    - name: Checkout PHZH Gitops Repo
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.PAZA_GITOPS_TOKEN }}
+        repository: 'vphzh/gitops'
+        path: gitops-phzh
+    - name: Configure git
+      run: |-
+        cd $GITHUB_WORKSPACE/gitops-phzh
+        git config user.name "${{ secrets.PAZA_GITOPS_USER }}"
+        git config user.email "${{ secrets.PAZA_GITOPS_EMAIL }}"
+    - name: Setup Kustomize
+      uses: imranismail/setup-kustomize@v1
+      with:
+        kustomize-version: "4.4.1"
+    - name: Update dev overlay
+      if: ${{ github.ref == 'refs/heads/dev' }}
+      run: |
+        HASH=`echo ${GITHUB_SHA} | cut -c1-7`
+        cd $GITHUB_WORKSPACE/gitops-phzh/overlays/dev
+        kustomize edit set image denartcc/api=adhp/api:$HASH
+    - name: Update prod overlay
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+        HASH=`echo ${GITHUB_SHA} | cut -c1-7`
+        cd $GITHUB_WORKSPACE/gitops-phzh/overlays/prod
+        kustomize edit set image denartcc/api=adhp/api:$HASH
+    - name: Commit manifests
+      run: |
+        cd $GITHUB_WORKSPACE/gitops-phzh
+        git add .
+        git commit -m "Update manifests for api"
+    - name: Push to gitops repo
+      run: |
+        cd $GITHUB_WORKSPACE/gitops-phzh
         git push origin main
