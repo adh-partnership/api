@@ -83,7 +83,9 @@ func GetFacility(id string) (*VATUSAFacility, error) {
 	}
 
 	type response struct {
-		Facility *VATUSAFacility `json:"data"`
+		Data struct {
+			Facility *VATUSAFacility `json:"facility"`
+		} `json:"data"`
 	}
 
 	r := response{}
@@ -92,7 +94,9 @@ func GetFacility(id string) (*VATUSAFacility, error) {
 		return nil, err
 	}
 
-	return r.Facility, nil
+	log.Debugf("response=%+v", r)
+
+	return r.Data.Facility, nil
 }
 
 // GetFacilityRoster will grab the facility roster from VATUSA. If membership is not specified, or it is not "home" or
