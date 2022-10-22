@@ -162,6 +162,11 @@ func CanUserModifyRole(user *models.User, role string) bool {
 }
 
 func InGroup(user *models.User, group string) bool {
+	// admins are always in group, no matter the group.
+	if group != "admin" && InGroup(user, "admin") {
+		return true
+	}
+
 	if _, ok := Groups[group]; !ok {
 		return false
 	}
