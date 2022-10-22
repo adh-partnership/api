@@ -109,15 +109,15 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 					}
 				}
 			}
-			user.Status = constants.ControllerTypeVisitor
+			user.ControllerType = constants.ControllerTypeVisitor
 		} else if controller.Membership == "home" {
 			user.Region = "AMAS"
 			user.Division = "USA"
 			user.Subdivision = controller.Facility
-			user.Status = constants.ControllerTypeHome
+			user.ControllerType = constants.ControllerTypeHome
 		} else {
 			// This shouldn't happen... but...
-			user.Status = constants.ControllerTypeNone
+			user.ControllerType = constants.ControllerTypeNone
 		}
 
 		if create {

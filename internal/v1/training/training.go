@@ -25,9 +25,9 @@ import (
 func getTraining(c *gin.Context) {
 	var notes []models.TrainingNote
 
-	user := c.MustGet("user").(*models.User)
+	user := c.MustGet("x-user").(*models.User)
 
-	if auth.InGroup(user, "training") || fmt.Sprint(user.CID) != c.Param("cid") {
+	if !auth.InGroup(user, "training") && fmt.Sprint(user.CID) != c.Param("cid") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
@@ -58,7 +58,7 @@ func postTraining(c *gin.Context) {
 		return
 	}
 
-	user := c.MustGet("user").(*models.User)
+	user := c.MustGet("x-user").(*models.User)
 
 	student, err := database.FindUserByCID(c.Param("cid"))
 	if err != nil {
@@ -180,9 +180,9 @@ func putTraining(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/training/:cid/:id [DELETE]
 func deleteTraining(c *gin.Context) {
-	user := c.MustGet("user").(*models.User)
+	user := c.MustGet("x-user").(*models.User)
 
-	if auth.InGroup(user, "training") {
+	if !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}

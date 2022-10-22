@@ -45,6 +45,14 @@ func UpdateRoster() error {
 		return err
 	}
 
+	// Cleanup operating initials from controllers that are gone
+	if err := database.DB.Model(&models.User{}).Where(models.User{ControllerType: constants.ControllerTypeNone}).
+		Updates(map[string]interface{}{
+			"operating_initials": "",
+		}).Error; err != nil {
+		return err
+	}
+
 	// Users not part of the VATUSA roster will be removed from our roster
 	if err := database.DB.Model(&models.User{}).Not(models.User{UpdateID: updateid}).
 		Or("update_id IS NULL").
