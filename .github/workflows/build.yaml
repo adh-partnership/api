@@ -61,6 +61,14 @@ jobs:
     - name: Push Image
       if: ${{ github.event_name == 'push' }}
       run: docker push --all-tags ${{ secrets.DOCKER_USERNAME }}/api
+    - name: Install Cosign
+      if: ${{ github.event_name == 'push' }}
+      uses: sigstore/cosign-installer@main
+    - name: Sign image
+      run: cosign sign --key env://COSIGN_PRIVATE_KEY ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }} ${{ secrets.DOCKER_USERNAME }}/api:${{ env.sha_short }}
+      env:
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PRIVATE_KEY_PASSWORD }}
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}      
   deploy-kzdv:
     name: Update KZDV GitOps Repo
     runs-on: ubuntu-latest
