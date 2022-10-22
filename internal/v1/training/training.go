@@ -27,7 +27,7 @@ func getTraining(c *gin.Context) {
 
 	user := c.MustGet("x-user").(*models.User)
 
-	if auth.InGroup(user, "training") || fmt.Sprint(user.CID) != c.Param("cid") {
+	if !auth.InGroup(user, "training") && fmt.Sprint(user.CID) != c.Param("cid") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
@@ -182,7 +182,7 @@ func putTraining(c *gin.Context) {
 func deleteTraining(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
-	if auth.InGroup(user, "training") {
+	if !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
