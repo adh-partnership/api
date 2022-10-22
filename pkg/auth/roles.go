@@ -1,6 +1,11 @@
 package auth
 
-import "github.com/adh-partnership/api/pkg/database/models"
+import (
+	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/logger"
+)
+
+var log = logger.Logger.WithField("component", "auth")
 
 type Role struct {
 	Name        string
@@ -164,21 +169,27 @@ func CanUserModifyRole(user *models.User, role string) bool {
 func InGroup(user *models.User, group string) bool {
 	// admins are always in group, no matter the group.
 	if group != "admin" && InGroup(user, "admin") {
+		log.Tracef("InGroup: User %d is in group admin", user.CID)
 		return true
 	}
 
 	if _, ok := Groups[group]; !ok {
+		log.Warnf("InGroup: Group %s does not exist", group)
 		return false
 	}
 
-	return HasRoleList(user, Groups[group])
+	has := HasRoleList(user, Groups[group])
+	log.Tracef("InGroup: User %d is in group %s: %t", user.CID, group, has)
+	return has
 }
 
 func HasRoleList(user *models.User, roles []string) bool {
 	for _, r := range roles {
 		if HasRole(user, r) {
+			log.Tracef("HasRoleList: User %d has role %s", user.CID, r)
 			return true
 		}
+		log.Tracef("HasRoleList: User %d does not have role %s", user.CID, r)
 	}
 	return false
 }
