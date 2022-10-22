@@ -81,6 +81,17 @@ jobs:
     if : ${{ github.event_name == 'push' && contains(fromJson('["refs/heads/dev", "refs/heads/main"]'), github.ref) }}
 
     steps:
+    - name: Set sha_short
+      id: vars
+      run: |-
+        echo "sha_short=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+        # Set default branch name for PRs, as we still want to test build an image on PRs
+        # but we have no branch to set a tag for.
+        branch="test"
+        if [[ "$GITHUB_REF" == "refs/heads/"* ]]; then
+          branch="${GITHUB_REF#refs/heads/}"
+        fi
+        echo "branch=${branch}" >> $GITHUB_ENV
     - name: Checkout KZDV Gitops Repo
       uses: actions/checkout@v3
       with:
@@ -99,15 +110,13 @@ jobs:
     - name: Update dev overlay
       if: ${{ github.ref == 'refs/heads/dev' }}
       run: |
-        HASH=`echo ${GITHUB_SHA} | cut -c1-7`
         cd $GITHUB_WORKSPACE/gitops/k8s/gitops/overlays/dev
-        kustomize edit set image denartcc/api=adhp/api:$HASH
+        kustomize edit set image denartcc/api=adhp/api:${{ env.branch }}-${{ env.sha_short }}
     - name: Update prod overlay
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |
-        HASH=`echo ${GITHUB_SHA} | cut -c1-7`
         cd $GITHUB_WORKSPACE/gitops/k8s/gitops/overlays/prod
-        kustomize edit set image denartcc/api=adhp/api:$HASH
+        kustomize edit set image denartcc/api=adhp/api:${{ env.branch }}-${{ env.sha_short }}
     - name: Commit manifests
       run: |
         cd $GITHUB_WORKSPACE/gitops/k8s/gitops
@@ -124,6 +133,17 @@ jobs:
     if : ${{ github.event_name == 'push' && contains(fromJson('["refs/heads/dev", "refs/heads/main"]'), github.ref) }}
 
     steps:
+    - name: Set sha_short
+      id: vars
+      run: |-
+        echo "sha_short=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+        # Set default branch name for PRs, as we still want to test build an image on PRs
+        # but we have no branch to set a tag for.
+        branch="test"
+        if [[ "$GITHUB_REF" == "refs/heads/"* ]]; then
+          branch="${GITHUB_REF#refs/heads/}"
+        fi
+        echo "branch=${branch}" >> $GITHUB_ENV
     - name: Checkout PAZA Gitops Repo
       uses: actions/checkout@v3
       with:
@@ -142,15 +162,14 @@ jobs:
     - name: Update dev overlay
       if: ${{ github.ref == 'refs/heads/dev' }}
       run: |
-        HASH=`echo ${GITHUB_SHA} | cut -c1-7`
         cd $GITHUB_WORKSPACE/gitops-paza/overlays/dev
-        kustomize edit set image denartcc/api=adhp/api:$HASH
+        kustomize edit set image denartcc/api=adhp/api:${{ env.branch }}-${{ env.sha_short }}
     - name: Update prod overlay
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |
         HASH=`echo ${GITHUB_SHA} | cut -c1-7`
         cd $GITHUB_WORKSPACE/gitops-paza/overlays/prod
-        kustomize edit set image denartcc/api=adhp/api:$HASH
+        kustomize edit set image denartcc/api=adhp/api:${{ env.branch }}-${{ env.sha_short }}
     - name: Commit manifests
       run: |
         cd $GITHUB_WORKSPACE/gitops-paza
@@ -168,6 +187,17 @@ jobs:
     if : ${{ github.event_name == 'push' && contains(fromJson('["refs/heads/dev", "refs/heads/main"]'), github.ref) }}
 
     steps:
+    - name: Set sha_short
+      id: vars
+      run: |-
+        echo "sha_short=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+        # Set default branch name for PRs, as we still want to test build an image on PRs
+        # but we have no branch to set a tag for.
+        branch="test"
+        if [[ "$GITHUB_REF" == "refs/heads/"* ]]; then
+          branch="${GITHUB_REF#refs/heads/}"
+        fi
+        echo "branch=${branch}" >> $GITHUB_ENV
     - name: Checkout PHZH Gitops Repo
       uses: actions/checkout@v3
       with:
@@ -186,15 +216,13 @@ jobs:
     - name: Update dev overlay
       if: ${{ github.ref == 'refs/heads/dev' }}
       run: |
-        HASH=`echo ${GITHUB_SHA} | cut -c1-7`
         cd $GITHUB_WORKSPACE/gitops-phzh/overlays/dev
-        kustomize edit set image denartcc/api=adhp/api:$HASH
+        kustomize edit set image denartcc/api=adhp/api:${{ env.branch }}-${{ env.sha_short }}
     - name: Update prod overlay
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |
-        HASH=`echo ${GITHUB_SHA} | cut -c1-7`
         cd $GITHUB_WORKSPACE/gitops-phzh/overlays/prod
-        kustomize edit set image denartcc/api=adhp/api:$HASH
+        kustomize edit set image denartcc/api=adhp/api:${{ env.branch }}-${{ env.sha_short }}
     - name: Commit manifests
       run: |
         cd $GITHUB_WORKSPACE/gitops-phzh
