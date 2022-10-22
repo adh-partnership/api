@@ -57,15 +57,20 @@ jobs:
     - name: Build Binaries
       run: make build
     - name: Build Image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }} -t ${{ secrets.DOCKER_USERNAME }}/api:${{ env.sha_short }} .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }} -t ${{ secrets.DOCKER_USERNAME }}/api:${{env.branch}}-${{ env.sha_short }} .
     - name: Push Image
       if: ${{ github.event_name == 'push' }}
       run: docker push --all-tags ${{ secrets.DOCKER_USERNAME }}/api
+    - name: Get image digest
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        echo "image_digest_sha=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }}-${{ env.sha_short }})" >> $GITHUB_ENV
+        echo "image_digest_branch=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }})" >> $GITHUB_ENV
     - name: Install Cosign
       if: ${{ github.event_name == 'push' }}
       uses: sigstore/cosign-installer@main
     - name: Sign image
-      run: cosign sign --key env://COSIGN_PRIVATE_KEY ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }} ${{ secrets.DOCKER_USERNAME }}/api:${{ env.sha_short }}
+      run: cosign sign --key env://COSIGN_PRIVATE_KEY ${{ env.image_digest_sha }} ${{ env.image_digest_branch }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PRIVATE_KEY_PASSWORD }}
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}      
