@@ -18,7 +18,7 @@ require (
 	github.com/jellydator/ttlcache/v3 v3.0.0
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/sirupsen/logrus v1.9.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.8.7
