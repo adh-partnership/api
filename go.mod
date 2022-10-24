@@ -22,7 +22,7 @@ require (
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.8.7
-	github.com/urfave/cli/v2 v2.20.2
+	github.com/urfave/cli/v2 v2.20.3
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
 	gorm.io/driver/mysql v1.4.3
 	gorm.io/gorm v1.24.0
