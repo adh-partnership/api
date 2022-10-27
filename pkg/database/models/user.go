@@ -9,7 +9,7 @@ type User struct {
 	FirstName         string `json:"first_name" gorm:"type:varchar(128)" example:"Daniel"`
 	LastName          string `json:"last_name" gorm:"type:varchar(128)" example:"Hawton"`
 	Email             string `json:"email" gorm:"type:varchar(128)" example:"wm@denartcc.org"`
-	OperatingInitials string `json:"oi" gorm:"type:varchar(2)" example:"DH"`
+	OperatingInitials string `json:"operating_initials" gorm:"type:varchar(2)" example:"DH"`
 	// Must be one of: none, active, inactive, loa
 	ControllerType string `json:"controllerType" gorm:"type:varchar(10)" example:"home"`
 	// Must be one of : none, training, solo, certified, cantrain
