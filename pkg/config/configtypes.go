@@ -68,6 +68,7 @@ type ConfigOAuthEndpoints struct {
 type ConfigVATUSA struct {
 	Facility string `json:"facility"`
 	APIKey   string `json:"api_key"`
+	TestMode bool   `json:"test_mode"`
 }
 
 type ConfigStorage struct {
