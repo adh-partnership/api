@@ -7,8 +7,8 @@ import (
 
 type ControllerStats struct {
 	CID            uint    `json:"cid" example:"1"`
-	FirstName      string  `json:"firstname" example:"Daniel"`
-	LastName       string  `json:"lastname" example:"Hawton"`
+	FirstName      string  `json:"first_name" example:"Daniel"`
+	LastName       string  `json:"last_name" example:"Hawton"`
 	ControllerType string  `json:"controllerType" example:"home"`
 	Rating         string  `json:"rating" example:"S1"`
 	Cab            float32 `json:"cab" example:"0.5"`
