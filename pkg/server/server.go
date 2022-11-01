@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -102,14 +101,8 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	log.Info("Configuring Discord package")
 	discord.SetupWebhooks(cfg.Discord.Webhooks)
 
-	log.Info("Building OAuth2 Client")
-	oauth.Build(
-		cfg.OAuth.ClientID,
-		cfg.OAuth.ClientSecret,
-		fmt.Sprintf("%s%s", cfg.OAuth.MyBaseURL, "/v1/user/login/callback"),
-		fmt.Sprintf("%s%s", cfg.OAuth.BaseURL, cfg.OAuth.Endpoints.Authorize),
-		fmt.Sprintf("%s%s", cfg.OAuth.BaseURL, cfg.OAuth.Endpoints.Token),
-	)
+	log.Info("Building OAuth2 Clients")
+	oauth.BuildWithConfig(cfg)
 
 	log.Info("Building storage objects")
 	log.Info(" - Uploads")

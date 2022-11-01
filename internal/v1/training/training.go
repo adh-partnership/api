@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 
 	"github.com/adh-partnership/api/pkg/auth"
 	"github.com/adh-partnership/api/pkg/database"
@@ -32,7 +33,7 @@ func getTraining(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Where(models.TrainingNote{ControllerID: database.Atou(c.Param("cid"))}).Find(&notes).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Where(models.TrainingNote{ControllerID: database.Atou(c.Param("cid"))}).Find(&notes).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}

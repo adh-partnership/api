@@ -10,6 +10,9 @@ import (
 var log = logger.Logger.WithField("component", "v1/user")
 
 func Routes(r *gin.RouterGroup) {
+	r.GET("/discord/link", getDiscordLink)
+	r.GET("/discord/callback", auth.NotGuest, getDiscordCallback)
+
 	r.GET("/login", getLogin)
 	r.GET("/login/callback", getLoginCallback)
 

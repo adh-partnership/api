@@ -26,6 +26,9 @@ func handle(method, endpoint string, formdata map[string]string) (int, []byte, e
 	}
 	q := u.Query()
 	q.Set("apikey", config.Cfg.VATUSA.APIKey)
+	if config.Cfg.VATUSA.TestMode {
+		q.Set("test", "true")
+	}
 	u.RawQuery = q.Encode()
 
 	return network.Handle(method, u.String(), "application/x-www-form-urlencode", data.Encode())

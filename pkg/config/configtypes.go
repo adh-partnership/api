@@ -18,7 +18,9 @@ type ConfigServer struct {
 }
 
 type ConfigDiscord struct {
-	Webhooks map[string]string `json:"webhooks"`
+	Webhooks     map[string]string `json:"webhooks"`
+	ClientID     string            `json:"client_id"`
+	ClientSecret string            `json:"client_secret"`
 }
 
 type ConfigDatabase struct {
@@ -68,6 +70,7 @@ type ConfigOAuthEndpoints struct {
 type ConfigVATUSA struct {
 	Facility string `json:"facility"`
 	APIKey   string `json:"api_key"`
+	TestMode bool   `json:"test_mode"`
 }
 
 type ConfigStorage struct {

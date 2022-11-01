@@ -6,10 +6,10 @@ import (
 
 type User struct {
 	CID               uint   `json:"cid" gorm:"primaryKey" example:"876594"`
-	FirstName         string `json:"firstname" gorm:"type:varchar(128)" example:"Daniel"`
-	LastName          string `json:"lastname" gorm:"type:varchar(128)" example:"Hawton"`
+	FirstName         string `json:"first_name" gorm:"type:varchar(128)" example:"Daniel"`
+	LastName          string `json:"last_name" gorm:"type:varchar(128)" example:"Hawton"`
 	Email             string `json:"email" gorm:"type:varchar(128)" example:"wm@denartcc.org"`
-	OperatingInitials string `json:"oi" gorm:"type:varchar(2)" example:"DH"`
+	OperatingInitials string `json:"operating_initials" gorm:"type:varchar(2)" example:"DH"`
 	// Must be one of: none, active, inactive, loa
 	ControllerType string `json:"controllerType" gorm:"type:varchar(10)" example:"home"`
 	// Must be one of : none, training, solo, certified, cantrain
