@@ -68,7 +68,7 @@ func getDiscordCallback(c *gin.Context) {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
-	token, err := oauth.OAuthConfig.Exchange(c.Request.Context(), c.Query("code"))
+	token, err := oauth.DiscordOAuthConfig.Exchange(c.Request.Context(), c.Query("code"))
 	if err != nil {
 		log.Warnf("Error exchanging code for token: %s", err.Error())
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
@@ -114,7 +114,7 @@ func getDiscordCallback(c *gin.Context) {
 
 	user := c.MustGet("x-user").(*models.User)
 	user.DiscordID = discorduser.ID
-	if err := database.DB.Save(user); err != nil {
+	if err := database.DB.Save(user).Error; err != nil {
 		log.Errorf("Error saving user %d discord id: %+v", user.CID, err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return

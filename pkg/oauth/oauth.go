@@ -44,8 +44,10 @@ func BuildWithConfig(c *config.Config) {
 		c.Discord.ClientID,
 		c.Discord.ClientSecret,
 		fmt.Sprintf("%s%s", c.OAuth.MyBaseURL, "/v1/user/discord/callback"),
-		"https://discord.com/oauth2/authorize",
-		"https://discord.com/api/oauth2/token",
+		"https://discord.com/api/v10/oauth2/authorize",
+		"https://discord.com/api/v10/oauth2/token",
 		[]string{"identify"}, // We really only need their id
 	)
+
+	DiscordOAuthConfig.Endpoint.AuthStyle = oauth2.AuthStyleInParams
 }
