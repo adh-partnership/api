@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
@@ -132,13 +133,23 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	}
 	s.Engine.Use(cors.New(corsConfig))
 
-	store := cookie.NewStore([]byte(cfg.Session.Cookie.Secret))
-	store.Options(sessions.Options{
+	cookieOpts := sessions.Options{
 		Domain:   cfg.Session.Cookie.Domain,
 		Path:     cfg.Session.Cookie.Path,
 		MaxAge:   cfg.Session.Cookie.MaxAge,
 		HttpOnly: true,
-	})
+	}
+	switch strings.ToLower(cfg.Session.Cookie.SameSite) {
+	case "lax":
+		cookieOpts.SameSite = http.SameSiteLaxMode
+	case "strict":
+		cookieOpts.SameSite = http.SameSiteStrictMode
+	default:
+		cookieOpts.SameSite = http.SameSiteDefaultMode
+	}
+
+	store := cookie.NewStore([]byte(cfg.Session.Cookie.Secret))
+	store.Options(cookieOpts)
 	s.Engine.Use(sessions.Sessions(cfg.Session.Cookie.Name, store))
 	s.Engine.Use(auth.UpdateCookie)
 	s.Engine.Use(auth.Auth)
