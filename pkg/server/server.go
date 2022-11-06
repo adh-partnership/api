@@ -138,8 +138,12 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		Path:     cfg.Session.Cookie.Path,
 		MaxAge:   cfg.Session.Cookie.MaxAge,
 		HttpOnly: true,
+		Secure:   cfg.Session.Cookie.Secure,
 	}
 	switch strings.ToLower(cfg.Session.Cookie.SameSite) {
+	case "none": // Useful for local development against the staging API
+		cookieOpts.SameSite = http.SameSiteNoneMode
+		cookieOpts.Secure = true
 	case "lax":
 		cookieOpts.SameSite = http.SameSiteLaxMode
 	case "strict":

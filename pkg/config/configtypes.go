@@ -50,6 +50,7 @@ type ConfigSessionCookie struct {
 	Domain   string `json:"domain"`
 	Path     string `json:"path"`
 	MaxAge   int    `json:"max_age"`
+	Secure   bool   `json:"secure"`
 	SameSite string `json:"same_site"`
 }
 
