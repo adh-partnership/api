@@ -65,6 +65,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		User:     cfg.Database.User,
 		Password: cfg.Database.Password,
 		Database: cfg.Database.Database,
+		CACert:   cfg.Database.CACert,
 		Driver:   "mysql",
 		Logger:   logger.Logger,
 	})

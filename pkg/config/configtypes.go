@@ -30,6 +30,7 @@ type ConfigDatabase struct {
 	Password    string `json:"password"`
 	Database    string `json:"database"`
 	Automigrate bool   `json:"automigrate"`
+	CACert      string `json:"ca_cert"`
 }
 
 type ConfigEmail struct {
