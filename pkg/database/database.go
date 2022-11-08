@@ -3,6 +3,7 @@ package database
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"database/sql"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -107,14 +108,16 @@ func Connect(options DBOptions) error {
 		return err
 	}
 
-	var conn gorm.Dialector
+	var conn *sql.DB
 	if options.Driver == "mysql" {
-		conn = mysql.Open(dsn)
-	}
-
-	DB, err = gorm.Open(conn, &gorm.Config{Logger: NewLogger(options.Logger)})
-	if err != nil {
-		return err
+		conn, err = sql.Open("mysql", dsn)
+		if err != nil {
+			return err
+		}
+		DB, err = gorm.Open(mysql.New(mysql.Config{Conn: conn}), &gorm.Config{Logger: NewLogger(options.Logger)})
+		if err != nil {
+			return err
+		}
 	}
 
 	sqlDB, err := DB.DB()
