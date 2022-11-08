@@ -3,6 +3,7 @@ package database
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"database/sql"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -42,8 +43,12 @@ func GenerateDSN(options DBOptions) (string, error) {
 	var dsn string
 
 	if options.Driver == "mysql" {
-		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", options.User, options.Password,
-			options.Host, options.Port, options.Database)
+		tls := ""
+		if options.CACert != "" {
+			tls = "&tls=custom"
+		}
+		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true%s", options.User, options.Password,
+			options.Host, options.Port, options.Database, tls)
 		if options.Options != "" {
 			dsn += "?" + options.Options
 		}
@@ -107,14 +112,16 @@ func Connect(options DBOptions) error {
 		return err
 	}
 
-	var conn gorm.Dialector
+	var conn *sql.DB
 	if options.Driver == "mysql" {
-		conn = mysql.Open(dsn)
-	}
-
-	DB, err = gorm.Open(conn, &gorm.Config{Logger: NewLogger(options.Logger)})
-	if err != nil {
-		return err
+		conn, err = sql.Open("mysql", dsn)
+		if err != nil {
+			return err
+		}
+		DB, err = gorm.Open(mysql.New(mysql.Config{Conn: conn}), &gorm.Config{Logger: NewLogger(options.Logger)})
+		if err != nil {
+			return err
+		}
 	}
 
 	sqlDB, err := DB.DB()

@@ -8,6 +8,7 @@ database:
   password: {{.DB_PASSWORD | default "root"}}
   database: {{.DB_DATABASE | default "zdv"}}
   automigrate: true
+  ca_cert: {{.DB_CA_CERT | default ""}}
 discord:
   webhooks:
     online: "https://discordapp.com/api/webhooks/..."

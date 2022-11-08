@@ -30,6 +30,7 @@ type ConfigDatabase struct {
 	Password    string `json:"password"`
 	Database    string `json:"database"`
 	Automigrate bool   `json:"automigrate"`
+	CACert      string `json:"ca_cert"`
 }
 
 type ConfigEmail struct {
@@ -45,11 +46,13 @@ type ConfigSession struct {
 }
 
 type ConfigSessionCookie struct {
-	Name   string `json:"name"`
-	Secret string `json:"secret"`
-	Domain string `json:"domain"`
-	Path   string `json:"path"`
-	MaxAge int    `json:"max_age"`
+	Name     string `json:"name"`
+	Secret   string `json:"secret"`
+	Domain   string `json:"domain"`
+	Path     string `json:"path"`
+	MaxAge   int    `json:"max_age"`
+	Secure   bool   `json:"secure"`
+	SameSite string `json:"same_site"`
 }
 
 type ConfigOAuth struct {

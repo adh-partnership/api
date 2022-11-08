@@ -18,7 +18,7 @@ jobs:
     - name: Setup go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.2
+        go-version: 1.19.3
     - name: Run tests
       run: make test
     - name: Test docs
@@ -44,7 +44,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.2
+        go-version: 1.19.3
     - name: Install Cosign
       if: ${{ github.event_name == 'push' }}
       uses: sigstore/cosign-installer@main
@@ -70,6 +70,7 @@ jobs:
         echo "image_digest_sha=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }}-${{ env.sha_short }})" >> $GITHUB_ENV
         echo "image_digest_branch=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKER_USERNAME }}/api:${{ env.branch }})" >> $GITHUB_ENV
     - name: Sign image
+      if: ${{ github.event_name == 'push' }}
       run: cosign sign --key env://COSIGN_PRIVATE_KEY ${{ env.image_digest_sha }} ${{ env.image_digest_branch }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PRIVATE_KEY_PASSWORD }}
