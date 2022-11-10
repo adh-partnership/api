@@ -23,7 +23,7 @@ require (
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.8.7
 	github.com/urfave/cli/v2 v2.23.4
-	golang.org/x/oauth2 v0.1.0
+	golang.org/x/oauth2 v0.2.0
 	gorm.io/driver/mysql v1.4.3
 	gorm.io/gorm v1.24.1
 	sigs.k8s.io/yaml v1.3.0
@@ -74,7 +74,7 @@ require (
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	go.uber.org/goleak v1.1.12 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
-	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
