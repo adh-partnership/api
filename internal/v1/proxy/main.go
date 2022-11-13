@@ -4,4 +4,5 @@ import "github.com/gin-gonic/gin"
 
 func Routes(r *gin.RouterGroup) {
 	r.GET("/metar/:icao", getMetar)
+	r.GET("/taf/:icao", getTaf)
 }
