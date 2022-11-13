@@ -15,6 +15,7 @@ func Routes(r *gin.RouterGroup) {
 
 	r.GET("/login", getLogin)
 	r.GET("/login/callback", getLoginCallback)
+	r.GET("/logout", auth.NotGuest, getLogout)
 
 	r.GET("/", auth.NotGuest, getUser)
 	r.GET("/:cid", getUser)

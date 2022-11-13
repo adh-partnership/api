@@ -17,6 +17,27 @@ import (
 	"github.com/adh-partnership/api/pkg/utils"
 )
 
+// Logout of account
+// @Summary Logout of account
+// @Tags user, oauth
+// @Param redirect query string false "Redirect URL"
+// @Success 307
+// @Failure 500 {object} response.R
+// @Router /v1/user/logout [GET]
+func getLogout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Delete("cid")
+	_ = session.Save()
+
+	redirect := c.Query("redirect")
+	if redirect != "" {
+		c.Redirect(http.StatusTemporaryRedirect, redirect)
+		return
+	}
+
+	response.RespondBlank(c, http.StatusNoContent)
+}
+
 // Login to account
 // @Summary Login to account
 // @Tags user, oauth
