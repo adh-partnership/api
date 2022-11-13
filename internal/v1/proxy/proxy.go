@@ -18,7 +18,7 @@ import (
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /proxy/metar/{icao} [get]
+// @Router /v1/proxy/metar/{icao} [get]
 func getMetar(c *gin.Context) {
 	icao := c.Param("icao")
 	if icao == "" {
