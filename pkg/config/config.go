@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strings"
 
 	"sigs.k8s.io/yaml"
 )
@@ -21,5 +22,16 @@ func ParseConfig(file string) (*Config, error) {
 		return nil, err
 	}
 
+	sanitizeConfig(cfg)
+
 	return cfg, nil
+}
+
+func sanitizeConfig(cfg *Config) {
+	if cfg.Server.Port == "" {
+		cfg.Server.Port = "8080"
+	}
+	if !strings.HasSuffix(cfg.Storage.BaseURL, "/") {
+		cfg.Storage.BaseURL += "/"
+	}
 }
