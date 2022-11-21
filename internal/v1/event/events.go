@@ -78,6 +78,7 @@ func getEvent(c *gin.Context) {
 func postEvent(c *gin.Context) {
 	var dto dto.EventRequest
 	if err := c.ShouldBindJSON(&dto); err != nil {
+		log.Debugf("Error binding dto: %s", err)
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
 	}
@@ -114,6 +115,7 @@ func postEvent(c *gin.Context) {
 func patchEvent(c *gin.Context) {
 	var data dto.EventRequest
 	if err := c.ShouldBindJSON(&data); err != nil {
+		log.Debugf("Error binding dto: %s", err)
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
 	}
