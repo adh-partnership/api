@@ -20,10 +20,29 @@ import (
 	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
 
+// Get visiting applications
+// @Summary Get visiting applications
+// @Description Get visiting applications
+// @Tags user
+// @Success 200 {object} []models.VisitorApplication
+// @Failure 401 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /user/visitor [get]
+func getVisitor(c *gin.Context) {
+	apps := []models.VisitorApplication{}
+	if err := database.DB.Find(&apps).Error; err != nil {
+		log.Errorf("Error getting visitor applications: %s", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	response.Respond(c, http.StatusOK, apps)
+}
+
 // Submit a Visitor Application
 // @Summary Submit a Visitor Application
 // @Description Submit a Visitor Application
-// @Tags User
+// @Tags user
 // @Success 204
 // @Failure 401 {object} response.R
 // @Failure 406 {object} response.R "Not Acceptable - Generally means doesn't meet requirements"
@@ -74,7 +93,7 @@ func postVisitor(c *gin.Context) {
 // Handle Visitor Application
 // @Summary Handle Visitor Application
 // @Description Handle Visitor Application
-// @Tags User
+// @Tags user
 // @Param id path int true "Visitor CID"
 // @Param action body string true "Action to take (accept, deny)"
 // @Param reason body string false "Reason for action for denials"

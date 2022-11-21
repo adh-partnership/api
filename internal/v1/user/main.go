@@ -22,6 +22,7 @@ func Routes(r *gin.RouterGroup) {
 	r.PATCH("/", auth.NotGuest, patchUser)
 	r.PATCH("/:cid", auth.NotGuest, patchUser)
 
+	r.GET("/visitor", auth.NotGuest, getVisitor)
 	r.POST("/visitor", auth.NotGuest, postVisitor)
 	r.PUT("/visitor/:id", auth.NotGuest, auth.InGroup("admin"), putVisitor)
 
