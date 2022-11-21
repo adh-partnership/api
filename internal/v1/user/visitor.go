@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
@@ -30,7 +31,7 @@ import (
 // @Router /user/visitor [get]
 func getVisitor(c *gin.Context) {
 	apps := []models.VisitorApplication{}
-	if err := database.DB.Find(&apps).Error; err != nil {
+	if err := database.DB.Preload("User.Rating").Preload(clause.Associations).Find(&apps).Error; err != nil {
 		log.Errorf("Error getting visitor applications: %s", err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
