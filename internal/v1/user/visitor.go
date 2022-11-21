@@ -12,6 +12,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
+	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
 	"github.com/adh-partnership/api/pkg/discord"
@@ -37,7 +38,7 @@ func getVisitor(c *gin.Context) {
 		return
 	}
 
-	response.Respond(c, http.StatusOK, apps)
+	response.Respond(c, http.StatusOK, dto.ConvVisitorApplicationsToResponse(apps))
 }
 
 // Submit a Visitor Application

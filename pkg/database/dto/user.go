@@ -42,6 +42,13 @@ type UserResponseAdmin struct {
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
 
+type VisitorResponse struct {
+	ID        uint          `json:"id" yaml:"id" xml:"id"`
+	User      *UserResponse `json:"user" yaml:"user" xml:"user"`
+	CreatedAt string        `json:"created_at" yaml:"created_at" xml:"created_at"`
+	UpdatedAt string        `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
+}
+
 type UserResponseCertifications struct {
 	Ground        string `json:"ground" yaml:"ground" xml:"ground"`
 	MajorGround   string `json:"major_ground" yaml:"major_ground" xml:"major_ground"`
@@ -94,6 +101,20 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 		CreatedAt:   user.CreatedAt.Format("2006-01-02T15:04:05Z"),
 		UpdatedAt:   user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
 	}
+}
+
+func ConvVisitorApplicationsToResponse(applications []models.VisitorApplication) []*VisitorResponse {
+	response := []*VisitorResponse{}
+	for _, application := range applications {
+		response = append(response, &VisitorResponse{
+			ID:        application.ID,
+			User:      ConvUserToUserResponse(application.User),
+			CreatedAt: application.CreatedAt.Format("2006-01-02T15:04:05Z"),
+			UpdatedAt: application.UpdatedAt.Format("2006-01-02T15:04:05Z"),
+		})
+	}
+
+	return response
 }
 
 const (
