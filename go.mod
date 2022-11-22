@@ -25,7 +25,7 @@ require (
 	github.com/urfave/cli/v2 v2.23.5
 	golang.org/x/oauth2 v0.2.0
 	gorm.io/driver/mysql v1.4.4
-	gorm.io/gorm v1.24.1
+	gorm.io/gorm v1.24.2
 	sigs.k8s.io/yaml v1.3.0
 )
 
