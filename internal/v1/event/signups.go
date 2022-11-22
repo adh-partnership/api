@@ -55,7 +55,7 @@ func postEventSignup(c *gin.Context) {
 
 	found := false
 	for i := range event.Signups {
-		if event.Signups[i].UserID == user.CID {
+		if *event.Signups[i].UserID == user.CID {
 			event.Signups[i] = signup
 			found = true
 		}
@@ -101,7 +101,7 @@ func deleteEventSignup(c *gin.Context) {
 
 	found := false
 	for i := range event.Signups {
-		if event.Signups[i].UserID == user.CID {
+		if *event.Signups[i].UserID == user.CID {
 			if err := database.DB.Delete(event.Signups[i]).Error; err != nil {
 				log.Errorf("Error deleting event signup: %s", err)
 				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
