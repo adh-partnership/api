@@ -23,6 +23,237 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/email/templates/:name": {
+            "get": {
+                "description": "Get Email Template(s)",
+                "tags": [
+                    "Email"
+                ],
+                "summary": "Get Email Template(s)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Name of email template",
+                        "name": "name",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.EmailTemplate"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Update Email Template",
+                "tags": [
+                    "Email"
+                ],
+                "summary": "Update Email Template",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Name of email template",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Email Template",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.EmailTemplateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/feedback": {
+            "get": {
+                "description": "Get feedback for a pilot",
+                "tags": [
+                    "Feedback"
+                ],
+                "summary": "Get Pilot Feedback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Controller CID filter",
+                        "name": "cid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Status filter",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.FeedbackResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Submit feedback for a pilot",
+                "tags": [
+                    "Feedback"
+                ],
+                "summary": "Submit Pilot Feedback",
+                "parameters": [
+                    {
+                        "description": "Feedback",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FeedbackRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/feedback/{id}": {
+            "patch": {
+                "description": "Patch feedback for a pilot -- currently only the status field can be patched",
+                "tags": [
+                    "Feedback"
+                ],
+                "summary": "Patch Pilot Feedback",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Feedback ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Feedback",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FeedbackPatchRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/live/:facility": {
             "get": {
                 "tags": [
@@ -56,6 +287,225 @@ const docTemplate = `{
                 }
             }
         },
+        "/stats/historical/{year}/{month}": {
+            "get": {
+                "description": "Get Historical Stats",
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get Historical Stats",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Year",
+                        "name": "year",
+                        "in": "path"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Month",
+                        "name": "month",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ControllerStats"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/stats/online": {
+            "get": {
+                "description": "Get Online Controllers",
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get Online Controllers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.OnlineController"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/visitor": {
+            "get": {
+                "description": "Get visiting applications",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get visiting applications",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.VisitorApplication"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Submit a Visitor Application",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Submit a Visitor Application",
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable - Generally means doesn't meet requirements",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Generally means already applied",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/visitor/{id}": {
+            "put": {
+                "description": "Handle Visitor Application",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Handle Visitor Application",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Visitor CID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Action to take (accept, deny)",
+                        "name": "action",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Reason for action for denials",
+                        "name": "reason",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/events": {
             "get": {
                 "description": "Get Upcoming Events",
@@ -75,7 +525,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Event"
+                            "$ref": "#/definitions/dto.EventsResponse"
                         }
                     },
                     "500": {
@@ -148,7 +598,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Event"
+                            "$ref": "#/definitions/dto.EventsResponse"
                         }
                     },
                     "404": {
@@ -621,6 +1071,94 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/proxy/metar/{icao}": {
+            "get": {
+                "description": "Proxy METAR Data",
+                "tags": [
+                    "Proxy"
+                ],
+                "summary": "Proxy METAR Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ICAO, multiple ICAOs can be separated by a comma",
+                        "name": "icao",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/proxy/taf/{icao}": {
+            "get": {
+                "description": "Proxy TAF Data",
+                "tags": [
+                    "Proxy"
+                ],
+                "summary": "Proxy TAF Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ICAO",
+                        "name": "icao",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/storage": {
             "post": {
                 "tags": [
@@ -853,6 +1391,224 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/training/:cid": {
+            "get": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Get Training Records for cid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.TrainingNote"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Create Training Record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Training Note",
+                        "name": "training",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingNoteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.TrainingNote"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/training/:cid/:id": {
+            "put": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Update Training Record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Training Note",
+                        "name": "training",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingNoteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.TrainingNote"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Delete Training Record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
                     },
                     "401": {
                         "description": "Unauthorized",
@@ -1141,6 +1897,72 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/user/discord/callback": {
+            "get": {
+                "tags": [
+                    "user",
+                    "oauth"
+                ],
+                "summary": "Discord Callback",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "307": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/discord/link": {
+            "get": {
+                "tags": [
+                    "user",
+                    "oauth"
+                ],
+                "summary": "Link account and Discord account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Redirect URL",
+                        "name": "redirect",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "307": {
+                        "description": ""
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/user/login": {
             "get": {
                 "tags": [
@@ -1197,6 +2019,34 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/logout": {
+            "get": {
+                "tags": [
+                    "user",
+                    "oauth"
+                ],
+                "summary": "Logout of account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Redirect URL",
+                        "name": "redirect",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "307": {
+                        "description": ""
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -1271,6 +2121,65 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.ControllerStats": {
+            "type": "object",
+            "properties": {
+                "cab": {
+                    "type": "number",
+                    "example": 0.5
+                },
+                "cid": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "controllerType": {
+                    "type": "string",
+                    "example": "home"
+                },
+                "enroute": {
+                    "type": "number",
+                    "example": 0.5
+                },
+                "first_name": {
+                    "type": "string",
+                    "example": "Daniel"
+                },
+                "last_name": {
+                    "type": "string",
+                    "example": "Hawton"
+                },
+                "rating": {
+                    "type": "string",
+                    "example": "S1"
+                },
+                "terminal": {
+                    "type": "number",
+                    "example": 0.5
+                }
+            }
+        },
+        "dto.EmailTemplateRequest": {
+            "type": "object",
+            "required": [
+                "body",
+                "edit_group",
+                "subject"
+            ],
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "cc": {
+                    "type": "string"
+                },
+                "edit_group": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.EventPositionRequest": {
             "type": "object",
             "properties": {
@@ -1279,6 +2188,23 @@ const docTemplate = `{
                 },
                 "position": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.EventPositionResponse": {
+            "type": "object",
+            "properties": {
+                "cid": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.UserResponse"
                 }
             }
         },
@@ -1315,6 +2241,73 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.EventSignupResponse": {
+            "type": "object",
+            "properties": {
+                "choice1": {
+                    "type": "string"
+                },
+                "choice2": {
+                    "type": "string"
+                },
+                "choice3": {
+                    "type": "string"
+                },
+                "cid": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.UserResponse"
+                }
+            }
+        },
+        "dto.EventsResponse": {
+            "type": "object",
+            "properties": {
+                "banner": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "positions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.EventPositionResponse"
+                    }
+                },
+                "signups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.EventSignupResponse"
+                    }
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -1370,17 +2363,21 @@ const docTemplate = `{
         },
         "dto.FeedbackRequest": {
             "type": "object",
+            "required": [
+                "callsign",
+                "comments",
+                "controller",
+                "position",
+                "rating"
+            ],
             "properties": {
+                "callsign": {
+                    "type": "string"
+                },
                 "comments": {
                     "type": "string"
                 },
                 "controller": {
-                    "type": "integer"
-                },
-                "flight_callsign": {
-                    "type": "string"
-                },
-                "flight_date": {
                     "type": "string"
                 },
                 "position": {
@@ -1394,25 +2391,19 @@ const docTemplate = `{
         "dto.FeedbackResponse": {
             "type": "object",
             "properties": {
+                "callsign": {
+                    "type": "string"
+                },
                 "comments": {
                     "type": "string"
                 },
-                "controller_cid": {
-                    "type": "integer"
-                },
-                "controller_name": {
+                "contact_email": {
                     "type": "string"
                 },
-                "controller_rating": {
-                    "type": "string"
+                "controller": {
+                    "$ref": "#/definitions/models.User"
                 },
                 "created_at": {
-                    "type": "string"
-                },
-                "flight_callsign": {
-                    "type": "string"
-                },
-                "flight_date": {
                     "type": "string"
                 },
                 "id": {
@@ -1428,10 +2419,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "submitter": {
-                    "type": "integer"
-                },
-                "submitter_name": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.User"
                 }
             }
         },
@@ -1445,6 +2433,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TrainingNoteRequest": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "session_date": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }
@@ -1467,6 +2475,9 @@ const docTemplate = `{
                 "discord_id": {
                     "type": "string"
                 },
+                "division": {
+                    "type": "string"
+                },
                 "first_name": {
                     "type": "string"
                 },
@@ -1479,6 +2490,9 @@ const docTemplate = `{
                 "rating": {
                     "type": "string"
                 },
+                "region": {
+                    "type": "string"
+                },
                 "roles": {
                     "type": "array",
                     "items": {
@@ -1486,6 +2500,9 @@ const docTemplate = `{
                     }
                 },
                 "status": {
+                    "type": "string"
+                },
+                "subdivision": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -1499,9 +2516,6 @@ const docTemplate = `{
                 "approach": {
                     "type": "string"
                 },
-                "delivery": {
-                    "type": "string"
-                },
                 "enroute": {
                     "type": "string"
                 },
@@ -1509,6 +2523,15 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "local": {
+                    "type": "string"
+                },
+                "major_approach": {
+                    "type": "string"
+                },
+                "major_ground": {
+                    "type": "string"
+                },
+                "major_local": {
                     "type": "string"
                 }
             }
@@ -1674,6 +2697,45 @@ const docTemplate = `{
                 }
             }
         },
+        "models.EmailTemplate": {
+            "description": "Email Templates, there will be no \"new\" for this object. These will be pre-existing but can be edited.",
+            "type": "object",
+            "properties": {
+                "body": {
+                    "description": "HTML-formatted email body",
+                    "type": "string",
+                    "example": "\u003ch1\u003eWelcome to the Virtual Denver ARTCC\u003c/h1\u003e"
+                },
+                "cc": {
+                    "type": "string",
+                    "example": "atm@denartcc.org,datm@denartcc.org"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "edit_group": {
+                    "type": "string",
+                    "example": "admin"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "welcome_message"
+                },
+                "subject": {
+                    "type": "string",
+                    "example": "Welcome to the Virtual Denver ARTCC"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                }
+            }
+        },
         "models.Event": {
             "type": "object",
             "properties": {
@@ -1764,6 +2826,46 @@ const docTemplate = `{
                 }
             }
         },
+        "models.OnlineController": {
+            "type": "object",
+            "properties": {
+                "cid": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "frequency": {
+                    "type": "string",
+                    "example": "118.000"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "logon_time": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "position": {
+                    "type": "string",
+                    "example": "ANC_TWR"
+                },
+                "update_id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                }
+            }
+        },
         "models.Rating": {
             "type": "object",
             "properties": {
@@ -1806,11 +2908,55 @@ const docTemplate = `{
                 }
             }
         },
+        "models.TrainingNote": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "string"
+                },
+                "controller": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "controller_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "instructor": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "instructor_id": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "session_date": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "vatusa_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "properties": {
                 "appCertification": {
-                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "description": "Must be one of : none, training, solo, certified, cantrain",
                     "type": "string",
                     "example": "certified"
                 },
@@ -1828,14 +2974,9 @@ const docTemplate = `{
                     "example": "2020-01-01T00:00:00Z"
                 },
                 "ctrCertification": {
-                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "description": "Must be one of : none, training, solo, certified, cantrain",
                     "type": "string",
                     "example": "none"
-                },
-                "delCertification": {
-                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
-                    "type": "string",
-                    "example": "certified"
                 },
                 "discord_id": {
                     "type": "string",
@@ -1849,25 +2990,40 @@ const docTemplate = `{
                     "type": "string",
                     "example": "wm@denartcc.org"
                 },
-                "firstname": {
+                "first_name": {
                     "type": "string",
                     "example": "Daniel"
                 },
                 "gndCertification": {
-                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "description": "Must be one of : none, training, solo, certified, cantrain",
                     "type": "string",
                     "example": "certified"
                 },
-                "lastname": {
+                "last_name": {
                     "type": "string",
                     "example": "Hawton"
                 },
                 "lclCertification": {
-                    "description": "Must be one of : none, training, solo, certified, major, cantrain",
+                    "description": "Must be one of : none, training, solo, certified, cantrain",
                     "type": "string",
                     "example": "certified"
                 },
-                "oi": {
+                "majgndCertification": {
+                    "description": "Must be one of : none, training, solo, certified, cantrain",
+                    "type": "string",
+                    "example": "certified"
+                },
+                "majorappCertification": {
+                    "description": "Must be one of : none, training, solo, certified, cantrain",
+                    "type": "string",
+                    "example": "certified"
+                },
+                "majorlclCertification": {
+                    "description": "Must be one of : none, training, solo, certified, cantrain",
+                    "type": "string",
+                    "example": "certified"
+                },
+                "operating_initials": {
                     "type": "string",
                     "example": "DH"
                 },
@@ -1901,6 +3057,26 @@ const docTemplate = `{
                 "updateid": {
                     "description": "Internally used identifier during scheduled updates for removals",
                     "type": "string"
+                }
+            }
+        },
+        "models.VisitorApplication": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
                 }
             }
         },
