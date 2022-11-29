@@ -55,7 +55,14 @@ func GetEvents(limit int) ([]models.Event, error) {
 
 func GetEvent(id string) (*models.Event, error) {
 	event := &models.Event{}
-	if err := DB.Preload("Signups.User").Preload("Positions.User").Preload(clause.Associations).Where(models.Event{ID: atou(id)}).First(event).Error; err != nil {
+	if err := DB.
+		Preload("Signups.User").
+		Preload("Signups.User.Rating").
+		Preload("Positions.User").
+		Preload("Positions.User.Rating").
+		Preload(clause.Associations).
+		Where(models.Event{ID: atou(id)}).
+		First(event).Error; err != nil {
 		return nil, err
 	}
 
