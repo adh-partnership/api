@@ -107,12 +107,16 @@ func ConvEventPositionsToEventPositionResponse(positions []*models.EventPosition
 }
 
 func ConvEventPositionToEventPositionResponse(position *models.EventPosition) *EventPositionResponse {
-	return &EventPositionResponse{
+	pos := &EventPositionResponse{
 		ID:       position.ID,
 		Position: position.Position,
 		UserID:   position.UserID,
-		User:     ConvUserToUserResponse(position.User),
 	}
+	if position.User != nil {
+		pos.User = ConvUserToUserResponse(position.User)
+	}
+
+	return pos
 }
 
 func ConvEventSignupsToEventSignupResponse(signups []*models.EventSignup) []*EventSignupResponse {
@@ -124,13 +128,18 @@ func ConvEventSignupsToEventSignupResponse(signups []*models.EventSignup) []*Eve
 }
 
 func ConvEventSignupToEventSignupResponse(signup *models.EventSignup) *EventSignupResponse {
-	return &EventSignupResponse{
+	sup := &EventSignupResponse{
 		ID:      signup.ID,
 		Choice1: signup.Choice1,
 		Choice2: signup.Choice2,
 		Choice3: signup.Choice3,
 		Notes:   signup.Notes,
 		UserID:  signup.UserID,
-		User:    ConvUserToUserResponse(signup.User),
 	}
+
+	if signup.User != nil {
+		sup.User = ConvUserToUserResponse(signup.User)
+	}
+
+	return sup
 }
