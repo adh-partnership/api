@@ -3,7 +3,7 @@ module github.com/adh-partnership/api
 go 1.19
 
 require (
-	github.com/Masterminds/sprig/v3 v3.2.2
+	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
 	github.com/aws/aws-sdk-go v1.44.146
 	github.com/gabriel-vasile/mimetype v1.4.1
