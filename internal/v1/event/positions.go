@@ -142,6 +142,7 @@ func updateEventPosition(c *gin.Context) {
 		}
 	}
 
+	var cid *uint
 	var user *models.User
 	if data.UserID != 0 {
 		user, err = database.FindUserByCID(fmt.Sprint(data.UserID))
@@ -150,6 +151,7 @@ func updateEventPosition(c *gin.Context) {
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
+		cid = &user.CID
 	}
 
 	for _, position := range event.Positions {
@@ -160,6 +162,7 @@ func updateEventPosition(c *gin.Context) {
 			}
 			position.Position = data.Position
 			position.User = user
+			position.UserID = cid
 			if err := database.DB.Save(&position).Error; err != nil {
 				log.Errorf("Error updating event position: %s", err)
 				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
