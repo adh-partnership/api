@@ -29,7 +29,8 @@ facility:
     run_at_hour: 0
     run_at_minute: 0
   feedback:
-    discord_webhook_name: "feedback"
+    pending_feedback: "feedback"
+    feedback_broadcast: "announcement"
   visiting:
     discord_webhook_name: "visitor"
     rating_min: S1

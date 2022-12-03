@@ -105,7 +105,8 @@ type ConfigFacilityVisiting struct {
 }
 
 type ConfigFacilityFeedback struct {
-	DiscordWebhookName string `json:"discord_webhook_name"`
+	DiscordWebhookName           string `json:"pending_feedback"`
+	AcceptedBroadcastWebhookName string `json:"feedback_broadcast"`
 }
 
 type ConfigFacilityActivity struct {

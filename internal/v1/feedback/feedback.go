@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 
 	"github.com/adh-partnership/api/pkg/auth"
 	"github.com/adh-partnership/api/pkg/config"
@@ -18,11 +19,11 @@ import (
 
 // Get Pilot Feedback
 // @Summary Get Pilot Feedback
-// @Description Get feedback for a pilot
+// @Description Get pilot feedback
 // @Tags Feedback
 // @Param cid query string false "Controller CID filter"
-// @Param status query string false "Status filter"
-// @Success 200 {object} dto.FeedbackResponse[]
+// @Param status query string false "Status filter, valid values: pending, approved, rejected. Default: pending"
+// @Success 200 {object} []dto.FeedbackResponse
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
@@ -36,6 +37,8 @@ func getFeedback(c *gin.Context) {
 	}
 	if c.Query("status") != "" {
 		res = res.Where("status = ?", c.Query("status"))
+	} else {
+		res = res.Where("status = 'pending'")
 	}
 	if err := res.Find(&feedback).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
@@ -68,7 +71,16 @@ func postFeedback(c *gin.Context) {
 	}
 
 	if !models.IsValidFeedbackRating(dto.Rating) {
-		response.RespondError(c, http.StatusBadRequest, "Invalid rating")
+		response.RespondError(
+			c,
+			http.StatusBadRequest,
+			fmt.Sprintf("Invalid rating. Valid values: %s, %s, %s, %s",
+				constants.FeedbackRatingExcellent,
+				constants.FeedbackRatingGood,
+				constants.FeedbackRatingFair,
+				constants.FeedbackRatingPoor,
+			),
+		)
 		return
 	}
 
@@ -102,11 +114,13 @@ func postFeedback(c *gin.Context) {
 		config.Cfg.Facility.Feedback.DiscordWebhookName,
 		"Web API",
 		fmt.Sprintf(
-			"New feedback submitted for %s on %s by %s (%d)",
+			"New feedback submitted for %s on %s by %s (%d) - Rating: %s Comments: %s",
 			feedback.Controller.FirstName+" "+feedback.Controller.LastName,
 			feedback.Position,
 			feedback.Submitter.FirstName+" "+feedback.Submitter.LastName,
 			feedback.Submitter.CID,
+			feedback.Rating,
+			feedback.Comments,
 		),
 	)
 
@@ -115,7 +129,7 @@ func postFeedback(c *gin.Context) {
 
 // Patch Pilot Feedback
 // @Summary Patch Pilot Feedback
-// @Description Patch feedback for a pilot -- currently only the status field can be patched
+// @Description Patch feedback for a pilot -- currently only the status field can be patched. Accepted values: approved, rejected
 // @Tags Feedback
 // @Param id path int true "Feedback ID"
 // @Param data body dto.FeedbackPatchRequest true "Feedback"
@@ -137,7 +151,7 @@ func patchFeedback(c *gin.Context) {
 	}
 
 	feedback := &models.Feedback{}
-	if err := database.DB.Where("id = ?", c.Param("id")).First(feedback).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Where("id = ?", c.Param("id")).First(feedback).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
@@ -145,6 +159,20 @@ func patchFeedback(c *gin.Context) {
 	if err := database.DB.Model(feedback).Update("status", dtoFeedback.Status).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
+	}
+
+	if dtoFeedback.Status == constants.FeedbackStatusApproved {
+		_ = discord.SendWebhookMessage(
+			config.Cfg.Facility.Feedback.AcceptedBroadcastWebhookName,
+			"Web API",
+			fmt.Sprintf(
+				"New feedback received! Controller %s on %s received a %s rating. Comments: %s",
+				feedback.Controller.FirstName+" "+feedback.Controller.LastName,
+				feedback.Position,
+				feedback.Rating,
+				feedback.Comments,
+			),
+		)
 	}
 
 	response.RespondBlank(c, http.StatusNoContent)

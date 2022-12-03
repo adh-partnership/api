@@ -16,7 +16,7 @@ import (
 // @Description Get Upcoming Events
 // @Tags Events
 // @Param limit query number false "Limit to X events, default 5 (max 10)"
-// @Success 200 {object} dto.EventsResponse[]
+// @Success 200 {object} []dto.EventsResponse
 // @Failure 500 {object} response.R
 // @Router /v1/events [get]
 func getEvents(c *gin.Context) {
