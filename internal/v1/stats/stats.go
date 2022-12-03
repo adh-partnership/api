@@ -18,7 +18,7 @@ import (
 // @Summary Get Online Controllers
 // @Description Get Online Controllers
 // @Tags Stats
-// @Success 200 {object} models.OnlineController[]
+// @Success 200 {object} []dto.OnlineController
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
@@ -26,12 +26,12 @@ import (
 func getOnlineATC(c *gin.Context) {
 	var controllers []models.OnlineController
 
-	if err := database.DB.Find(&controllers).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Find(&controllers).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
-	response.Respond(c, http.StatusOK, controllers)
+	response.Respond(c, http.StatusOK, dto.ConvertOnlineToDTOs(controllers))
 }
 
 // Get Historical Stats

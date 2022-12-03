@@ -16,6 +16,14 @@ type ControllerStats struct {
 	Enroute        float32 `json:"enroute" example:"0.5"`
 }
 
+type OnlineController struct {
+	CID         uint          `json:"cid" example:"1"`
+	Controller  *UserResponse `json:"controller"`
+	Position    string        `json:"position" example:"ANC_00_CTR"`
+	Frequency   string        `json:"frequency" example:"118.000"`
+	OnlineSince string        `json:"online_since" example:"2020-01-01T00:00:00Z"`
+}
+
 func GetDTOForUserAndMonth(user *models.User, month int, year int) (*ControllerStats, error) {
 	cab, terminal, enroute, err := database.GetStatsForUserAndMonth(user, month, year)
 	if err != nil {
@@ -31,4 +39,22 @@ func GetDTOForUserAndMonth(user *models.User, month int, year int) (*ControllerS
 		Terminal:       terminal,
 		Enroute:        enroute,
 	}, nil
+}
+
+func ConvertOnlineToDTO(online *models.OnlineController) *OnlineController {
+	return &OnlineController{
+		CID:         online.User.CID,
+		Controller:  ConvUserToUserResponse(online.User),
+		Position:    online.Position,
+		Frequency:   online.Frequency,
+		OnlineSince: online.CreatedAt.Format("2006-01-02T15:04:05Z"),
+	}
+}
+
+func ConvertOnlineToDTOs(online []models.OnlineController) []OnlineController {
+	var ret []OnlineController
+	for _, o := range online {
+		ret = append(ret, *ConvertOnlineToDTO(&o))
+	}
+	return ret
 }
