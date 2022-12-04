@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,6 +9,7 @@ import (
 	"github.com/adh-partnership/api/pkg/auth"
 	"github.com/adh-partnership/api/pkg/database"
 	models "github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/memcache"
 )
@@ -99,6 +101,12 @@ func putUserRoles(c *gin.Context) {
 		return
 	}
 
+	_ = discord.SendWebhookMessage(
+		"role",
+		"Web API",
+		fmt.Sprintf("%s %s has added role %s to %s %s (%d)", reqUser.FirstName, reqUser.LastName, role, user.FirstName, user.LastName, user.CID),
+	)
+
 	// If roles change, invalidate staff cache
 	memcache.Cache.Delete("staff")
 
@@ -158,6 +166,12 @@ func deleteUserRoles(c *gin.Context) {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+
+	_ = discord.SendWebhookMessage(
+		"role",
+		"Web API",
+		fmt.Sprintf("%s %s has removed role %s to %s %s (%d)", reqUser.FirstName, reqUser.LastName, role, user.FirstName, user.LastName, user.CID),
+	)
 
 	// If roles change, invalidate staff cache
 	memcache.Cache.Delete("staff")

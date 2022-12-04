@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm/clause"
 
 	"github.com/adh-partnership/api/pkg/auth"
-	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
@@ -111,7 +110,7 @@ func postFeedback(c *gin.Context) {
 	}
 
 	_ = discord.SendWebhookMessage(
-		config.Cfg.Facility.Feedback.DiscordWebhookName,
+		"pending_feedback",
 		"Web API",
 		fmt.Sprintf(
 			"New feedback submitted for %s on %s by %s (%d) - Rating: %s Comments: %s",
@@ -163,7 +162,7 @@ func patchFeedback(c *gin.Context) {
 
 	if dtoFeedback.Status == constants.FeedbackStatusApproved {
 		_ = discord.SendWebhookMessage(
-			config.Cfg.Facility.Feedback.AcceptedBroadcastWebhookName,
+			"broadcast_feedback",
 			"Web API",
 			fmt.Sprintf(
 				"New feedback received! Controller %s on %s received a %s rating. Comments: %s",

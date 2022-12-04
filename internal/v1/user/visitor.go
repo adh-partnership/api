@@ -83,7 +83,7 @@ func postVisitor(c *gin.Context) {
 
 	go func() {
 		_ = discord.SendWebhookMessage(
-			config.Cfg.Facility.Visiting.DiscordWebhookName,
+			"visiting_application",
 			"Web API",
 			fmt.Sprintf("New visiting application from %s %s (%d) [%s]", user.FirstName, user.LastName, user.CID, user.Rating.Short),
 		)
@@ -151,7 +151,7 @@ func putVisitor(c *gin.Context) {
 				log.Errorf("Error sending visitor accepted email to %s: %s", app.User.Email, err)
 			}
 			err = discord.SendWebhookMessage(
-				config.Cfg.Facility.Visiting.DiscordWebhookName,
+				"visiting_application",
 				"Web API",
 				fmt.Sprintf("Visitor application accepted for %s %s (%d) [%s]", app.User.FirstName, app.User.LastName, app.User.CID, app.User.Rating.Short),
 			)
@@ -163,7 +163,7 @@ func putVisitor(c *gin.Context) {
 		if err != nil || status > 299 {
 			log.Errorf("Error adding visiting controller to VATUSA for %d: %s", app.User.CID, err)
 			err = discord.SendWebhookMessage(
-				config.Cfg.Facility.Visiting.DiscordWebhookName,
+				"visiting_application",
 				"Web API",
 				fmt.Sprintf("Error adding visiting controller to VATUSA for cid: %d: %s -- Please add manually!", app.User.CID, err),
 			)
@@ -196,7 +196,7 @@ func putVisitor(c *gin.Context) {
 				log.Errorf("Error sending visitor rejected email to %s: %s", app.User.Email, err)
 			}
 			err = discord.SendWebhookMessage(
-				config.Cfg.Facility.Visiting.DiscordWebhookName,
+				"visiting_application",
 				"Web API",
 				fmt.Sprintf("Visitor application denied for %s %s (%d) [%s]", app.User.FirstName, app.User.LastName, app.User.CID, app.User.Rating.Short),
 			)
