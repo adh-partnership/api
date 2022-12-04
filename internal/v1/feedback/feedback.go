@@ -123,7 +123,7 @@ func postFeedback(c *gin.Context) {
 		),
 	)
 
-	response.RespondBlank(c, http.StatusCreated)
+	response.RespondBlank(c, http.StatusNoContent)
 }
 
 // Patch Pilot Feedback
