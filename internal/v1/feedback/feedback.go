@@ -39,7 +39,7 @@ func getFeedback(c *gin.Context) {
 	} else {
 		res = res.Where("status = 'pending'")
 	}
-	if err := res.Find(&feedback).Error; err != nil {
+	if err := res.Preload(clause.Associations).Find(&feedback).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
