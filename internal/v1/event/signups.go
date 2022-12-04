@@ -53,13 +53,17 @@ func postEventSignup(c *gin.Context) {
 		Notes:   data.Notes,
 	}
 
+	log.Debugf("Signups: %+v", event.Signups)
+
 	found := false
 	for i := range event.Signups {
-		if *event.Signups[i].UserID == user.CID {
+		if event.Signups[i].User.CID == user.CID {
 			event.Signups[i] = signup
 			found = true
 		}
 	}
+
+	log.Debugf("found: %t", found)
 
 	if !found {
 		event.Signups = append(event.Signups, signup)
