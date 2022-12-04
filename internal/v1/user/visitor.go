@@ -29,7 +29,7 @@ import (
 // @Success 200 {object} []models.VisitorApplication
 // @Failure 401 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /user/visitor [get]
+// @Router /v1/user/visitor [get]
 func getVisitor(c *gin.Context) {
 	apps := []models.VisitorApplication{}
 	if err := database.DB.Preload("User.Rating").Preload(clause.Associations).Find(&apps).Error; err != nil {
@@ -50,7 +50,7 @@ func getVisitor(c *gin.Context) {
 // @Failure 406 {object} response.R "Not Acceptable - Generally means doesn't meet requirements"
 // @Failure 409 {object} response.R "Conflict - Generally means already applied"
 // @Failure 500 {object} response.R
-// @Router /user/visitor [post]
+// @Router /v1/user/visitor [post]
 func postVisitor(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
@@ -104,7 +104,7 @@ func postVisitor(c *gin.Context) {
 // @Failure 403 {object} response.R
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /user/visitor/{id} [put]
+// @Router /v1/user/visitor/{id} [put]
 func putVisitor(c *gin.Context) {
 	var app models.VisitorApplication
 	if err := database.DB.Find(&models.VisitorApplication{UserID: database.Atou(c.Param("id"))}).First(&app).Error; err != nil {

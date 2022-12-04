@@ -23,7 +23,7 @@ import (
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /email/templates/:name [get]
+// @Router /v1/email/templates/:name [get]
 func getTemplate(c *gin.Context) {
 	var templates []*models.EmailTemplate
 
@@ -50,7 +50,7 @@ func getTemplate(c *gin.Context) {
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /email/templates/:name [post]
+// @Router /v1/email/templates/:name [post]
 func postTemplate(c *gin.Context) {
 	var req dto.EmailTemplateRequest
 	if err := c.ShouldBind(&req); err != nil {

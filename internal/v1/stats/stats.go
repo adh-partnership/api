@@ -22,7 +22,7 @@ import (
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /stats/online [get]
+// @Router /v1/stats/online [get]
 func getOnlineATC(c *gin.Context) {
 	var controllers []models.OnlineController
 
@@ -44,7 +44,7 @@ func getOnlineATC(c *gin.Context) {
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /stats/historical/{year}/{month} [get]
+// @Router /v1/stats/historical/{year}/{month} [get]
 func getHistoricalStats(c *gin.Context) {
 	var users []models.User
 	var year, month int

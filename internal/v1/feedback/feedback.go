@@ -27,7 +27,7 @@ import (
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /feedback [get]
+// @Router /v1/feedback [get]
 func getFeedback(c *gin.Context) {
 	var feedback []*models.Feedback
 
@@ -62,7 +62,7 @@ func getFeedback(c *gin.Context) {
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /feedback [post]
+// @Router /v1/feedback [post]
 func postFeedback(c *gin.Context) {
 	var dto dto.FeedbackRequest
 	if err := c.ShouldBindJSON(&dto); err != nil {
@@ -137,7 +137,7 @@ func postFeedback(c *gin.Context) {
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /feedback/{id} [patch]
+// @Router /v1/feedback/{id} [patch]
 func patchFeedback(c *gin.Context) {
 	var dtoFeedback dto.FeedbackPatchRequest
 	if err := c.ShouldBindJSON(&dtoFeedback); err != nil {
