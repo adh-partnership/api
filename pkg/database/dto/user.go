@@ -214,7 +214,7 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 }
 
 func GetUsersByRole(role string) ([]*UserResponse, error) {
-	var users []*UserResponse
+	users := []*UserResponse{}
 
 	u, err := database.FindUsersWithRole(role)
 	if err != nil {

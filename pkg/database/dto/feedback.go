@@ -34,7 +34,7 @@ type FeedbackResponse struct {
 }
 
 func ConvertFeedbacktoResponse(feedback []*models.Feedback, includeEmail bool) []FeedbackResponse {
-	var ret []FeedbackResponse
+	ret := []FeedbackResponse{}
 
 	for _, f := range feedback {
 		controller, _ := database.FindUserByCID(fmt.Sprint(f.Controller.CID))

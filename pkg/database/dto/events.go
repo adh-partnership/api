@@ -76,7 +76,8 @@ func PatchEventRequest(base *models.Event, patch EventRequest) *models.Event {
 }
 
 func ConvEventsToEventsResponse(events []*models.Event) []*EventsResponse {
-	var res []*EventsResponse
+	res := []*EventsResponse{}
+
 	for _, event := range events {
 		res = append(res, ConvEventToEventsResponse(event))
 	}
@@ -99,7 +100,7 @@ func ConvEventToEventsResponse(event *models.Event) *EventsResponse {
 }
 
 func ConvEventPositionsToEventPositionResponse(positions []*models.EventPosition) []*EventPositionResponse {
-	var res []*EventPositionResponse
+	res := []*EventPositionResponse{}
 	for _, position := range positions {
 		res = append(res, ConvEventPositionToEventPositionResponse(position))
 	}
@@ -120,7 +121,7 @@ func ConvEventPositionToEventPositionResponse(position *models.EventPosition) *E
 }
 
 func ConvEventSignupsToEventSignupResponse(signups []*models.EventSignup) []*EventSignupResponse {
-	var res []*EventSignupResponse
+	res := []*EventSignupResponse{}
 	for _, signup := range signups {
 		res = append(res, ConvEventSignupToEventSignupResponse(signup))
 	}

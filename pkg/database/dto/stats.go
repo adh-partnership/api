@@ -52,7 +52,8 @@ func ConvertOnlineToDTO(online *models.OnlineController) *OnlineController {
 }
 
 func ConvertOnlineToDTOs(online []models.OnlineController) []OnlineController {
-	var ret []OnlineController
+	ret := []OnlineController{}
+
 	for _, o := range online {
 		ret = append(ret, *ConvertOnlineToDTO(&o))
 	}
