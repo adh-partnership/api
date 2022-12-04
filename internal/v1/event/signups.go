@@ -58,7 +58,10 @@ func postEventSignup(c *gin.Context) {
 	found := false
 	for i := range event.Signups {
 		if event.Signups[i].User.CID == user.CID {
-			event.Signups[i] = signup
+			event.Signups[i].Choice1 = data.Choice1
+			event.Signups[i].Choice2 = data.Choice2
+			event.Signups[i].Choice3 = data.Choice3
+			event.Signups[i].Notes = data.Notes
 			found = true
 		}
 	}
