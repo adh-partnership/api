@@ -134,14 +134,6 @@ func updateEventPosition(c *gin.Context) {
 		return
 	}
 
-	// Check if position already exists
-	for _, position := range event.Positions {
-		if position.Position == data.Position {
-			response.RespondError(c, http.StatusConflict, "Position already exists")
-			return
-		}
-	}
-
 	var cid *uint
 	var user *models.User
 	if data.UserID != 0 {
