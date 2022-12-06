@@ -6,7 +6,7 @@ type EventSignup struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
 	EventID   uint      `json:"-"`
 	Event     Event     `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	UserID    uint      `json:"-"`
+	UserID    *uint     `json:"-"`
 	User      *User     `json:"user"`
 	Choice1   string    `json:"choice1" gorm:"type:varchar(25)"`
 	Choice2   string    `json:"choice2" gorm:"type:varchar(25)"`

@@ -87,25 +87,17 @@ type ConfigStorage struct {
 
 type ConfigFacility struct {
 	Activity ConfigFacilityActivity `json:"activity"`
-	Feedback ConfigFacilityFeedback `json:"feedback"`
 	Stats    ConfigFacilityStats    `json:"stats"`
 	Visiting ConfigFacilityVisiting `json:"visiting"`
 }
 
 type ConfigFacilityStats struct {
-	Enabled                     bool     `json:"enabled"`
-	DiscordBroadcast            bool     `json:"discord_broadcast"`
-	DiscordBroadcastWebhookName string   `json:"discord_broadcast_webhook_name"`
-	Prefixes                    []string `json:"prefixes"`
+	Enabled  bool     `json:"enabled"`
+	Prefixes []string `json:"prefixes"`
 }
 
 type ConfigFacilityVisiting struct {
-	DiscordWebhookName string `json:"discord_webhook_name"`
-	MinRating          string `json:"min_rating"`
-}
-
-type ConfigFacilityFeedback struct {
-	DiscordWebhookName string `json:"discord_webhook_name"`
+	MinRating string `json:"min_rating"`
 }
 
 type ConfigFacilityActivity struct {

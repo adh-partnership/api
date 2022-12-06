@@ -15,12 +15,14 @@ func Routes(r *gin.RouterGroup) {
 
 	r.GET("/login", getLogin)
 	r.GET("/login/callback", getLoginCallback)
+	r.GET("/logout", auth.NotGuest, getLogout)
 
 	r.GET("/", auth.NotGuest, getUser)
 	r.GET("/:cid", getUser)
 	r.PATCH("/", auth.NotGuest, patchUser)
 	r.PATCH("/:cid", auth.NotGuest, patchUser)
 
+	r.GET("/visitor", auth.NotGuest, getVisitor)
 	r.POST("/visitor", auth.NotGuest, postVisitor)
 	r.PUT("/visitor/:id", auth.NotGuest, auth.InGroup("admin"), putVisitor)
 

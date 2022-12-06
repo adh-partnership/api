@@ -8,9 +8,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
+	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
 	"github.com/adh-partnership/api/pkg/discord"
@@ -20,16 +22,35 @@ import (
 	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
 
+// Get visiting applications
+// @Summary Get visiting applications
+// @Description Get visiting applications
+// @Tags user
+// @Success 200 {object} []models.VisitorApplication
+// @Failure 401 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/user/visitor [get]
+func getVisitor(c *gin.Context) {
+	apps := []models.VisitorApplication{}
+	if err := database.DB.Preload("User.Rating").Preload(clause.Associations).Find(&apps).Error; err != nil {
+		log.Errorf("Error getting visitor applications: %s", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	response.Respond(c, http.StatusOK, dto.ConvVisitorApplicationsToResponse(apps))
+}
+
 // Submit a Visitor Application
 // @Summary Submit a Visitor Application
 // @Description Submit a Visitor Application
-// @Tags User
+// @Tags user
 // @Success 204
 // @Failure 401 {object} response.R
 // @Failure 406 {object} response.R "Not Acceptable - Generally means doesn't meet requirements"
 // @Failure 409 {object} response.R "Conflict - Generally means already applied"
 // @Failure 500 {object} response.R
-// @Router /user/visitor [post]
+// @Router /v1/user/visitor [post]
 func postVisitor(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
@@ -62,7 +83,7 @@ func postVisitor(c *gin.Context) {
 
 	go func() {
 		_ = discord.SendWebhookMessage(
-			config.Cfg.Facility.Visiting.DiscordWebhookName,
+			"visiting_application",
 			"Web API",
 			fmt.Sprintf("New visiting application from %s %s (%d) [%s]", user.FirstName, user.LastName, user.CID, user.Rating.Short),
 		)
@@ -74,7 +95,7 @@ func postVisitor(c *gin.Context) {
 // Handle Visitor Application
 // @Summary Handle Visitor Application
 // @Description Handle Visitor Application
-// @Tags User
+// @Tags user
 // @Param id path int true "Visitor CID"
 // @Param action body string true "Action to take (accept, deny)"
 // @Param reason body string false "Reason for action for denials"
@@ -83,7 +104,7 @@ func postVisitor(c *gin.Context) {
 // @Failure 403 {object} response.R
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /user/visitor/{id} [put]
+// @Router /v1/user/visitor/{id} [put]
 func putVisitor(c *gin.Context) {
 	var app models.VisitorApplication
 	if err := database.DB.Find(&models.VisitorApplication{UserID: database.Atou(c.Param("id"))}).First(&app).Error; err != nil {
@@ -130,7 +151,7 @@ func putVisitor(c *gin.Context) {
 				log.Errorf("Error sending visitor accepted email to %s: %s", app.User.Email, err)
 			}
 			err = discord.SendWebhookMessage(
-				config.Cfg.Facility.Visiting.DiscordWebhookName,
+				"visiting_application",
 				"Web API",
 				fmt.Sprintf("Visitor application accepted for %s %s (%d) [%s]", app.User.FirstName, app.User.LastName, app.User.CID, app.User.Rating.Short),
 			)
@@ -142,7 +163,7 @@ func putVisitor(c *gin.Context) {
 		if err != nil || status > 299 {
 			log.Errorf("Error adding visiting controller to VATUSA for %d: %s", app.User.CID, err)
 			err = discord.SendWebhookMessage(
-				config.Cfg.Facility.Visiting.DiscordWebhookName,
+				"visiting_application",
 				"Web API",
 				fmt.Sprintf("Error adding visiting controller to VATUSA for cid: %d: %s -- Please add manually!", app.User.CID, err),
 			)
@@ -175,7 +196,7 @@ func putVisitor(c *gin.Context) {
 				log.Errorf("Error sending visitor rejected email to %s: %s", app.User.Email, err)
 			}
 			err = discord.SendWebhookMessage(
-				config.Cfg.Facility.Visiting.DiscordWebhookName,
+				"visiting_application",
 				"Web API",
 				fmt.Sprintf("Visitor application denied for %s %s (%d) [%s]", app.User.FirstName, app.User.LastName, app.User.CID, app.User.Rating.Short),
 			)

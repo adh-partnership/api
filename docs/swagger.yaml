@@ -1,11 +1,64 @@
 basePath: /v1
 definitions:
+  dto.ControllerStats:
+    properties:
+      cab:
+        example: 0.5
+        type: number
+      cid:
+        example: 1
+        type: integer
+      controllerType:
+        example: home
+        type: string
+      enroute:
+        example: 0.5
+        type: number
+      first_name:
+        example: Daniel
+        type: string
+      last_name:
+        example: Hawton
+        type: string
+      rating:
+        example: S1
+        type: string
+      terminal:
+        example: 0.5
+        type: number
+    type: object
+  dto.EmailTemplateRequest:
+    properties:
+      body:
+        type: string
+      cc:
+        type: string
+      edit_group:
+        type: string
+      subject:
+        type: string
+    required:
+    - body
+    - edit_group
+    - subject
+    type: object
   dto.EventPositionRequest:
     properties:
       cid:
         type: integer
       position:
         type: string
+    type: object
+  dto.EventPositionResponse:
+    properties:
+      cid:
+        type: integer
+      id:
+        type: integer
+      position:
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
     type: object
   dto.EventRequest:
     properties:
@@ -29,6 +82,50 @@ definitions:
       choice3:
         type: string
       notes:
+        type: string
+    type: object
+  dto.EventSignupResponse:
+    properties:
+      choice1:
+        type: string
+      choice2:
+        type: string
+      choice3:
+        type: string
+      cid:
+        type: integer
+      id:
+        type: integer
+      notes:
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.EventsResponse:
+    properties:
+      banner:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: integer
+      positions:
+        items:
+          $ref: '#/definitions/dto.EventPositionResponse'
+        type: array
+      signups:
+        items:
+          $ref: '#/definitions/dto.EventSignupResponse'
+        type: array
+      start_date:
+        type: string
+      title:
+        type: string
+      updated_at:
         type: string
     type: object
   dto.FacilityStaffResponse:
@@ -65,34 +162,34 @@ definitions:
     type: object
   dto.FeedbackRequest:
     properties:
+      callsign:
+        type: string
       comments:
         type: string
       controller:
-        type: integer
-      flight_callsign:
-        type: string
-      flight_date:
         type: string
       position:
         type: string
       rating:
         type: string
+    required:
+    - callsign
+    - comments
+    - controller
+    - position
+    - rating
     type: object
   dto.FeedbackResponse:
     properties:
+      callsign:
+        type: string
       comments:
         type: string
-      controller_cid:
-        type: integer
-      controller_name:
+      contact_email:
         type: string
-      controller_rating:
-        type: string
+      controller:
+        $ref: '#/definitions/models.User'
       created_at:
-        type: string
-      flight_callsign:
-        type: string
-      flight_date:
         type: string
       id:
         type: integer
@@ -103,9 +200,7 @@ definitions:
       status:
         type: string
       submitter:
-        type: integer
-      submitter_name:
-        type: string
+        $ref: '#/definitions/models.User'
     type: object
   dto.StorageRequest:
     properties:
@@ -114,6 +209,19 @@ definitions:
       description:
         type: string
       name:
+        type: string
+    type: object
+  dto.TrainingNoteRequest:
+    properties:
+      comments:
+        type: string
+      duration:
+        type: string
+      position:
+        type: string
+      session_date:
+        type: string
+      type:
         type: string
     type: object
   dto.UserResponse:
@@ -128,6 +236,8 @@ definitions:
         type: string
       discord_id:
         type: string
+      division:
+        type: string
       first_name:
         type: string
       last_name:
@@ -136,11 +246,15 @@ definitions:
         type: string
       rating:
         type: string
+      region:
+        type: string
       roles:
         items:
           type: string
         type: array
       status:
+        type: string
+      subdivision:
         type: string
       updated_at:
         type: string
@@ -149,13 +263,17 @@ definitions:
     properties:
       approach:
         type: string
-      delivery:
-        type: string
       enroute:
         type: string
       ground:
         type: string
       local:
+        type: string
+      major_approach:
+        type: string
+      major_ground:
+        type: string
+      major_local:
         type: string
     type: object
   github.com_adh-partnership_api_internal_v1_overflight.Flightsv1:
@@ -276,6 +394,36 @@ definitions:
         example: https://www.example.com/document.pdf
         type: string
     type: object
+  models.EmailTemplate:
+    description: Email Templates, there will be no "new" for this object. These will
+      be pre-existing but can be edited.
+    properties:
+      body:
+        description: HTML-formatted email body
+        example: <h1>Welcome to the Virtual Denver ARTCC</h1>
+        type: string
+      cc:
+        example: atm@denartcc.org,datm@denartcc.org
+        type: string
+      created_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      edit_group:
+        example: admin
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: welcome_message
+        type: string
+      subject:
+        example: Welcome to the Virtual Denver ARTCC
+        type: string
+      updated_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+    type: object
   models.Event:
     properties:
       banner:
@@ -335,6 +483,35 @@ definitions:
       user:
         $ref: '#/definitions/models.User'
     type: object
+  models.OnlineController:
+    properties:
+      cid:
+        example: 1
+        type: integer
+      created_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      frequency:
+        example: "118.000"
+        type: string
+      id:
+        example: 1
+        type: integer
+      logon_time:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      position:
+        example: ANC_TWR
+        type: string
+      update_id:
+        example: "1"
+        type: string
+      updated_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
   models.Rating:
     properties:
       id:
@@ -364,10 +541,39 @@ definitions:
           $ref: '#/definitions/models.User'
         type: array
     type: object
+  models.TrainingNote:
+    properties:
+      comments:
+        type: string
+      controller:
+        $ref: '#/definitions/models.User'
+      controller_id:
+        type: integer
+      created_at:
+        type: string
+      duration:
+        type: string
+      id:
+        type: integer
+      instructor:
+        $ref: '#/definitions/models.User'
+      instructor_id:
+        type: integer
+      position:
+        type: string
+      session_date:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      vatusa_id:
+        type: integer
+    type: object
   models.User:
     properties:
       appCertification:
-        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        description: 'Must be one of : none, training, solo, certified, cantrain'
         example: certified
         type: string
       cid:
@@ -381,12 +587,8 @@ definitions:
         example: "2020-01-01T00:00:00Z"
         type: string
       ctrCertification:
-        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        description: 'Must be one of : none, training, solo, certified, cantrain'
         example: none
-        type: string
-      delCertification:
-        description: 'Must be one of : none, training, solo, certified, major, cantrain'
-        example: certified
         type: string
       discord_id:
         example: "123456789012345678"
@@ -397,21 +599,33 @@ definitions:
       email:
         example: wm@denartcc.org
         type: string
-      firstname:
+      first_name:
         example: Daniel
         type: string
       gndCertification:
-        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        description: 'Must be one of : none, training, solo, certified, cantrain'
         example: certified
         type: string
-      lastname:
+      last_name:
         example: Hawton
         type: string
       lclCertification:
-        description: 'Must be one of : none, training, solo, certified, major, cantrain'
+        description: 'Must be one of : none, training, solo, certified, cantrain'
         example: certified
         type: string
-      oi:
+      majgndCertification:
+        description: 'Must be one of : none, training, solo, certified, cantrain'
+        example: certified
+        type: string
+      majorappCertification:
+        description: 'Must be one of : none, training, solo, certified, cantrain'
+        example: certified
+        type: string
+      majorlclCertification:
+        description: 'Must be one of : none, training, solo, certified, cantrain'
+        example: certified
+        type: string
+      operating_initials:
         example: DH
         type: string
       rating:
@@ -438,6 +652,20 @@ definitions:
         description: Internally used identifier during scheduled updates for removals
         type: string
     type: object
+  models.VisitorApplication:
+    properties:
+      created_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      id:
+        example: 1
+        type: integer
+      updated_at:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
   response.R:
     properties:
       data: {}
@@ -456,6 +684,159 @@ info:
   title: ADH API
   version: "1.0"
 paths:
+  /email/templates/:name:
+    get:
+      description: Get Email Template(s)
+      parameters:
+      - description: Name of email template
+        in: path
+        name: name
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EmailTemplate'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Email Template(s)
+      tags:
+      - Email
+    post:
+      description: Update Email Template
+      parameters:
+      - description: Name of email template
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Email Template
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EmailTemplateRequest'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Update Email Template
+      tags:
+      - Email
+  /feedback:
+    get:
+      description: Get feedback for a pilot
+      parameters:
+      - description: Controller CID filter
+        in: query
+        name: cid
+        type: string
+      - description: Status filter
+        in: query
+        name: status
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.FeedbackResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Pilot Feedback
+      tags:
+      - Feedback
+    post:
+      description: Submit feedback for a pilot
+      parameters:
+      - description: Feedback
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FeedbackRequest'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Submit Pilot Feedback
+      tags:
+      - Feedback
+  /feedback/{id}:
+    patch:
+      description: Patch feedback for a pilot -- currently only the status field can
+        be patched
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Feedback
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FeedbackPatchRequest'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Patch Pilot Feedback
+      tags:
+      - Feedback
   /live/:facility:
     get:
       parameters:
@@ -477,6 +858,150 @@ paths:
       summary: Get Overflights for Facility [Legacy/Deprecated]
       tags:
       - overflight
+  /stats/historical/{year}/{month}:
+    get:
+      description: Get Historical Stats
+      parameters:
+      - description: Year
+        in: path
+        name: year
+        type: integer
+      - description: Month
+        in: path
+        name: month
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ControllerStats'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Historical Stats
+      tags:
+      - Stats
+  /stats/online:
+    get:
+      description: Get Online Controllers
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.OnlineController'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Online Controllers
+      tags:
+      - Stats
+  /user/visitor:
+    get:
+      description: Get visiting applications
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.VisitorApplication'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get visiting applications
+      tags:
+      - user
+    post:
+      description: Submit a Visitor Application
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "406":
+          description: Not Acceptable - Generally means doesn't meet requirements
+          schema:
+            $ref: '#/definitions/response.R'
+        "409":
+          description: Conflict - Generally means already applied
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Submit a Visitor Application
+      tags:
+      - user
+  /user/visitor/{id}:
+    put:
+      description: Handle Visitor Application
+      parameters:
+      - description: Visitor CID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Action to take (accept, deny)
+        in: body
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: Reason for action for denials
+        in: body
+        name: reason
+        schema:
+          type: string
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Handle Visitor Application
+      tags:
+      - user
   /v1/events:
     get:
       description: Get Upcoming Events
@@ -489,7 +1014,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Event'
+            $ref: '#/definitions/dto.EventsResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -563,7 +1088,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Event'
+            $ref: '#/definitions/dto.EventsResponse'
         "404":
           description: Not Found
           schema:
@@ -851,6 +1376,64 @@ paths:
       summary: Get Overflights for Facility
       tags:
       - overflight
+  /v1/proxy/metar/{icao}:
+    get:
+      description: Proxy METAR Data
+      parameters:
+      - description: ICAO, multiple ICAOs can be separated by a comma
+        in: path
+        name: icao
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Proxy METAR Data
+      tags:
+      - Proxy
+  /v1/proxy/taf/{icao}:
+    get:
+      description: Proxy TAF Data
+      parameters:
+      - description: ICAO
+        in: path
+        name: icao
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Proxy TAF Data
+      tags:
+      - Proxy
   /v1/storage:
     post:
       parameters:
@@ -1021,6 +1604,150 @@ paths:
       summary: Upload file data to storage object
       tags:
       - storage
+  /v1/training/:cid:
+    get:
+      parameters:
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TrainingNote'
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Training Records for cid
+      tags:
+      - training
+    post:
+      parameters:
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
+      - description: Training Note
+        in: body
+        name: training
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TrainingNoteRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.TrainingNote'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Create Training Record
+      tags:
+      - training
+  /v1/training/:cid/:id:
+    delete:
+      parameters:
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Delete Training Record
+      tags:
+      - training
+    put:
+      parameters:
+      - description: CID
+        in: path
+        name: cid
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Training Note
+        in: body
+        name: training
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TrainingNoteRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrainingNote'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Update Training Record
+      tags:
+      - training
   /v1/user/:cid:
     get:
       parameters:
@@ -1192,6 +1919,49 @@ paths:
       summary: Get Full Roster
       tags:
       - user
+  /v1/user/discord/callback:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+        "307":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Discord Callback
+      tags:
+      - user
+      - oauth
+  /v1/user/discord/link:
+    get:
+      parameters:
+      - description: Redirect URL
+        in: path
+        name: redirect
+        type: string
+      responses:
+        "307":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Link account and Discord account
+      tags:
+      - user
+      - oauth
   /v1/user/login:
     get:
       parameters:
@@ -1232,6 +2002,24 @@ paths:
           schema:
             $ref: '#/definitions/response.R'
       summary: Login callback
+      tags:
+      - user
+      - oauth
+  /v1/user/logout:
+    get:
+      parameters:
+      - description: Redirect URL
+        in: query
+        name: redirect
+        type: string
+      responses:
+        "307":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Logout of account
       tags:
       - user
       - oauth

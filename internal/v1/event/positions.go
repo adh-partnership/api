@@ -60,7 +60,7 @@ func addEventPosition(c *gin.Context) {
 	}
 
 	data := &dto.EventPositionRequest{}
-	if err := c.ShouldBindJSON(&data); err != nil {
+	if err := c.ShouldBindJSON(&data); err != nil || data.Position == "" {
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
@@ -134,14 +134,7 @@ func updateEventPosition(c *gin.Context) {
 		return
 	}
 
-	// Check if position already exists
-	for _, position := range event.Positions {
-		if position.Position == data.Position {
-			response.RespondError(c, http.StatusConflict, "Position already exists")
-			return
-		}
-	}
-
+	var cid *uint
 	var user *models.User
 	if data.UserID != 0 {
 		user, err = database.FindUserByCID(fmt.Sprint(data.UserID))
@@ -150,6 +143,7 @@ func updateEventPosition(c *gin.Context) {
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
+		cid = &user.CID
 	}
 
 	for _, position := range event.Positions {
@@ -160,6 +154,7 @@ func updateEventPosition(c *gin.Context) {
 			}
 			position.Position = data.Position
 			position.User = user
+			position.UserID = cid
 			if err := database.DB.Save(&position).Error; err != nil {
 				log.Errorf("Error updating event position: %s", err)
 				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")

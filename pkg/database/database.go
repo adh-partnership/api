@@ -49,6 +49,7 @@ func GenerateDSN(options DBOptions) (string, error) {
 		}
 		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true%s", options.User, options.Password,
 			options.Host, options.Port, options.Database, tls)
+		log.Debugf("dsn=%s", dsn)
 		if options.Options != "" {
 			dsn += "?" + options.Options
 		}
@@ -77,6 +78,7 @@ func HandleCACert(driver string, cacert string) error {
 		if err != nil {
 			return errors.New("error registering tls config: " + err.Error())
 		}
+		log.Debugf("registered tls config: %+v", rootCertPool)
 	}
 
 	return nil

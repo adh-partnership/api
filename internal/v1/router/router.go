@@ -7,6 +7,7 @@ import (
 	"github.com/adh-partnership/api/internal/v1/event"
 	"github.com/adh-partnership/api/internal/v1/feedback"
 	"github.com/adh-partnership/api/internal/v1/overflight"
+	"github.com/adh-partnership/api/internal/v1/proxy"
 	"github.com/adh-partnership/api/internal/v1/stats"
 	"github.com/adh-partnership/api/internal/v1/storage"
 	"github.com/adh-partnership/api/internal/v1/training"
@@ -24,6 +25,7 @@ func init() {
 	routeGroups["/events"] = event.Routes
 	routeGroups["/feedback"] = feedback.Routes
 	routeGroups["/overflight"] = overflight.Routes
+	routeGroups["/proxy"] = proxy.Routes
 	routeGroups["/stats"] = stats.Routes
 	routeGroups["/storage"] = storage.Routes
 	routeGroups["/training"] = training.Routes

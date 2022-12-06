@@ -16,7 +16,7 @@ import (
 // @Description Get Upcoming Events
 // @Tags Events
 // @Param limit query number false "Limit to X events, default 5 (max 10)"
-// @Success 200 {object} models.Event[]
+// @Success 200 {object} []dto.EventsResponse
 // @Failure 500 {object} response.R
 // @Router /v1/events [get]
 func getEvents(c *gin.Context) {
@@ -37,7 +37,7 @@ func getEvents(c *gin.Context) {
 		return
 	}
 
-	response.Respond(c, http.StatusOK, events)
+	response.Respond(c, http.StatusOK, dto.ConvEventsToEventsResponse(events))
 }
 
 // Get Event
@@ -45,7 +45,7 @@ func getEvents(c *gin.Context) {
 // @Description Get an event
 // @Tags Events
 // @Param id path string true "Event ID"
-// @Success 200 {object} models.Event
+// @Success 200 {object} dto.EventsResponse
 // @Failure 404 {object} response.R
 // @Failure 500 {object} response.R
 // @Router /v1/events/{id} [get]
@@ -62,7 +62,7 @@ func getEvent(c *gin.Context) {
 		return
 	}
 
-	response.Respond(c, http.StatusOK, event)
+	response.Respond(c, http.StatusOK, dto.ConvEventToEventsResponse(event))
 }
 
 // Create Event
@@ -78,6 +78,7 @@ func getEvent(c *gin.Context) {
 func postEvent(c *gin.Context) {
 	var dto dto.EventRequest
 	if err := c.ShouldBindJSON(&dto); err != nil {
+		log.Debugf("Error binding dto: %s", err)
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
 	}
@@ -114,6 +115,7 @@ func postEvent(c *gin.Context) {
 func patchEvent(c *gin.Context) {
 	var data dto.EventRequest
 	if err := c.ShouldBindJSON(&data); err != nil {
+		log.Debugf("Error binding dto: %s", err)
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
 	}

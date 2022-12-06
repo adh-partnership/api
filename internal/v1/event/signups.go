@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
@@ -44,34 +45,41 @@ func postEventSignup(c *gin.Context) {
 
 	user := c.MustGet("x-user").(*models.User)
 
-	signup := &models.EventSignup{
-		EventID: event.ID,
-		User:    user,
-		Choice1: data.Choice1,
-		Choice2: data.Choice2,
-		Choice3: data.Choice3,
-		Notes:   data.Notes,
-	}
-
-	found := false
-	for i := range event.Signups {
-		if event.Signups[i].UserID == user.CID {
-			event.Signups[i] = signup
-			found = true
+	signup := &models.EventSignup{}
+	if err := database.DB.Where("event_id = ? AND user_id = ?", event.ID, user.CID).First(signup).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			signup := &models.EventSignup{
+				EventID: event.ID,
+				User:    user,
+				Choice1: data.Choice1,
+				Choice2: data.Choice2,
+				Choice3: data.Choice3,
+				Notes:   data.Notes,
+			}
+			if err := database.DB.Create(signup).Error; err != nil {
+				log.Errorf("Error creating event signup: %s", err)
+				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+				return
+			}
 		}
-	}
-
-	if !found {
-		event.Signups = append(event.Signups, signup)
-	}
-
-	if err := database.DB.Save(&event).Error; err != nil {
-		log.Errorf("Error creating event signup: %s", err)
+		log.Errorf("Error getting event signup: %s", err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
-	response.Respond(c, http.StatusOK, event)
+	signup.Choice1 = data.Choice1
+	signup.Choice2 = data.Choice2
+	signup.Choice3 = data.Choice3
+	signup.Notes = data.Notes
+
+	if err := database.DB.Save(&signup).Error; err != nil {
+		log.Errorf("Error updating event signup: %s", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	event, _ = database.GetEvent(c.Param("id"))
+	response.Respond(c, http.StatusOK, dto.ConvEventToEventsResponse(event))
 }
 
 // Delete User Signup
@@ -101,7 +109,7 @@ func deleteEventSignup(c *gin.Context) {
 
 	found := false
 	for i := range event.Signups {
-		if event.Signups[i].UserID == user.CID {
+		if *event.Signups[i].UserID == user.CID {
 			if err := database.DB.Delete(event.Signups[i]).Error; err != nil {
 				log.Errorf("Error deleting event signup: %s", err)
 				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")

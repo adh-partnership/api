@@ -49,7 +49,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 					msg := fmt.Sprintf("New user on roster, %s %s (%d), needs to be assigned an OI", user.FirstName, user.LastName, user.CID)
 					err := discord.SendWebhookMessage(
 						"seniorstaff",
-						"ADH-PARTNERSHIP Web API",
+						"Web API",
 						msg,
 					)
 					if err != nil {
