@@ -47,7 +47,7 @@ func postEventSignup(c *gin.Context) {
 
 	signup := &models.EventSignup{}
 	if err := database.DB.Where("event_id = ? AND user_id = ?", event.ID, user.CID).First(signup).Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
+		if err == gorm.ErrRecordNotFound {
 			signup := &models.EventSignup{
 				EventID: event.ID,
 				User:    user,
