@@ -160,7 +160,7 @@ func patchFeedback(c *gin.Context) {
 		return
 	}
 
-	if dtoFeedback.Status == constants.FeedbackStatusApproved {
+	if shouldBroadcastFeedback(feedback) {
 		_ = discord.SendWebhookMessage(
 			"broadcast_feedback",
 			"Web API",
@@ -175,4 +175,13 @@ func patchFeedback(c *gin.Context) {
 	}
 
 	response.RespondBlank(c, http.StatusNoContent)
+}
+
+// shouldBroadcastFeedback returns true if the feedback should be broadcast to the public on approval
+func shouldBroadcastFeedback(feedback *models.Feedback) bool {
+	if feedback.Status != constants.FeedbackStatusApproved {
+		return false
+	}
+
+	return feedback.Rating == constants.FeedbackRatingExcellent || feedback.Rating == constants.FeedbackRatingGood
 }
