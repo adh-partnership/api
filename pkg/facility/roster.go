@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"gorm.io/gorm"
+
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
@@ -63,7 +65,9 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 		user.FirstName = controller.FirstName
 		user.LastName = controller.LastName
 		user.Email = controller.Email
-		user.RatingID = controller.Rating
+		rating, _ := database.FindRatingByShort(controller.RatingShort)
+		user.Rating = *rating
+		user.RatingID = rating.ID
 		user.UpdateID = updateid
 
 		if controller.Membership == "visit" {
@@ -126,7 +130,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 				continue
 			}
 		} else {
-			if err := database.DB.Save(user).Error; err != nil {
+			if err := database.DB.Session(&gorm.Session{FullSaveAssociations: true}).Save(user).Error; err != nil {
 				log.Errorf("Error saving user: %s", err.Error())
 				continue
 			}

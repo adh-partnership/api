@@ -150,6 +150,18 @@ func FindRatingByShort(short string) (*models.Rating, error) {
 	return rating, nil
 }
 
+func FindRating(id int) (*models.Rating, error) {
+	rating := &models.Rating{}
+	if err := DB.Where(models.Rating{ID: id}).First(rating).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return rating, nil
+}
+
 func AddDelayedJob(queue, body string, duration time.Duration) error {
 	djob := &models.DelayedJob{
 		Queue:     queue,
