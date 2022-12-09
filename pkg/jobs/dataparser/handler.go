@@ -109,7 +109,7 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 		}
 
 		// Check if we are tracking this prefix, if so, add it to the database
-		if !server.Server.TrackedPrefixes[prefix] {
+		if _, ok := server.Server.TrackedPrefixes[prefix]; !ok {
 			continue
 		}
 
@@ -123,7 +123,7 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 
 		if c.Position == "" {
 			// Safe to assume this is a new controller
-			go func() {
+			go func(callsign string) {
 				user, err := database.FindUserByCID(fmt.Sprint(controller.CID))
 				if err != nil || user == nil {
 					log.Errorf("Error finding user with CID %d: %v", controller.CID, err)
@@ -136,13 +136,13 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 						user.FirstName,
 						user.LastName,
 						user.OperatingInitials,
-						controller.Callsign,
+						callsign,
 					),
 				)
 				if err != nil {
 					log.Errorf("Error sending discord webhook: %v", err)
 				}
-			}()
+			}(controller.Callsign)
 		}
 
 		c.UserID = uint(controller.CID)
