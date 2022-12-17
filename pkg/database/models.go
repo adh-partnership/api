@@ -107,7 +107,7 @@ func FindUsersWithRole(role string) ([]models.User, error) {
 		return nil, err
 	}
 
-	if err := DB.Model(r).Preload("Users.Roles").Association("Users").Find(&users); err != nil {
+	if err := DB.Model(r).Association("Users").Find(&users); err != nil {
 		return nil, err
 	}
 
