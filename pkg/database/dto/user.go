@@ -60,12 +60,17 @@ type UserResponseCertifications struct {
 }
 
 type FacilityStaffResponse struct {
-	ATM  []*UserResponse `json:"atm" yaml:"atm" xml:"atm"`
-	DATM []*UserResponse `json:"datm" yaml:"datm" xml:"datm"`
-	TA   []*UserResponse `json:"ta" yaml:"ta" xml:"ta"`
-	EC   []*UserResponse `json:"ec" yaml:"ec" xml:"ec"`
-	FE   []*UserResponse `json:"fe" yaml:"fe" xml:"fe"`
-	WM   []*UserResponse `json:"wm" yaml:"wm" xml:"wm"`
+	ATM        []*UserResponse `json:"atm" yaml:"atm" xml:"atm"`
+	DATM       []*UserResponse `json:"datm" yaml:"datm" xml:"datm"`
+	TA         []*UserResponse `json:"ta" yaml:"ta" xml:"ta"`
+	EC         []*UserResponse `json:"ec" yaml:"ec" xml:"ec"`
+	FE         []*UserResponse `json:"fe" yaml:"fe" xml:"fe"`
+	WM         []*UserResponse `json:"wm" yaml:"wm" xml:"wm"`
+	Events     []*UserResponse `json:"events" yaml:"events" xml:"events"`
+	Facilities []*UserResponse `json:"facilities" yaml:"facilities" xml:"facilities"`
+	Web        []*UserResponse `json:"web" yaml:"web" xml:"web"`
+	Instructor []*UserResponse `json:"instructor" yaml:"instructor" xml:"instructor"`
+	Mentor     []*UserResponse `json:"mentor" yaml:"mentor" xml:"mentor"`
 }
 
 func ConvUserToUserResponse(user *models.User) *UserResponse {
@@ -229,7 +234,7 @@ func GetUsersByRole(role string) ([]*UserResponse, error) {
 }
 
 func GetStaffResponse() (*FacilityStaffResponse, error) {
-	roles := []string{"atm", "datm", "ta", "ec", "fe", "wm"}
+	roles := []string{"atm", "datm", "ta", "ec", "fe", "wm", "events", "facilities", "web", "ins", "mtr"}
 	staff := &FacilityStaffResponse{}
 
 	for _, role := range roles {
@@ -251,6 +256,16 @@ func GetStaffResponse() (*FacilityStaffResponse, error) {
 			staff.FE = u
 		case "wm":
 			staff.WM = u
+		case "events":
+			staff.Events = u
+		case "facilities":
+			staff.Facilities = u
+		case "web":
+			staff.Web = u
+		case "ins":
+			staff.Instructor = u
+		case "mtr":
+			staff.Mentor = u
 		}
 	}
 
