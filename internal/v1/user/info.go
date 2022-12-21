@@ -53,6 +53,7 @@ func getUser(c *gin.Context) {
 // @Success 200 {object} dto.UserResponse
 // @Failure 400 {object} response.R
 // @Failure 403 {object} response.R
+// @Failure 409 {object} response.R
 // @Failure 500 {object} response.R
 // @Router /v1/user/:cid [PATCH]
 func patchUser(c *gin.Context) {
@@ -164,6 +165,14 @@ func patchUser(c *gin.Context) {
 		if status > 299 {
 			log.Errorf("Got invalid status code from VATUSA changing controller type %s for %s: %d", req.ControllerType, c.Param("cid"), status)
 			response.RespondError(c, http.StatusInternalServerError, "error changing controller type on vatusa")
+			return
+		}
+	}
+
+	if user.ControllerType != constants.ControllerTypeNone && req.ControllerType != constants.ControllerTypeNone &&
+		user.OperatingInitials != req.OperatingInitials && req.OperatingInitials != "" {
+		if database.IsOperatingInitialsAllocated(req.OperatingInitials) {
+			response.RespondError(c, http.StatusConflict, "Operating initials already allocated")
 			return
 		}
 	}

@@ -70,6 +70,13 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 		user.RatingID = rating.ID
 		user.UpdateID = updateid
 
+		// If their status is none or empty, set it to active
+		if user.Status == constants.ControllerStatusNone || user.Status == "" {
+			_ = discord.SendWebhookMessage("seniorstaff", "Web API",
+				fmt.Sprintf("User %s %s (%d) is on our roster with no status set. Assuming active.", user.FirstName, user.LastName, user.CID))
+			user.Status = constants.ControllerStatusActive
+		}
+
 		if controller.Membership == "visit" {
 			if controller.Facility != "ZZN" {
 				user.Region = "AMAS"

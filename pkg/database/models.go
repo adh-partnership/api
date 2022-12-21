@@ -138,6 +138,22 @@ func FindOI(user *models.User) (string, error) {
 	return "", nil
 }
 
+func IsOperatingInitialsAllocated(operatingInitials string) bool {
+	_, err := FindUserByOperatingInitials(operatingInitials)
+	return err == nil
+}
+
+func FindUserByOperatingInitials(oi string) (*models.User, error) {
+	user := &models.User{}
+	if err := DB.Preload(clause.Associations).Where(models.User{OperatingInitials: oi}).First(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return user, nil
+}
+
 func FindRatingByShort(short string) (*models.Rating, error) {
 	rating := &models.Rating{}
 	if err := DB.Where(models.Rating{Short: short}).First(rating).Error; err != nil {
