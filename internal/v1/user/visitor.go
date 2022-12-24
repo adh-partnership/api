@@ -81,13 +81,27 @@ func postVisitor(c *gin.Context) {
 		User: user,
 	}
 
-	go func() {
-		_ = discord.SendWebhookMessage(
-			"visiting_application",
-			"Web API",
-			fmt.Sprintf("New visiting application from %s %s (%d) [%s]", user.FirstName, user.LastName, user.CID, user.Rating.Short),
-		)
-	}()
+	_ = discord.NewMessage().
+		SetContent("New Visiting Application").
+		AddEmbed(
+			discord.NewEmbed().
+				SetTitle("New Visiting Application").
+				SetColor(
+					discord.GetColor("00", "00", "ff"),
+				).
+				AddField(
+					discord.NewField().SetName("Name").SetValue(fmt.Sprintf("%s %s", user.FirstName, user.LastName)).SetInline(true),
+				).
+				AddField(
+					discord.NewField().SetName("CID").SetValue(fmt.Sprintf("%d", user.CID)).SetInline(true),
+				).
+				AddField(
+					discord.NewField().SetName("Rating").SetValue(user.Rating.Short).SetInline(true),
+				).
+				AddField(
+					discord.NewField().SetName("Visiting From").SetValue(fmt.Sprintf("%s/%s/%s", user.Region, user.Division, user.Subdivision)).SetInline(true),
+				),
+		).Send("visiting_application")
 
 	response.Respond(c, http.StatusNoContent, nil)
 }
@@ -150,26 +164,13 @@ func putVisitor(c *gin.Context) {
 			if err != nil {
 				log.Errorf("Error sending visitor accepted email to %s: %s", app.User.Email, err)
 			}
-			err = discord.SendWebhookMessage(
-				"visiting_application",
-				"Web API",
-				fmt.Sprintf("Visitor application accepted for %s %s (%d) [%s]", app.User.FirstName, app.User.LastName, app.User.CID, app.User.Rating.Short),
-			)
-			if err != nil {
-				log.Errorf("Error sending visitor accepted Discord message: %s", err)
-			}
 		}()
 		status, err := vatusa.AddVisitingController(fmt.Sprint(app.User.CID))
 		if err != nil || status > 299 {
 			log.Errorf("Error adding visiting controller to VATUSA for %d: %s", app.User.CID, err)
-			err = discord.SendWebhookMessage(
-				"visiting_application",
-				"Web API",
-				fmt.Sprintf("Error adding visiting controller to VATUSA for cid: %d: %s -- Please add manually!", app.User.CID, err),
-			)
-			if err != nil {
-				log.Errorf("Error sending visiting VATUSA error Discord message: %s", err)
-			}
+			_ = discord.NewMessage().SetContent(
+				fmt.Sprintf("Error adding visiting controller %s %s (%d) to VATUSA roster", app.User.FirstName, app.User.LastName, app.User.CID),
+			).Send("visiting_application")
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
@@ -194,14 +195,6 @@ func putVisitor(c *gin.Context) {
 			)
 			if err != nil {
 				log.Errorf("Error sending visitor rejected email to %s: %s", app.User.Email, err)
-			}
-			err = discord.SendWebhookMessage(
-				"visiting_application",
-				"Web API",
-				fmt.Sprintf("Visitor application denied for %s %s (%d) [%s]", app.User.FirstName, app.User.LastName, app.User.CID, app.User.Rating.Short),
-			)
-			if err != nil {
-				log.Errorf("Error sending visitor denied Discord message: %s", err)
 			}
 		}()
 	default:

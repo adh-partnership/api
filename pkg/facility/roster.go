@@ -48,16 +48,9 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			}
 			if oi == "" {
 				go func() {
-					msg := fmt.Sprintf("New user on roster, %s %s (%d), needs to be assigned an OI", user.FirstName, user.LastName, user.CID)
-					err := discord.SendWebhookMessage(
-						"seniorstaff",
-						"Web API",
-						msg,
-					)
-					if err != nil {
-						log.Errorf("Error sending discord message (%s): %s", msg, err.Error())
-						return
-					}
+					_ = discord.NewMessage().
+						SetContent(fmt.Sprintf("New user on roster, %s %s (%d), needs to be assigned an OI", user.FirstName, user.LastName, user.CID)).
+						Send("seniorstaff")
 				}()
 			}
 			user.OperatingInitials = oi
@@ -72,8 +65,12 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 
 		// If their status is none or empty, set it to active
 		if user.Status == constants.ControllerStatusNone || user.Status == "" {
-			_ = discord.SendWebhookMessage("seniorstaff", "Web API",
-				fmt.Sprintf("User %s %s (%d) is on our roster with no status set. Assuming active.", user.FirstName, user.LastName, user.CID))
+			_ = discord.NewMessage().SetContent(
+				fmt.Sprintf("User %s %s (%d) is on our roster with no status set. Assuming active.",
+					user.FirstName,
+					user.LastName,
+					user.CID)).
+				Send("seniorstaff")
 			user.Status = constants.ControllerStatusActive
 		}
 
@@ -84,13 +81,12 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 				user.Subdivision = controller.Facility
 
 				if controller.Facility == "ZAE" && isInDailyCheck() {
-					err := discord.SendWebhookMessage("seniorstaff", "Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, but is in %s, %s, %s -- verify eligibility",
-						user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))
-					if err != nil && err != discord.ErrWebhookNotConfigured && err != discord.ErrUsedDefaultWebhook {
-						log.Errorf("Error sending discord message: %s", err.Error())
-					} else if err != nil {
-						log.Warnf("Error sending discord message: %s", err.Error())
-					}
+					_ = discord.NewMessage().SetContent(
+						fmt.Sprintf("User %s %s (%d) is a visitor, but is in ZAE. Verify eligibility as this should not happen.",
+							user.FirstName,
+							user.LastName,
+							user.CID)).
+						Send("seniorstaff")
 				}
 			} else {
 				location, err := global.GetLocation(fmt.Sprint(controller.CID))
@@ -108,15 +104,12 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 							"JUST transferred into VATUSA and the div sync job hasn't run yet)",
 							user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision)
 
-						err := discord.SendWebhookMessage("seniorstaff", "Web API", fmt.Sprintf("%s %s (%d) (%s) is a visitor, VATSIM API indicates they are in %s, %s, %s "+
-							"but VATUSA has them in a non-member facility (ZZN) -- verify eligibility and raise to VATUSA's Tech Manager as this should not happen (unless they "+
-							"JUST transferred into VATUSA and the div sync job hasn't run yet)",
-							user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision))
-						if err != nil && err != discord.ErrWebhookNotConfigured && err != discord.ErrUsedDefaultWebhook {
-							log.Errorf("Error sending discord message: %s", err.Error())
-						} else if err != nil {
-							log.Warnf("Error sending discord message: %s", err.Error())
-						}
+						_ = discord.NewMessage().SetContent(
+							fmt.Sprintf("%s %s (%d) (%s) is a visitor, VATSIM API indicates they are in %s, %s, %s "+
+								"but VATUSA has them in a non-member facility (ZZN) -- verify eligibility and raise to VATUSA's Tech Manager as this should not happen (unless they "+
+								"JUST transferred into VATUSA and the div sync job hasn't run yet)",
+								user.FirstName, user.LastName, user.CID, controller.RatingShort, user.Region, user.Division, user.Subdivision)).
+							Send("seniorstaff")
 					}
 				}
 			}

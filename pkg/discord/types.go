@@ -4,16 +4,16 @@ type Message struct {
 	Username  *string  `json:"username,omitempty"`
 	AvatarURL *string  `json:"avatar_URL,omitempty"`
 	Content   *string  `json:"content,omitempty"`
-	Embeds    *[]Embed `json:"embeds,omitempty"`
+	Embeds    []*Embed `json:"embeds,omitempty"`
 }
 
 type Embed struct {
 	Title       *string    `json:"title,omitempty"`
 	URL         *string    `json:"URL,omitempty"`
 	Description *string    `json:"description,omitempty"`
-	Color       *string    `json:"color,omitempty"`
+	Color       *int       `json:"color,omitempty"`
 	Author      *Author    `json:"author,omitempty"`
-	Fields      *[]Field   `json:"fields,omitempty"`
+	Fields      []*Field   `json:"fields,omitempty"`
 	Thumbnail   *Thumbnail `json:"thumbnail,omitempty"`
 	Image       *Image     `json:"image,omitempty"`
 	Footer      *Footer    `json:"footer,omitempty"`

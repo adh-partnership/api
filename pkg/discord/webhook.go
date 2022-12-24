@@ -18,7 +18,7 @@ func SetupWebhooks(hooks map[string]string) {
 	webhooks = hooks
 }
 
-func SendWebhookMessage(name string, username, msg string) error {
+func SendWebhookMessageObj(name string, msg Message) error {
 	usedDefault := false
 	if _, ok := webhooks[name]; !ok || webhooks[name] == "" {
 		name = "default"
@@ -28,12 +28,7 @@ func SendWebhookMessage(name string, username, msg string) error {
 		}
 	}
 
-	message := Message{
-		Username: &username,
-		Content:  &msg,
-	}
-
-	err := send(webhooks[name], message)
+	err := send(webhooks[name], msg)
 	if err != nil {
 		return err
 	}
@@ -43,6 +38,14 @@ func SendWebhookMessage(name string, username, msg string) error {
 	}
 
 	return nil
+}
+
+// Deprecated: use SendWebhookMessageObj instead
+func SendWebhookMessage(name string, username, msg string) error {
+	return SendWebhookMessageObj(name, Message{
+		Username: &username,
+		Content:  &msg,
+	})
 }
 
 func send(webhook string, message Message) error {

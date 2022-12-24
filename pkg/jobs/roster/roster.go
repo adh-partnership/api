@@ -109,6 +109,8 @@ func NagJob() {
 
 	// Send nag message to senior staff discord webhook
 	for _, user := range users {
-		_ = discord.SendWebhookMessage("seniorstaff", "Web API", fmt.Sprintf("User %s %s (%d) has no operating initials", user.FirstName, user.LastName, user.CID))
+		_ = discord.NewMessage().SetContent(
+			fmt.Sprintf("User %s %s (%d) has no operating initials", user.FirstName, user.LastName, user.CID),
+		).Send("seniorstaff")
 	}
 }

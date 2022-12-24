@@ -129,19 +129,19 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 					log.Errorf("Error finding user with CID %d: %v", controller.CID, err)
 					return
 				}
-				err = discord.SendWebhookMessage("online",
-					"Web API",
-					fmt.Sprintf(
-						"Controller Online! %s %s (%s) is now online as %s",
-						user.FirstName,
-						user.LastName,
-						user.OperatingInitials,
-						callsign,
-					),
-				)
-				if err != nil {
-					log.Errorf("Error sending discord webhook: %v", err)
-				}
+				_ = discord.NewMessage().SetContent("Ooooh! A new controller!").
+					AddEmbed(
+						discord.NewEmbed().SetTitle(fmt.Sprintf("%s is now online!", callsign)).SetColor(
+							discord.GetColor("00", "00", "ff"),
+						).
+							SetDescription(fmt.Sprintf(
+								"%s %s (%s) is now online as %s",
+								user.FirstName,
+								user.LastName,
+								user.OperatingInitials,
+								callsign,
+							)),
+					).Send("online")
 			}(controller.Callsign)
 		}
 
