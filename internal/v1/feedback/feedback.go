@@ -109,19 +109,25 @@ func postFeedback(c *gin.Context) {
 		return
 	}
 
-	_ = discord.SendWebhookMessage(
-		"pending_feedback",
-		"Web API",
-		fmt.Sprintf(
-			"New feedback submitted for %s on %s by %s (%d) - Rating: %s Comments: %s",
-			feedback.Controller.FirstName+" "+feedback.Controller.LastName,
-			feedback.Position,
-			feedback.Submitter.FirstName+" "+feedback.Submitter.LastName,
-			feedback.Submitter.CID,
-			feedback.Rating,
-			feedback.Comments,
-		),
-	)
+	_ = discord.NewMessage().
+		SetContent("New feedback received and is awaiting review").
+		AddEmbed(
+			discord.NewEmbed().
+				AddField(
+					discord.NewField().SetName("Controller").SetValue(
+						fmt.Sprintf("%s %s (%s)", controller.FirstName, controller.LastName, controller.OperatingInitials),
+					).SetInline(true),
+				).
+				AddField(
+					discord.NewField().SetName("Position").SetValue(dto.Position).SetInline(true),
+				).
+				AddField(
+					discord.NewField().SetName("Rating").SetValue(dto.Rating).SetInline(true),
+				).
+				AddField(
+					discord.NewField().SetName("Comments").SetValue(dto.Comments).SetInline(false),
+				),
+		).Send("pending_feedback")
 
 	response.RespondBlank(c, http.StatusNoContent)
 }
@@ -161,17 +167,25 @@ func patchFeedback(c *gin.Context) {
 	}
 
 	if shouldBroadcastFeedback(feedback) {
-		_ = discord.SendWebhookMessage(
-			"broadcast_feedback",
-			"Web API",
-			fmt.Sprintf(
-				"New feedback received! Controller %s on %s received a %s rating. Comments: %s",
-				feedback.Controller.FirstName+" "+feedback.Controller.LastName,
-				feedback.Position,
-				feedback.Rating,
-				feedback.Comments,
-			),
-		)
+		_ = discord.NewMessage().
+			SetContent("New feedback received!").
+			AddEmbed(
+				discord.NewEmbed().
+					AddField(
+						discord.NewField().SetName("Controller").SetValue(
+							fmt.Sprintf("%s %s (%s)", feedback.Controller.FirstName, feedback.Controller.LastName, feedback.Controller.OperatingInitials),
+						).SetInline(true),
+					).
+					AddField(
+						discord.NewField().SetName("Position").SetValue(feedback.Position).SetInline(true),
+					).
+					AddField(
+						discord.NewField().SetName("Rating").SetValue(feedback.Rating).SetInline(true),
+					).
+					AddField(
+						discord.NewField().SetName("Comments").SetValue(feedback.Comments).SetInline(false),
+					),
+			).Send("broadcast_feedback")
 	}
 
 	response.RespondBlank(c, http.StatusNoContent)

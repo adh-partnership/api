@@ -101,11 +101,16 @@ func putUserRoles(c *gin.Context) {
 		return
 	}
 
-	_ = discord.SendWebhookMessage(
-		"role",
-		"Web API",
-		fmt.Sprintf("%s %s has added role %s to %s %s (%d)", reqUser.FirstName, reqUser.LastName, role, user.FirstName, user.LastName, user.CID),
-	)
+	_ = discord.NewMessage().
+		SetContent(
+			fmt.Sprintf("%s %s has added role %s to %s %s (%d)",
+				reqUser.FirstName,
+				reqUser.LastName,
+				role,
+				user.FirstName,
+				user.LastName,
+				user.CID)).
+		Send("role")
 
 	// If roles change, invalidate staff cache
 	memcache.Cache.Delete("staff")
@@ -167,11 +172,16 @@ func deleteUserRoles(c *gin.Context) {
 		return
 	}
 
-	_ = discord.SendWebhookMessage(
-		"role",
-		"Web API",
-		fmt.Sprintf("%s %s has removed role %s to %s %s (%d)", reqUser.FirstName, reqUser.LastName, role, user.FirstName, user.LastName, user.CID),
-	)
+	_ = discord.NewMessage().
+		SetContent(
+			fmt.Sprintf("%s %s has removed role %s from %s %s (%d)",
+				reqUser.FirstName,
+				reqUser.LastName,
+				role,
+				user.FirstName,
+				user.LastName,
+				user.CID)).
+		Send("role")
 
 	// If roles change, invalidate staff cache
 	memcache.Cache.Delete("staff")
