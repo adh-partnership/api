@@ -26,6 +26,7 @@ func Handle(method, url, contenttype, body string) (int, []byte, error) {
 func HandleWithHeaders(method, url, contenttype, body string, headers map[string]string) (int, []byte, error) {
 	r, err := http.NewRequest(method, url, strings.NewReader(body))
 	log.Debugf("Making request: %s %s", method, url)
+	log.Debugf("with Body: %s", body)
 	if err != nil {
 		return 0, nil, err
 	}
