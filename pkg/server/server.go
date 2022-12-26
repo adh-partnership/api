@@ -125,7 +125,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	s.Engine.Use(ginLogger.Logger)
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowMethods = []string{"GET", "PATCH", "POST", "PUT", "DELETE", "OPTIONS"}
-	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "X-Requested-With", "Accept"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "X-Requested-With", "Accept", "x-xsrf-token"}
 	corsConfig.AllowCredentials = true
 	corsConfig.AllowWildcard = true
 	// Use this instead of AllowAllOrigins so that we return the origin and not '*'
