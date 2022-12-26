@@ -48,7 +48,7 @@ func EditTrainingNote(id, studentcid, instructorcid, position string, sessiondat
 	})
 
 	if err != nil || status > 299 {
-		log.Errorf("Error editing training note (%d): %s", id, err)
+		log.Errorf("Error editing training note (%s): %s", id, err)
 		log.Errorf("Status: %d", status)
 		return status, err
 	}
@@ -60,7 +60,7 @@ func DeleteTrainingNote(id string) (int, error) {
 	status, _, err := handle("DELETE", "/training/record/"+id, nil)
 
 	if err != nil || status > 299 {
-		log.Errorf("Error deleting training note (%d): %s", id, err)
+		log.Errorf("Error deleting training note (%s): %s", id, err)
 		log.Errorf("Status: %d", status)
 		return status, err
 	}
