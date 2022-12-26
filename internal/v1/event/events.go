@@ -166,13 +166,13 @@ func deleteEvent(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Delete(event.Positions).Error; err != nil {
+	if err := database.DB.Delete(models.EventPosition{}).Where(models.EventPosition{EventID: event.ID}).Error; err != nil {
 		log.Errorf("Error deleting positions: %s", err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
-	if err := database.DB.Delete(event.Signups).Error; err != nil {
+	if err := database.DB.Delete(models.EventSignup{}).Where(models.EventSignup{EventID: event.ID}).Error; err != nil {
 		log.Errorf("Error deleting signups: %s", err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
