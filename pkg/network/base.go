@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"moul.io/http2curl"
+
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
@@ -36,6 +38,9 @@ func HandleWithHeaders(method, url, contenttype, body string, headers map[string
 	for k, v := range headers {
 		r.Header.Set(k, v)
 	}
+
+	curl, _ := http2curl.GetCurlCommand(r)
+	log.Debugf("Request curl equivalent: %s", curl)
 
 	client := &http.Client{}
 	resp, err := client.Do(r)
