@@ -58,6 +58,7 @@ func HandleWithHeaders(method, url, contenttype, body string, headers map[string
 	}
 
 	log.Debugf("Response from %s %s: %d", method, url, resp.StatusCode)
+	log.Debugf("Response body: %s", string(contents))
 
 	return resp.StatusCode, contents, nil
 }
