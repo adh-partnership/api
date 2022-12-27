@@ -146,9 +146,6 @@ func IsOperatingInitialsAllocated(operatingInitials string) bool {
 func FindUserByOperatingInitials(oi string) (*models.User, error) {
 	user := &models.User{}
 	if err := DB.Preload(clause.Associations).Where(models.User{OperatingInitials: oi}).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
 		return nil, err
 	}
 	return user, nil
