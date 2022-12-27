@@ -231,5 +231,17 @@ func isEligibleVisiting(user *models.User) bool {
 		return false
 	}
 
+	// Check VATUSA eligibility
+	eligible, home, err := vatusa.IsTransferEligible(fmt.Sprint(user.CID), true)
+	if err != nil {
+		log.Errorf("Error checking VATUSA eligibility: %s", err)
+		return false
+	}
+
+	// They aren't eligible and they aren't home controller
+	if !eligible && !home {
+		return false
+	}
+
 	return true
 }
