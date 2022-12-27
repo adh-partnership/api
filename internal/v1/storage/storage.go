@@ -193,7 +193,7 @@ func putStorageFile(c *gin.Context) {
 			_ = discord.NewMessage().SetContent("Error deleting object from uploads storage: " + err.Error()).Send("uploads")
 		}
 	}
-	fileSlug := fmt.Sprintf("uploads/%s%s", utils.StringToSlug(s.Name), filepath.Ext(file.Filename))
+	fileSlug := fmt.Sprintf("uploads/%s%s", utils.StringToSlug(fmt.Sprintf("%d-%s", s.ID, s.Name)), filepath.Ext(file.Filename))
 
 	tmp, err := os.CreateTemp("", "storage")
 	if err != nil {
