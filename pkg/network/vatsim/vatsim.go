@@ -60,7 +60,7 @@ func GetDateOfRatingChange(cid string) (*time.Time, error) {
 	}
 
 	type rating struct {
-		LastRatingChange time.Time `json:"lastratingchange"`
+		LastRatingChange string `json:"lastratingchange"`
 	}
 	ret := &rating{}
 	err = json.Unmarshal(contents, ret)
@@ -68,7 +68,13 @@ func GetDateOfRatingChange(cid string) (*time.Time, error) {
 		return nil, err
 	}
 
-	return &ret.LastRatingChange, nil
+	if ret.LastRatingChange == "" {
+		return nil, nil
+	}
+
+	t, err := time.Parse("2006-01-02T15:04:05", ret.LastRatingChange)
+
+	return &t, err
 }
 
 // GetLocation returns the Region, Division and Subdivision of a VATSIM CID
