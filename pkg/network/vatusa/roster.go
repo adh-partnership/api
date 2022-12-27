@@ -161,3 +161,44 @@ func GetUserFacility(cid string) (string, error) {
 
 	return facility.Facility, nil
 }
+
+// Check user transfer checklist
+// Return: Eligible, skipped as not home controller, error
+func IsTransferEligible(cid string, needHomeController bool) (bool, bool, error) {
+	status, content, err := handle("GET", "/user/"+cid+"/transfer/checklist", nil)
+	if err != nil {
+		return false, false, err
+	}
+
+	if status > 299 {
+		log.Warnf("Failed to get transfer checklist for %s: %s", cid, content)
+		return false, false, fmt.Errorf("invalid status code: %d", status)
+	}
+
+	var checklist struct {
+		HomeController bool `json:"homecontroller"`
+		Promo          int  `json:"promo"`
+		NinetyDays     bool `json:"90days"`
+	}
+
+	err = json.Unmarshal(content, &checklist)
+	if err != nil {
+		return false, false, err
+	}
+
+	if needHomeController && !checklist.HomeController {
+		return false, true, nil
+	}
+
+	// Did they get promoted in the last 90 days S1-C1?
+	if checklist.Promo != 1 {
+		return false, false, nil
+	}
+
+	// Any transfers in the last 90 days?
+	if !checklist.NinetyDays {
+		return false, false, nil
+	}
+
+	return true, false, nil
+}
