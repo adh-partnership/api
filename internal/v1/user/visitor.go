@@ -64,21 +64,24 @@ func postVisitor(c *gin.Context) {
 		return
 	}
 
-	app := &models.VisitorApplication{}
-	if err := database.DB.Find(&models.VisitorApplication{UserID: user.CID}).First(&app).Error; err == nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-			return
-		}
+	app, err := database.FindVisitorApplicationByCID(fmt.Sprint(user.CID))
+	if err != nil {
+		log.Errorf("Error getting visitor application: %s", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
 	}
 
-	if app != nil {
+	if app != nil && err == nil {
 		response.RespondError(c, http.StatusConflict, "Already applied")
 		return
 	}
 
-	app = &models.VisitorApplication{
-		User: user,
+	app.UserID = user.CID
+	app.User = user
+	if err := database.DB.Create(&app).Error; err != nil {
+		log.Errorf("Error creating visitor application: %s", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
 	}
 
 	_ = discord.NewMessage().
