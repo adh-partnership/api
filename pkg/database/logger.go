@@ -34,7 +34,7 @@ func (l *Logger) Info(ctx context.Context, s string, args ...interface{}) {
 }
 
 func (l *Logger) Debug(ctx context.Context, s string, args ...interface{}) {
-	l.log.WithField("component", "database").WithContext(ctx).Debugf(s, args...)
+	l.log.WithField("component", "database").WithContext(ctx).Tracef(s, args...) // Re-route to trace as we don't want SQL queries in debug output
 }
 
 func (l *Logger) Warn(ctx context.Context, s string, args ...interface{}) {
