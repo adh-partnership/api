@@ -48,11 +48,7 @@ func handleJSON(method, endpoint string, formdata map[string]string) (int, []byt
 	u.RawQuery = q.Encode()
 
 	// Encode formdata to json
-	data := url.Values{}
-	for k, v := range formdata {
-		data.Set(k, v)
-	}
-	j, _ := json.Marshal(data)
+	j, _ := json.Marshal(formdata)
 
 	return network.Handle(method, u.String(), "application/json", string(j))
 }

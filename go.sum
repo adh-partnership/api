@@ -18,6 +18,8 @@ github.com/aws/aws-sdk-go v1.44.165 h1:yaeKEU28EiSCp1T5XXinVA/qx9JFGbVZGUmj5COAM
 github.com/aws/aws-sdk-go v1.44.165/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/aws/aws-sdk-go v1.44.167 h1:kQmBhGdZkQLU7AiHShSkBJ15zr8agy0QeaxXduvyp2E=
 github.com/aws/aws-sdk-go v1.44.167/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
+github.com/aws/aws-sdk-go v1.44.168 h1:/NNDLkjcgW8UrvAUk7QvQS9yzo/CFu9Zp4BCiPHoV+E=
+github.com/aws/aws-sdk-go v1.44.168/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
 github.com/bytedance/sonic v1.6.0 h1:j90DM/Ss1bmySEQYL2U4jRsUjJ+chASzCCZYxohJR60=
 github.com/bytedance/sonic v1.6.0/go.mod h1:i736AoUSYt75HyZLoJW9ERYxcy6eaN6h4BZXU064P/U=

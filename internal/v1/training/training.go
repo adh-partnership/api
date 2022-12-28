@@ -133,7 +133,7 @@ func putTraining(c *gin.Context) {
 	}
 
 	training := &models.TrainingNote{}
-	if err := database.DB.Find(training, c.Param("id")).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Find(training, c.Param("id")).Error; err != nil {
 		response.RespondError(c, http.StatusNotFound, "Training Note Not Found")
 		return
 	}
