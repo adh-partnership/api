@@ -31,7 +31,7 @@ func SubmitTrainingNote(studentcid, instructorcid, position string, sessiondate 
 	var id int
 	r := response{}
 	if err2 := json.Unmarshal(body, &r); err2 == nil {
-		id = r.Data["id"].(int)
+		id = int(r.Data["id"].(float64))
 	}
 
 	return status, id, err
