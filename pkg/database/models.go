@@ -143,6 +143,18 @@ func IsOperatingInitialsAllocated(operatingInitials string) bool {
 	return err == nil
 }
 
+func FindVisitorApplicationByCID(cid string) (*models.VisitorApplication, error) {
+	application := &models.VisitorApplication{}
+	if err := DB.Preload(clause.Associations).Where(models.VisitorApplication{UserID: atou(cid)}).First(&application).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return application, nil
+}
+
 func FindUserByOperatingInitials(oi string) (*models.User, error) {
 	user := &models.User{}
 	if err := DB.Preload(clause.Associations).Where(models.User{OperatingInitials: oi}).First(&user).Error; err != nil {
