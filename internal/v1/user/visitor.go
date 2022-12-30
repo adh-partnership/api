@@ -76,7 +76,6 @@ func postVisitor(c *gin.Context) {
 		return
 	}
 
-	app.UserID = user.CID
 	app.User = user
 	if err := database.DB.Create(&app).Error; err != nil {
 		log.Errorf("Error creating visitor application: %s", err)
