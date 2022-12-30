@@ -2,8 +2,6 @@ package airport
 
 import (
 	"github.com/gin-gonic/gin"
-
-	"github.com/adh-partnership/api/pkg/logger"
 )
 
 func Routes(r *gin.RouterGroup) {
