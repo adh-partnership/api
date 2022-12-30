@@ -67,7 +67,13 @@ func getAirport(c *gin.Context) {
 // @Success 200 {object} []models.AirportATC
 // @Router /v1/airports/:center/:id/atc [get]
 func getAirportATC(c *gin.Context) {
-	atc, err := database.FindAirportATCByID(c.Param("id"))
+	airport, err := database.FindAirportByID(c.Param("id"))
+	if err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	atc, err := database.FindAirportATCByID(airport.ID)
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -90,7 +96,13 @@ func getAirportATC(c *gin.Context) {
 // @Success 200 {object} []models.AirportChart
 // @Router /v1/airports/:center/:id/charts [get]
 func getAirportCharts(c *gin.Context) {
-	charts, err := database.FindAirportChartsByID(c.Param("id"))
+	airport, err := database.FindAirportByID(c.Param("id"))
+	if err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	charts, err := database.FindAirportChartsByID(airport.ID)
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -113,8 +125,14 @@ func getAirportCharts(c *gin.Context) {
 // @Success 200 {object} dto.AirportWeatherDTO
 // @Router /v1/airports/:center/:id/weather [get]
 func getAirportWeather(c *gin.Context) {
+	airport, err := database.FindAirportByID(c.Param("id"))
+	if err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
 	d := &dto.AirportWeatherDTO{
-		ID: c.Param("id"),
+		ID: airport.ICAO,
 	}
 
 	type Result struct {
