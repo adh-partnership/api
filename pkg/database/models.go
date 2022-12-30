@@ -258,7 +258,7 @@ func FindAirportATCByID(id string) (*models.AirportATC, error) {
 
 func FindAirportChartsByID(id string) ([]*models.AirportChart, error) {
 	var charts []*models.AirportChart
-	if err := DB.Preload(clause.Associations).Where(models.AirportChart{ID: id}).Find(&charts).Error; err != nil {
+	if err := DB.Preload(clause.Associations).Where(models.AirportChart{AirportID: id}).Find(&charts).Error; err != nil {
 		return nil, err
 	}
 

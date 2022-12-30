@@ -41,7 +41,8 @@ type AirportATC struct {
 }
 
 type AirportChart struct {
-	ID        string    `json:"arpt_id" example:"FAI" gorm:"index"`
+	ID        string    `json:"-" gorm:"primary_key"`
+	AirportID string    `json:"arpt_id" example:"FAI" gorm:"index"`
 	Cycle     int       `json:"cycle" example:"2213" gorm:"index"`
 	FromDate  time.Time `json:"from_date" example:"2021-09-01T00:00:00Z"`
 	ToDate    time.Time `json:"to_date" example:"2021-09-30T00:00:00Z"`
