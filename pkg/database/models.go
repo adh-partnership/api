@@ -222,3 +222,45 @@ func Atoi(a string) int {
 	}
 	return i
 }
+
+func FindAirportByID(id string) (*models.Airport, error) {
+	airport := &models.Airport{}
+	if err := DB.Preload(clause.Associations).Where(models.Airport{ID: id}).Or(models.Airport{ICAO: id}).First(airport).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return airport, nil
+}
+
+func FindAirportsByARTCC(artcc string) ([]*models.Airport, error) {
+	var airports []*models.Airport
+	if err := DB.Where(models.Airport{ARTCC: artcc}).Find(&airports).Error; err != nil {
+		return nil, err
+	}
+
+	return airports, nil
+}
+
+func FindAirportATCByID(id string) (*models.AirportATC, error) {
+	atc := &models.AirportATC{}
+	if err := DB.Preload(clause.Associations).Where(models.AirportATC{ID: id}).First(atc).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return atc, nil
+}
+
+func FindAirportChartsByID(id string) ([]*models.AirportChart, error) {
+	var charts []*models.AirportChart
+	if err := DB.Preload(clause.Associations).Where(models.AirportChart{ID: id}).Find(&charts).Error; err != nil {
+		return nil, err
+	}
+
+	return charts, nil
+}

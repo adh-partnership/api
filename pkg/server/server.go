@@ -75,6 +75,9 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 
 	log.Info("Running migrations...")
 	err = database.DB.AutoMigrate(
+		&models.Airport{},
+		&models.AirportATC{},
+		&models.AirportChart{},
 		&models.APIKeys{},
 		&models.ControllerStat{},
 		&models.DelayedJob{},
