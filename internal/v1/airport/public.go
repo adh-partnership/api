@@ -9,6 +9,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
+	_ "github.com/adh-partnership/api/pkg/database/models" // for docs
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
@@ -17,7 +18,7 @@ import (
 // @Description Get airports in ARTCC
 // @Tags Airports
 // @Param center path string true "ARTCC identifier, ie ZAN"
-// @Success 200 {object} []Airport
+// @Success 200 {object} []models.Airport
 // @Router /v1/airports/:center [get]
 func getCenter(c *gin.Context) {
 	airports, err := database.FindAirportsByARTCC(c.Param("center"))
@@ -40,7 +41,7 @@ func getCenter(c *gin.Context) {
 // @Tags Airports
 // @Param center path string true "ARTCC identifier, ie ZAN"
 // @Param id path string true "Airport identifier, ie KATL [FAA Identifier or ICAO]"
-// @Success 200 {object} Airport
+// @Success 200 {object} models.Airport
 // @Router /v1/airports/:center/:id [get]
 func getAirport(c *gin.Context) {
 	airport, err := database.FindAirportByID(c.Param("id"))
@@ -63,7 +64,7 @@ func getAirport(c *gin.Context) {
 // @Tags Airports
 // @Param center path string true "ARTCC identifier, ie ZAN"
 // @Param id path string true "Airport identifier, ie KATL [FAA Identifier or ICAO]"
-// @Success 200 {object} []AirportATC
+// @Success 200 {object} []models.AirportATC
 // @Router /v1/airports/:center/:id/atc [get]
 func getAirportATC(c *gin.Context) {
 	atc, err := database.FindAirportATCByID(c.Param("id"))
@@ -86,7 +87,7 @@ func getAirportATC(c *gin.Context) {
 // @Tags Airports
 // @Param center path string true "ARTCC identifier, ie ZAN"
 // @Param id path string true "Airport identifier, ie KATL [FAA Identifier or ICAO]"
-// @Success 200 {object} []AirportChart
+// @Success 200 {object} []models.AirportChart
 // @Router /v1/airports/:center/:id/charts [get]
 func getAirportCharts(c *gin.Context) {
 	charts, err := database.FindAirportChartsByID(c.Param("id"))
