@@ -235,9 +235,15 @@ func FindAirportByID(id string) (*models.Airport, error) {
 	return airport, nil
 }
 
-func FindAirportsByARTCC(artcc string) ([]*models.Airport, error) {
+func FindAirportsByARTCC(artcc string, atc bool) ([]*models.Airport, error) {
 	var airports []*models.Airport
-	if err := DB.Where(models.Airport{ARTCC: artcc}).Find(&airports).Error; err != nil {
+	query := DB.Where(models.Airport{ARTCC: artcc})
+
+	if atc {
+		query = query.Preload(clause.Associations)
+	}
+
+	if err := query.Find(&airports).Error; err != nil {
 		return nil, err
 	}
 

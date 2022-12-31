@@ -18,10 +18,11 @@ import (
 // @Description Get airports in ARTCC
 // @Tags Airports
 // @Param center path string true "ARTCC identifier, ie ZAN"
+// @Param atc query bool false "Include ATC information"
 // @Success 200 {object} []models.Airport
 // @Router /v1/airports/:center [get]
 func getCenter(c *gin.Context) {
-	airports, err := database.FindAirportsByARTCC(c.Param("center"))
+	airports, err := database.FindAirportsByARTCC(c.Param("center"), c.Query("atc") == "true")
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -41,6 +42,7 @@ func getCenter(c *gin.Context) {
 // @Tags Airports
 // @Param center path string true "ARTCC identifier, ie ZAN"
 // @Param id path string true "Airport identifier, ie KATL [FAA Identifier or ICAO]"
+// @Param atc query bool false "Include ATC information"
 // @Success 200 {object} models.Airport
 // @Router /v1/airports/:center/:id [get]
 func getAirport(c *gin.Context) {

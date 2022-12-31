@@ -3,19 +3,20 @@ package models
 import "time"
 
 type Airport struct {
-	ID          string    `json:"arpt_id" example:"FAI" gorm:"primary_key"`
-	ICAO        string    `json:"icao_id" example:"PAFA" gorm:"index"`
-	State       string    `json:"state_code" example:"AK"`
-	City        string    `json:"city" example:"Fairbanks"`
-	Name        string    `json:"arpt_name" example:"FAIRBANKS INTL AIRPORT"`
-	ARTCC       string    `json:"resp_artcc_id" example:"ZNY" gorm:"index"`
-	Status      string    `json:"arpt_status" example:"O"`
-	TwrTypeCode string    `json:"twr_type_code" example:"T"`
-	Elevation   float32   `json:"elevation" example:"13.0"`
-	Latitude    float32   `json:"latitude" example:"40.639801"`
-	Longitude   float32   `json:"longitude" example:"-73.778900"`
-	CreatedAt   time.Time `json:"created_at" example:"2021-09-01T00:00:00Z"`
-	UpdatedAt   time.Time `json:"updated_at" example:"2021-09-01T00:00:00Z"`
+	ID          string      `json:"arpt_id" example:"FAI" gorm:"primary_key"`
+	ICAO        string      `json:"icao_id" example:"PAFA" gorm:"index"`
+	State       string      `json:"state_code" example:"AK"`
+	City        string      `json:"city" example:"Fairbanks"`
+	Name        string      `json:"arpt_name" example:"FAIRBANKS INTL AIRPORT"`
+	ARTCC       string      `json:"resp_artcc_id" example:"ZNY" gorm:"index"`
+	Status      string      `json:"arpt_status" example:"O"`
+	TwrTypeCode string      `json:"twr_type_code" example:"T"`
+	Elevation   float32     `json:"elevation" example:"13.0"`
+	Latitude    float32     `json:"latitude" example:"40.639801"`
+	Longitude   float32     `json:"longitude" example:"-73.778900"`
+	ATC         *AirportATC `json:"atc,omitempty" gorm:"foreignKey:ID;references:ID"`
+	CreatedAt   time.Time   `json:"created_at" example:"2021-09-01T00:00:00Z"`
+	UpdatedAt   time.Time   `json:"updated_at" example:"2021-09-01T00:00:00Z"`
 }
 
 type AirportATC struct {
