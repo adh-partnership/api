@@ -16,7 +16,247 @@
     "host": "network.denartcc.org",
     "basePath": "/v1",
     "paths": {
-        "/email/templates/:name": {
+        "/live/:facility": {
+            "get": {
+                "tags": [
+                    "overflight"
+                ],
+                "summary": "Get Overflights for Facility [Legacy/Deprecated]",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Facility, defaults to ZDV if no facility id provided",
+                        "name": "fac",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/admin/logging": {
+            "get": {
+                "description": "Get/Set Log Levels",
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Get/Set Log Levels",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Level to set",
+                        "name": "level",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/airports/:center": {
+            "get": {
+                "description": "Get airports in ARTCC",
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Get airports in ARTCC",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ARTCC identifier, ie ZAN",
+                        "name": "center",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Airport"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/airports/:center/:id": {
+            "get": {
+                "description": "Get Airport",
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Get Airport",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ARTCC identifier, ie ZAN",
+                        "name": "center",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Airport identifier, ie KATL [FAA Identifier or ICAO]",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Airport"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/airports/:center/:id/atc": {
+            "get": {
+                "description": "Get Airport ATC",
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Get Airport ATC",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ARTCC identifier, ie ZAN",
+                        "name": "center",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Airport identifier, ie KATL [FAA Identifier or ICAO]",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AirportATC"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/airports/:center/:id/charts": {
+            "get": {
+                "description": "Get Airport Charts",
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Get Airport Charts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ARTCC identifier, ie ZAN",
+                        "name": "center",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Airport identifier, ie KATL [FAA Identifier or ICAO]",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AirportChart"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/airports/:center/:id/weather": {
+            "get": {
+                "description": "Get Airport Weather",
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Get Airport Weather",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ARTCC identifier, ie ZAN",
+                        "name": "center",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Airport identifier, ie KATL [FAA Identifier or ICAO]",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AirportWeatherDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/email/templates/:name": {
             "get": {
                 "description": "Get Email Template(s)",
                 "tags": [
@@ -107,398 +347,6 @@
                 }
             }
         },
-        "/feedback": {
-            "get": {
-                "description": "Get feedback for a pilot",
-                "tags": [
-                    "Feedback"
-                ],
-                "summary": "Get Pilot Feedback",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Controller CID filter",
-                        "name": "cid",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Status filter",
-                        "name": "status",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.FeedbackResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Submit feedback for a pilot",
-                "tags": [
-                    "Feedback"
-                ],
-                "summary": "Submit Pilot Feedback",
-                "parameters": [
-                    {
-                        "description": "Feedback",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.FeedbackRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/feedback/{id}": {
-            "patch": {
-                "description": "Patch feedback for a pilot -- currently only the status field can be patched",
-                "tags": [
-                    "Feedback"
-                ],
-                "summary": "Patch Pilot Feedback",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Feedback ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Feedback",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.FeedbackPatchRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/live/:facility": {
-            "get": {
-                "tags": [
-                    "overflight"
-                ],
-                "summary": "Get Overflights for Facility [Legacy/Deprecated]",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Facility, defaults to ZDV if no facility id provided",
-                        "name": "fac",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/stats/historical/{year}/{month}": {
-            "get": {
-                "description": "Get Historical Stats",
-                "tags": [
-                    "Stats"
-                ],
-                "summary": "Get Historical Stats",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Year",
-                        "name": "year",
-                        "in": "path"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Month",
-                        "name": "month",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/dto.ControllerStats"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/stats/online": {
-            "get": {
-                "description": "Get Online Controllers",
-                "tags": [
-                    "Stats"
-                ],
-                "summary": "Get Online Controllers",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.OnlineController"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/visitor": {
-            "get": {
-                "description": "Get visiting applications",
-                "tags": [
-                    "user"
-                ],
-                "summary": "Get visiting applications",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.VisitorApplication"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Submit a Visitor Application",
-                "tags": [
-                    "user"
-                ],
-                "summary": "Submit a Visitor Application",
-                "responses": {
-                    "204": {
-                        "description": ""
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "406": {
-                        "description": "Not Acceptable - Generally means doesn't meet requirements",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict - Generally means already applied",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/visitor/{id}": {
-            "put": {
-                "description": "Handle Visitor Application",
-                "tags": [
-                    "user"
-                ],
-                "summary": "Handle Visitor Application",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Visitor CID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Action to take (accept, deny)",
-                        "name": "action",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Reason for action for denials",
-                        "name": "reason",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/events": {
             "get": {
                 "description": "Get Upcoming Events",
@@ -518,7 +366,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.EventsResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.EventsResponse"
+                            }
                         }
                     },
                     "500": {
@@ -998,6 +849,149 @@
                 }
             }
         },
+        "/v1/feedback": {
+            "get": {
+                "description": "Get pilot feedback",
+                "tags": [
+                    "Feedback"
+                ],
+                "summary": "Get Pilot Feedback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Controller CID filter",
+                        "name": "cid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Status filter, valid values: pending, approved, rejected. Default: pending",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.FeedbackResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Submit feedback for a pilot",
+                "tags": [
+                    "Feedback"
+                ],
+                "summary": "Submit Pilot Feedback",
+                "parameters": [
+                    {
+                        "description": "Feedback",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FeedbackRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/feedback/{id}": {
+            "patch": {
+                "description": "Patch feedback for a pilot -- currently only the status field can be patched. Accepted values: approved, rejected",
+                "tags": [
+                    "Feedback"
+                ],
+                "summary": "Patch Pilot Feedback",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Feedback ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Feedback",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FeedbackPatchRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/overflight": {
             "get": {
                 "tags": [
@@ -1018,7 +1012,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1051,7 +1045,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1139,6 +1133,96 @@
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/stats/historical/{year}/{month}": {
+            "get": {
+                "description": "Get Historical Stats",
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get Historical Stats",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Year",
+                        "name": "year",
+                        "in": "path"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Month",
+                        "name": "month",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ControllerStats"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/stats/online": {
+            "get": {
+                "description": "Get Online Controllers",
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get Online Controllers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.OnlineController"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
@@ -1713,6 +1797,12 @@
                             "$ref": "#/definitions/response.R"
                         }
                     },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -2111,9 +2201,155 @@
                     }
                 }
             }
+        },
+        "/v1/user/visitor": {
+            "get": {
+                "description": "Get visiting applications",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get visiting applications",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.VisitorApplication"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Submit a Visitor Application",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Submit a Visitor Application",
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable - Generally means doesn't meet requirements",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Generally means already applied",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/visitor/{id}": {
+            "put": {
+                "description": "Handle Visitor Application",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Handle Visitor Application",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Visitor CID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Action to take (accept, deny)",
+                        "name": "action",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Reason for action for denials",
+                        "name": "reason",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "dto.AirportWeatherDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "metar": {
+                    "type": "string"
+                },
+                "taf": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.ControllerStats": {
             "type": "object",
             "properties": {
@@ -2140,6 +2376,10 @@
                 "last_name": {
                     "type": "string",
                     "example": "Hawton"
+                },
+                "operating_initials": {
+                    "type": "string",
+                    "example": "DAN"
                 },
                 "rating": {
                     "type": "string",
@@ -2326,13 +2566,43 @@
                         "$ref": "#/definitions/dto.UserResponse"
                     }
                 },
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "facilities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
                 "fe": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/dto.UserResponse"
                     }
                 },
+                "instructor": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "mentor": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
                 "ta": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                },
+                "web": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/dto.UserResponse"
@@ -2394,7 +2664,7 @@
                     "type": "string"
                 },
                 "controller": {
-                    "$ref": "#/definitions/models.User"
+                    "$ref": "#/definitions/dto.UserResponse"
                 },
                 "created_at": {
                     "type": "string"
@@ -2412,7 +2682,31 @@
                     "type": "string"
                 },
                 "submitter": {
-                    "$ref": "#/definitions/models.User"
+                    "$ref": "#/definitions/dto.UserResponse"
+                }
+            }
+        },
+        "dto.OnlineController": {
+            "type": "object",
+            "properties": {
+                "cid": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "controller": {
+                    "$ref": "#/definitions/dto.UserResponse"
+                },
+                "frequency": {
+                    "type": "string",
+                    "example": "118.000"
+                },
+                "online_since": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
+                },
+                "position": {
+                    "type": "string",
+                    "example": "ANC_00_CTR"
                 }
             }
         },
@@ -2643,6 +2937,185 @@
                 }
             }
         },
+        "models.Airport": {
+            "type": "object",
+            "properties": {
+                "arpt_id": {
+                    "type": "string",
+                    "example": "FAI"
+                },
+                "arpt_name": {
+                    "type": "string",
+                    "example": "FAIRBANKS INTL AIRPORT"
+                },
+                "arpt_status": {
+                    "type": "string",
+                    "example": "O"
+                },
+                "city": {
+                    "type": "string",
+                    "example": "Fairbanks"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2021-09-01T00:00:00Z"
+                },
+                "elevation": {
+                    "type": "number",
+                    "example": 13
+                },
+                "icao_id": {
+                    "type": "string",
+                    "example": "PAFA"
+                },
+                "latitude": {
+                    "type": "number",
+                    "example": 40.639801
+                },
+                "longitude": {
+                    "type": "number",
+                    "example": -73.7789
+                },
+                "resp_artcc_id": {
+                    "type": "string",
+                    "example": "ZNY"
+                },
+                "state_code": {
+                    "type": "string",
+                    "example": "AK"
+                },
+                "twr_type_code": {
+                    "type": "string",
+                    "example": "T"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2021-09-01T00:00:00Z"
+                }
+            }
+        },
+        "models.AirportATC": {
+            "type": "object",
+            "properties": {
+                "apch_p_prov_type_cd": {
+                    "type": "string",
+                    "example": "A"
+                },
+                "apch_p_provider": {
+                    "type": "string",
+                    "example": "FAI"
+                },
+                "apch_s_prov_type_cd": {
+                    "type": "string",
+                    "example": "A"
+                },
+                "apch_s_provider": {
+                    "type": "string",
+                    "example": "ANC"
+                },
+                "arpt_id": {
+                    "type": "string",
+                    "example": "JFK"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2021-09-01T00:00:00Z"
+                },
+                "dep_p_prov_type_cd": {
+                    "type": "string",
+                    "example": "A"
+                },
+                "dep_p_provider": {
+                    "type": "string",
+                    "example": "FAI"
+                },
+                "dep_s_prov_type_cd": {
+                    "type": "string",
+                    "example": "A"
+                },
+                "dep_s_provider": {
+                    "type": "string",
+                    "example": "ANC"
+                },
+                "facility_type": {
+                    "type": "string",
+                    "example": "ATCT-A/C"
+                },
+                "primary_apch_radio_call": {
+                    "type": "string",
+                    "example": "Fairbanks"
+                },
+                "primary_dep_radio_call": {
+                    "type": "string",
+                    "example": "Fairbanks"
+                },
+                "secondary_apch_radio_call": {
+                    "type": "string",
+                    "example": "Anchorage"
+                },
+                "secondary_dep_radio_call": {
+                    "type": "string",
+                    "example": "Anchorage"
+                },
+                "twr_call": {
+                    "type": "string",
+                    "example": "Fairbanks"
+                },
+                "twr_hrs": {
+                    "type": "string",
+                    "example": "1200-0100 local time"
+                },
+                "twr_operator_code": {
+                    "type": "string",
+                    "example": "A"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2021-09-01T00:00:00Z"
+                }
+            }
+        },
+        "models.AirportChart": {
+            "type": "object",
+            "properties": {
+                "arpt_id": {
+                    "type": "string",
+                    "example": "FAI"
+                },
+                "chart_code": {
+                    "type": "string",
+                    "example": "DP"
+                },
+                "chart_name": {
+                    "type": "string",
+                    "example": "RDFLG FOUR (RNAV)"
+                },
+                "chart_url": {
+                    "type": "string",
+                    "example": "https://aeronav.faa.gov/d-tpp/2212/01234RDFLG.PDF"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2021-09-01T00:00:00Z"
+                },
+                "cycle": {
+                    "type": "integer",
+                    "example": 2213
+                },
+                "from_date": {
+                    "type": "string",
+                    "example": "2021-09-01T00:00:00Z"
+                },
+                "to_date": {
+                    "type": "string",
+                    "example": "2021-09-30T00:00:00Z"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2021-09-01T00:00:00Z"
+                }
+            }
+        },
         "models.Document": {
             "type": "object",
             "properties": {
@@ -2813,46 +3286,6 @@
                 },
                 "updated_at": {
                     "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.User"
-                }
-            }
-        },
-        "models.OnlineController": {
-            "type": "object",
-            "properties": {
-                "cid": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "created_at": {
-                    "type": "string",
-                    "example": "2020-01-01T00:00:00Z"
-                },
-                "frequency": {
-                    "type": "string",
-                    "example": "118.000"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "logon_time": {
-                    "type": "string",
-                    "example": "2020-01-01T00:00:00Z"
-                },
-                "position": {
-                    "type": "string",
-                    "example": "ANC_TWR"
-                },
-                "update_id": {
-                    "type": "string",
-                    "example": "1"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "example": "2020-01-01T00:00:00Z"
                 },
                 "user": {
                     "$ref": "#/definitions/models.User"

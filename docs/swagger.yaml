@@ -1,5 +1,14 @@
 basePath: /v1
 definitions:
+  dto.AirportWeatherDTO:
+    properties:
+      id:
+        type: string
+      metar:
+        type: string
+      taf:
+        type: string
+    type: object
   dto.ControllerStats:
     properties:
       cab:
@@ -19,6 +28,9 @@ definitions:
         type: string
       last_name:
         example: Hawton
+        type: string
+      operating_initials:
+        example: DAN
         type: string
       rating:
         example: S1
@@ -142,11 +154,31 @@ definitions:
         items:
           $ref: '#/definitions/dto.UserResponse'
         type: array
+      events:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      facilities:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
       fe:
         items:
           $ref: '#/definitions/dto.UserResponse'
         type: array
+      instructor:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      mentor:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
       ta:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+      web:
         items:
           $ref: '#/definitions/dto.UserResponse'
         type: array
@@ -188,7 +220,7 @@ definitions:
       contact_email:
         type: string
       controller:
-        $ref: '#/definitions/models.User'
+        $ref: '#/definitions/dto.UserResponse'
       created_at:
         type: string
       id:
@@ -200,7 +232,24 @@ definitions:
       status:
         type: string
       submitter:
-        $ref: '#/definitions/models.User'
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.OnlineController:
+    properties:
+      cid:
+        example: 1
+        type: integer
+      controller:
+        $ref: '#/definitions/dto.UserResponse'
+      frequency:
+        example: "118.000"
+        type: string
+      online_since:
+        example: "2020-01-01T00:00:00Z"
+        type: string
+      position:
+        example: ANC_00_CTR
+        type: string
     type: object
   dto.StorageRequest:
     properties:
@@ -360,6 +409,138 @@ definitions:
         example: C208
         type: string
     type: object
+  models.Airport:
+    properties:
+      arpt_id:
+        example: FAI
+        type: string
+      arpt_name:
+        example: FAIRBANKS INTL AIRPORT
+        type: string
+      arpt_status:
+        example: O
+        type: string
+      city:
+        example: Fairbanks
+        type: string
+      created_at:
+        example: "2021-09-01T00:00:00Z"
+        type: string
+      elevation:
+        example: 13
+        type: number
+      icao_id:
+        example: PAFA
+        type: string
+      latitude:
+        example: 40.639801
+        type: number
+      longitude:
+        example: -73.7789
+        type: number
+      resp_artcc_id:
+        example: ZNY
+        type: string
+      state_code:
+        example: AK
+        type: string
+      twr_type_code:
+        example: T
+        type: string
+      updated_at:
+        example: "2021-09-01T00:00:00Z"
+        type: string
+    type: object
+  models.AirportATC:
+    properties:
+      apch_p_prov_type_cd:
+        example: A
+        type: string
+      apch_p_provider:
+        example: FAI
+        type: string
+      apch_s_prov_type_cd:
+        example: A
+        type: string
+      apch_s_provider:
+        example: ANC
+        type: string
+      arpt_id:
+        example: JFK
+        type: string
+      created_at:
+        example: "2021-09-01T00:00:00Z"
+        type: string
+      dep_p_prov_type_cd:
+        example: A
+        type: string
+      dep_p_provider:
+        example: FAI
+        type: string
+      dep_s_prov_type_cd:
+        example: A
+        type: string
+      dep_s_provider:
+        example: ANC
+        type: string
+      facility_type:
+        example: ATCT-A/C
+        type: string
+      primary_apch_radio_call:
+        example: Fairbanks
+        type: string
+      primary_dep_radio_call:
+        example: Fairbanks
+        type: string
+      secondary_apch_radio_call:
+        example: Anchorage
+        type: string
+      secondary_dep_radio_call:
+        example: Anchorage
+        type: string
+      twr_call:
+        example: Fairbanks
+        type: string
+      twr_hrs:
+        example: 1200-0100 local time
+        type: string
+      twr_operator_code:
+        example: A
+        type: string
+      updated_at:
+        example: "2021-09-01T00:00:00Z"
+        type: string
+    type: object
+  models.AirportChart:
+    properties:
+      arpt_id:
+        example: FAI
+        type: string
+      chart_code:
+        example: DP
+        type: string
+      chart_name:
+        example: RDFLG FOUR (RNAV)
+        type: string
+      chart_url:
+        example: https://aeronav.faa.gov/d-tpp/2212/01234RDFLG.PDF
+        type: string
+      created_at:
+        example: "2021-09-01T00:00:00Z"
+        type: string
+      cycle:
+        example: 2213
+        type: integer
+      from_date:
+        example: "2021-09-01T00:00:00Z"
+        type: string
+      to_date:
+        example: "2021-09-30T00:00:00Z"
+        type: string
+      updated_at:
+        example: "2021-09-01T00:00:00Z"
+        type: string
+    type: object
   models.Document:
     properties:
       category:
@@ -479,35 +660,6 @@ definitions:
       notes:
         type: string
       updated_at:
-        type: string
-      user:
-        $ref: '#/definitions/models.User'
-    type: object
-  models.OnlineController:
-    properties:
-      cid:
-        example: 1
-        type: integer
-      created_at:
-        example: "2020-01-01T00:00:00Z"
-        type: string
-      frequency:
-        example: "118.000"
-        type: string
-      id:
-        example: 1
-        type: integer
-      logon_time:
-        example: "2020-01-01T00:00:00Z"
-        type: string
-      position:
-        example: ANC_TWR
-        type: string
-      update_id:
-        example: "1"
-        type: string
-      updated_at:
-        example: "2020-01-01T00:00:00Z"
         type: string
       user:
         $ref: '#/definitions/models.User'
@@ -684,7 +836,165 @@ info:
   title: ADH API
   version: "1.0"
 paths:
-  /email/templates/:name:
+  /live/:facility:
+    get:
+      parameters:
+      - description: Facility, defaults to ZDV if no facility id provided
+        in: path
+        name: fac
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Overflights for Facility [Legacy/Deprecated]
+      tags:
+      - overflight
+  /v1/admin/logging:
+    get:
+      description: Get/Set Log Levels
+      parameters:
+      - description: Level to set
+        in: query
+        name: level
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get/Set Log Levels
+      tags:
+      - Admin
+  /v1/airports/:center:
+    get:
+      description: Get airports in ARTCC
+      parameters:
+      - description: ARTCC identifier, ie ZAN
+        in: path
+        name: center
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Airport'
+            type: array
+      summary: Get airports in ARTCC
+      tags:
+      - Airports
+  /v1/airports/:center/:id:
+    get:
+      description: Get Airport
+      parameters:
+      - description: ARTCC identifier, ie ZAN
+        in: path
+        name: center
+        required: true
+        type: string
+      - description: Airport identifier, ie KATL [FAA Identifier or ICAO]
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Airport'
+      summary: Get Airport
+      tags:
+      - Airports
+  /v1/airports/:center/:id/atc:
+    get:
+      description: Get Airport ATC
+      parameters:
+      - description: ARTCC identifier, ie ZAN
+        in: path
+        name: center
+        required: true
+        type: string
+      - description: Airport identifier, ie KATL [FAA Identifier or ICAO]
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AirportATC'
+            type: array
+      summary: Get Airport ATC
+      tags:
+      - Airports
+  /v1/airports/:center/:id/charts:
+    get:
+      description: Get Airport Charts
+      parameters:
+      - description: ARTCC identifier, ie ZAN
+        in: path
+        name: center
+        required: true
+        type: string
+      - description: Airport identifier, ie KATL [FAA Identifier or ICAO]
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AirportChart'
+            type: array
+      summary: Get Airport Charts
+      tags:
+      - Airports
+  /v1/airports/:center/:id/weather:
+    get:
+      description: Get Airport Weather
+      parameters:
+      - description: ARTCC identifier, ie ZAN
+        in: path
+        name: center
+        required: true
+        type: string
+      - description: Airport identifier, ie KATL [FAA Identifier or ICAO]
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AirportWeatherDTO'
+      summary: Get Airport Weather
+      tags:
+      - Airports
+  /v1/email/templates/:name:
     get:
       description: Get Email Template(s)
       parameters:
@@ -744,264 +1054,6 @@ paths:
       summary: Update Email Template
       tags:
       - Email
-  /feedback:
-    get:
-      description: Get feedback for a pilot
-      parameters:
-      - description: Controller CID filter
-        in: query
-        name: cid
-        type: string
-      - description: Status filter
-        in: query
-        name: status
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.FeedbackResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Pilot Feedback
-      tags:
-      - Feedback
-    post:
-      description: Submit feedback for a pilot
-      parameters:
-      - description: Feedback
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.FeedbackRequest'
-      responses:
-        "204":
-          description: ""
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Submit Pilot Feedback
-      tags:
-      - Feedback
-  /feedback/{id}:
-    patch:
-      description: Patch feedback for a pilot -- currently only the status field can
-        be patched
-      parameters:
-      - description: Feedback ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Feedback
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.FeedbackPatchRequest'
-      responses:
-        "204":
-          description: ""
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Patch Pilot Feedback
-      tags:
-      - Feedback
-  /live/:facility:
-    get:
-      parameters:
-      - description: Facility, defaults to ZDV if no facility id provided
-        in: path
-        name: fac
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Overflights for Facility [Legacy/Deprecated]
-      tags:
-      - overflight
-  /stats/historical/{year}/{month}:
-    get:
-      description: Get Historical Stats
-      parameters:
-      - description: Year
-        in: path
-        name: year
-        type: integer
-      - description: Month
-        in: path
-        name: month
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/dto.ControllerStats'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Historical Stats
-      tags:
-      - Stats
-  /stats/online:
-    get:
-      description: Get Online Controllers
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.OnlineController'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Online Controllers
-      tags:
-      - Stats
-  /user/visitor:
-    get:
-      description: Get visiting applications
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.VisitorApplication'
-            type: array
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get visiting applications
-      tags:
-      - user
-    post:
-      description: Submit a Visitor Application
-      responses:
-        "204":
-          description: ""
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.R'
-        "406":
-          description: Not Acceptable - Generally means doesn't meet requirements
-          schema:
-            $ref: '#/definitions/response.R'
-        "409":
-          description: Conflict - Generally means already applied
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Submit a Visitor Application
-      tags:
-      - user
-  /user/visitor/{id}:
-    put:
-      description: Handle Visitor Application
-      parameters:
-      - description: Visitor CID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Action to take (accept, deny)
-        in: body
-        name: action
-        required: true
-        schema:
-          type: string
-      - description: Reason for action for denials
-        in: body
-        name: reason
-        schema:
-          type: string
-      responses:
-        "204":
-          description: ""
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Handle Visitor Application
-      tags:
-      - user
   /v1/events:
     get:
       description: Get Upcoming Events
@@ -1014,7 +1066,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.EventsResponse'
+            items:
+              $ref: '#/definitions/dto.EventsResponse'
+            type: array
         "500":
           description: Internal Server Error
           schema:
@@ -1334,6 +1388,102 @@ paths:
       summary: Create/Edit User Signup for Event
       tags:
       - Events
+  /v1/feedback:
+    get:
+      description: Get pilot feedback
+      parameters:
+      - description: Controller CID filter
+        in: query
+        name: cid
+        type: string
+      - description: 'Status filter, valid values: pending, approved, rejected. Default:
+          pending'
+        in: query
+        name: status
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.FeedbackResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Pilot Feedback
+      tags:
+      - Feedback
+    post:
+      description: Submit feedback for a pilot
+      parameters:
+      - description: Feedback
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FeedbackRequest'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Submit Pilot Feedback
+      tags:
+      - Feedback
+  /v1/feedback/{id}:
+    patch:
+      description: 'Patch feedback for a pilot -- currently only the status field
+        can be patched. Accepted values: approved, rejected'
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Feedback
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FeedbackPatchRequest'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Patch Pilot Feedback
+      tags:
+      - Feedback
   /v1/overflight:
     get:
       parameters:
@@ -1346,7 +1496,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1367,7 +1517,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1434,6 +1584,65 @@ paths:
       summary: Proxy TAF Data
       tags:
       - Proxy
+  /v1/stats/historical/{year}/{month}:
+    get:
+      description: Get Historical Stats
+      parameters:
+      - description: Year
+        in: path
+        name: year
+        type: integer
+      - description: Month
+        in: path
+        name: month
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ControllerStats'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Historical Stats
+      tags:
+      - Stats
+  /v1/stats/online:
+    get:
+      description: Get Online Controllers
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.OnlineController'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Online Controllers
+      tags:
+      - Stats
   /v1/storage:
     post:
       parameters:
@@ -1802,6 +2011,10 @@ paths:
           description: Forbidden
           schema:
             $ref: '#/definitions/response.R'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.R'
         "500":
           description: Internal Server Error
           schema:
@@ -2061,6 +2274,93 @@ paths:
           schema:
             $ref: '#/definitions/response.R'
       summary: Get Facility Staff
+      tags:
+      - user
+  /v1/user/visitor:
+    get:
+      description: Get visiting applications
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.VisitorApplication'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get visiting applications
+      tags:
+      - user
+    post:
+      description: Submit a Visitor Application
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "406":
+          description: Not Acceptable - Generally means doesn't meet requirements
+          schema:
+            $ref: '#/definitions/response.R'
+        "409":
+          description: Conflict - Generally means already applied
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Submit a Visitor Application
+      tags:
+      - user
+  /v1/user/visitor/{id}:
+    put:
+      description: Handle Visitor Application
+      parameters:
+      - description: Visitor CID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Action to take (accept, deny)
+        in: body
+        name: action
+        required: true
+        schema:
+          type: string
+      - description: Reason for action for denials
+        in: body
+        name: reason
+        schema:
+          type: string
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Handle Visitor Application
       tags:
       - user
 securityDefinitions:
