@@ -10,7 +10,7 @@ import (
 var log = logger.Logger.WithField("component", "training")
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("/:cid", getTraining)
+	r.GET("/:cid", auth.NotGuest, getTraining)
 	r.POST("/:cid", auth.NotGuest, auth.InGroup("training"), postTraining)
 	r.PUT("/:cid/:id", auth.NotGuest, auth.InGroup("training"), putTraining)
 	r.DELETE("/:cid/:id", auth.NotGuest, auth.InGroup("training"), deleteTraining)
