@@ -1,8 +1,6 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 
 	"github.com/adh-partnership/api/internal/v1/admin"
@@ -16,7 +14,6 @@ import (
 	"github.com/adh-partnership/api/internal/v1/storage"
 	"github.com/adh-partnership/api/internal/v1/training"
 	"github.com/adh-partnership/api/internal/v1/user"
-	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
@@ -43,9 +40,6 @@ func SetupRoutes(r *gin.Engine) {
 	log.Infof("Setting up old overflight redirect")
 	// Setup redirect for old overflight endpoint
 	r.GET("/live/:fac", overflight.GetOverflightsLegacy)
-	r.GET("/ping", func(c *gin.Context) {
-		response.RespondMessage(c, http.StatusOK, "pong")
-	})
 
 	v1 := r.Group("/v1")
 	for prefix, f := range routeGroups {
