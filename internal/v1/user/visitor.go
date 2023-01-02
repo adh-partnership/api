@@ -76,7 +76,11 @@ func postVisitor(c *gin.Context) {
 		return
 	}
 
-	app.User = user
+	app = &models.VisitorApplication{
+		UserID: user.CID,
+		User:   user,
+	}
+
 	if err := database.DB.Create(&app).Error; err != nil {
 		log.Errorf("Error creating visitor application: %s", err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
