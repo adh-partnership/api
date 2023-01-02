@@ -61,21 +61,22 @@ func postEventSignup(c *gin.Context) {
 				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
+		} else {
+			log.Errorf("Error getting event signup: %s", err)
+			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
-		log.Errorf("Error getting event signup: %s", err)
-		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-		return
-	}
+	} else {
+		signup.Choice1 = data.Choice1
+		signup.Choice2 = data.Choice2
+		signup.Choice3 = data.Choice3
+		signup.Notes = data.Notes
 
-	signup.Choice1 = data.Choice1
-	signup.Choice2 = data.Choice2
-	signup.Choice3 = data.Choice3
-	signup.Notes = data.Notes
-
-	if err := database.DB.Save(&signup).Error; err != nil {
-		log.Errorf("Error updating event signup: %s", err)
-		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-		return
+		if err := database.DB.Save(&signup).Error; err != nil {
+			log.Errorf("Error updating event signup: %s", err)
+			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
 	}
 
 	event, _ = database.GetEvent(c.Param("id"))
