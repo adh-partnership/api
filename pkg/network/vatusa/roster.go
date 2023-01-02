@@ -56,7 +56,7 @@ func RemoveController(cid string, by uint, reason string) (int, error) {
 
 // RemoveVisitingController removes a controller from the visiting roster at VATUSA.
 func RemoveVisitingController(cid string, by uint, reason string) (int, error) {
-	status, _, err := handle("DELETE", "/facility/"+config.Cfg.VATUSA.Facility+"/roster/visiting/"+cid, map[string]string{
+	status, _, err := handle("DELETE", "/facility/"+config.Cfg.VATUSA.Facility+"/roster/manageVisitor/"+cid, map[string]string{
 		"by":     fmt.Sprint(by),
 		"reason": reason,
 	})
