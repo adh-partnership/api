@@ -56,9 +56,30 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			user.OperatingInitials = oi
 		}
 
-		// Check if we need to give them a join date
-		if user.ControllerType == constants.ControllerTypeNone && (controller.Membership == "visit" || controller.Membership == "home") {
-			user.RosterJoinDate = time.Now()
+		// Check if they are new on roster, previously in the table, and don't have an OI set
+		if user.OperatingInitials == "" &&
+			user.ControllerType == constants.ControllerTypeNone &&
+			(controller.Membership == "home" || controller.Membership == "visit") {
+			oi, err := database.FindOI(user)
+			if err != nil {
+				log.Infof("Error generating new OI: %s", err.Error())
+				oi = ""
+			}
+			if oi == "" {
+				go func() {
+					_ = discord.NewMessage().
+						SetContent(
+							fmt.Sprintf(
+								"User %s %s (%d) is back on the roster, but auto-generated OI failed as their first initial + last initial was already in use. Please assign one.",
+								user.FirstName,
+								user.LastName,
+								user.CID,
+							),
+						).
+						Send("seniorstaff")
+				}()
+			}
+			user.OperatingInitials = oi
 		}
 
 		user.FirstName = controller.FirstName
@@ -68,6 +89,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 		user.Rating = *rating
 		user.RatingID = rating.ID
 		user.UpdateID = updateid
+		user.RosterJoinDate = &(controller.FacilityJoin)
 
 		// If their status is none or empty, set it to active
 		if user.Status == constants.ControllerStatusNone || user.Status == "" {
@@ -119,13 +141,11 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 					}
 				}
 			}
-			user.ControllerType = constants.ControllerTypeVisitor
 		} else if controller.Membership == "home" {
 			user.Region = "AMAS"
 			user.Division = "USA"
 			user.Subdivision = controller.Facility
 			user.ControllerType = constants.ControllerTypeHome
-			user.RosterJoinDate = controller.FacilityJoin
 		} else {
 			// This shouldn't happen... but...
 			user.ControllerType = constants.ControllerTypeNone

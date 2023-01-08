@@ -37,10 +37,10 @@ type User struct {
 	// This may be blank
 	Subdivision string `json:"subdivision" gorm:"type:varchar(10)" example:"ZDV"`
 	// Internally used identifier during scheduled updates for removals
-	UpdateID       string    `json:"updateid" gorm:"type:varchar(32)"`
-	RosterJoinDate time.Time `json:"roster_join_date" example:"2020-01-01T00:00:00Z"`
-	CreatedAt      time.Time `json:"created_at" example:"2020-01-01T00:00:00Z"`
-	UpdatedAt      time.Time `json:"updated_at" example:"2020-01-01T00:00:00Z"`
+	UpdateID       string     `json:"updateid" gorm:"type:varchar(32)"`
+	RosterJoinDate *time.Time `json:"roster_join_date" example:"2020-01-01T00:00:00Z"`
+	CreatedAt      time.Time  `json:"created_at" example:"2020-01-01T00:00:00Z"`
+	UpdatedAt      time.Time  `json:"updated_at" example:"2020-01-01T00:00:00Z"`
 }
 
 var CertificationOptions = map[string]string{

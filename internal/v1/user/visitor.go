@@ -182,7 +182,8 @@ func putVisitor(c *gin.Context) {
 		}
 		app.User.ControllerType = constants.ControllerTypeVisitor
 		app.User.Status = constants.ControllerStatusActive
-		app.User.RosterJoinDate = time.Now()
+		t := time.Now()
+		app.User.RosterJoinDate = &t
 		if err := database.DB.Save(&app.User).Error; err != nil {
 			log.Errorf("Error updating user controller type to visitor for %d: %s", app.User.CID, err)
 		}
