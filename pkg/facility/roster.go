@@ -56,6 +56,32 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			user.OperatingInitials = oi
 		}
 
+		// Check if they are new on roster, previously in the table, and don't have an OI set
+		if user.OperatingInitials == "" &&
+			user.ControllerType == constants.ControllerTypeNone &&
+			(controller.Membership == "home" || controller.Membership == "visit") {
+			oi, err := database.FindOI(user)
+			if err != nil {
+				log.Infof("Error generating new OI: %s", err.Error())
+				oi = ""
+			}
+			if oi == "" {
+				go func() {
+					_ = discord.NewMessage().
+						SetContent(
+							fmt.Sprintf(
+								"User %s %s (%d) is back on the roster, but auto-generated OI failed as their first initial + last initial was already in use. Please assign one.",
+								user.FirstName,
+								user.LastName,
+								user.CID,
+							),
+						).
+						Send("seniorstaff")
+				}()
+			}
+			user.OperatingInitials = oi
+		}
+
 		user.FirstName = controller.FirstName
 		user.LastName = controller.LastName
 		user.Email = controller.Email
