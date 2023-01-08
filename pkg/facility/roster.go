@@ -55,6 +55,12 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			}
 			user.OperatingInitials = oi
 		}
+
+		// Check if we need to give them a join date
+		if user.ControllerType == constants.ControllerTypeNone && (controller.Membership == "visit" || controller.Membership == "home") {
+			user.RosterJoinDate = time.Now()
+		}
+
 		user.FirstName = controller.FirstName
 		user.LastName = controller.LastName
 		user.Email = controller.Email
@@ -119,6 +125,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			user.Division = "USA"
 			user.Subdivision = controller.Facility
 			user.ControllerType = constants.ControllerTypeHome
+			user.RosterJoinDate = controller.FacilityJoin
 		} else {
 			// This shouldn't happen... but...
 			user.ControllerType = constants.ControllerTypeNone

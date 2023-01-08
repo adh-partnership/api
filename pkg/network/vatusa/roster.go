@@ -3,19 +3,21 @@ package vatusa
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/adh-partnership/api/pkg/config"
 )
 
 type VATUSAController struct {
-	CID         int    `json:"cid"`
-	FirstName   string `json:"fname"`
-	LastName    string `json:"lname"`
-	Email       string `json:"email"`
-	Rating      int    `json:"rating"`
-	Facility    string `json:"facility"`
-	Membership  string `json:"membership"`
-	RatingShort string `json:"rating_short"`
+	CID          int       `json:"cid"`
+	FirstName    string    `json:"fname"`
+	LastName     string    `json:"lname"`
+	Email        string    `json:"email"`
+	Rating       int       `json:"rating"`
+	Facility     string    `json:"facility"`
+	Membership   string    `json:"membership"`
+	RatingShort  string    `json:"rating_short"`
+	FacilityJoin time.Time `json:"facility_join"`
 }
 
 type VATUSAFacility struct {
