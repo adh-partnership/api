@@ -38,7 +38,7 @@ func handle() {
 	var controllers []*models.User
 	if err := database.DB.Preload(clause.Associations).
 		Where(&models.User{Status: constants.ControllerStatusActive}).
-		Where("join_date <= date_sub(now(), interval ? month", config.Cfg.Facility.Activity.Period).
+		Where("roster_join_date <= date_sub(now(), interval ? month", config.Cfg.Facility.Activity.Period).
 		Find(&controllers).Error; err != nil {
 		log.Errorf("Failed to get active controllers: %s", err)
 		return
