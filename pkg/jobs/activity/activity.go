@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron"
+	"gorm.io/gorm/clause"
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
@@ -35,7 +36,7 @@ func handle() {
 
 	// Get all active controllers
 	var controllers []*models.User
-	if err := database.DB.Where(&models.User{Status: constants.ControllerStatusActive}).Find(&controllers).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Where(&models.User{Status: constants.ControllerStatusActive}).Find(&controllers).Error; err != nil {
 		log.Errorf("Failed to get active controllers: %s", err)
 		return
 	}
