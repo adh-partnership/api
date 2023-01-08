@@ -31,6 +31,17 @@ func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string,
 			}
 			return ret
 		},
+		"findRole": func(role string) []string {
+			var ret []string
+			users, err := database.FindUsersWithRole(role)
+			if err != nil {
+				return ret
+			}
+			for _, user := range users {
+				ret = append(ret, fmt.Sprintf("%s %s, %s", user.FirstName, user.LastName, strings.ToUpper(role)))
+			}
+			return ret
+		},
 	}).Parse(templ.Body)
 	if err != nil {
 		return nil, "", "", err
