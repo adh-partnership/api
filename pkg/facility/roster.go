@@ -125,6 +125,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			user.Division = "USA"
 			user.Subdivision = controller.Facility
 			user.ControllerType = constants.ControllerTypeHome
+			user.RosterJoinDate = controller.FacilityJoin
 		} else {
 			// This shouldn't happen... but...
 			user.ControllerType = constants.ControllerTypeNone
