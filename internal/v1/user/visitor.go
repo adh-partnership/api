@@ -127,7 +127,7 @@ func postVisitor(c *gin.Context) {
 // @Router /v1/user/visitor/{id} [put]
 func putVisitor(c *gin.Context) {
 	var app models.VisitorApplication
-	if err := database.DB.Find(&models.VisitorApplication{UserID: database.Atou(c.Param("id"))}).First(&app).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Find(&models.VisitorApplication{UserID: database.Atou(c.Param("id"))}).First(&app).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.RespondError(c, http.StatusNotFound, "Not Found")
 			return
@@ -181,6 +181,7 @@ func putVisitor(c *gin.Context) {
 			return
 		}
 		app.User.ControllerType = constants.ControllerTypeVisitor
+		app.User.Status = constants.ControllerStatusActive
 		if err := database.DB.Save(&app.User).Error; err != nil {
 			log.Errorf("Error updating user controller type to visitor for %d: %s", app.User.CID, err)
 		}
