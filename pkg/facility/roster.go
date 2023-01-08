@@ -63,7 +63,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 		user.Rating = *rating
 		user.RatingID = rating.ID
 		user.UpdateID = updateid
-		user.RosterJoinDate = controller.FacilityJoin
+		user.RosterJoinDate = &controller.FacilityJoin
 
 		// If their status is none or empty, set it to active
 		if user.Status == constants.ControllerStatusNone || user.Status == "" {
@@ -120,7 +120,6 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			user.Division = "USA"
 			user.Subdivision = controller.Facility
 			user.ControllerType = constants.ControllerTypeHome
-			user.RosterJoinDate = controller.FacilityJoin
 		} else {
 			// This shouldn't happen... but...
 			user.ControllerType = constants.ControllerTypeNone
