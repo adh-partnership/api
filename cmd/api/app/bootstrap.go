@@ -231,9 +231,7 @@ information. The invite for this can be found on our website.</p>
 						Subject: "Visitor Application Denied",
 						Body: `<p>Hello {{.FirstName}} {{.LastName}},</p>
 
-<p>We regret to inform you that your visiting application has been denied.</p>
-
-<p>The reason for the denial is: {{.Reason}}</p>
+<p>We regret to inform you that your visiting application has been denied. This usually means that you did not meet the requirements to be a visitor.</p>
 
 <p>If you have any questions about the reason for this denial, please do not hesitate to contact the senior staff.</p>
 

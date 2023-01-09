@@ -54,6 +54,35 @@ func getVisitor(c *gin.Context) {
 func postVisitor(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
+	if user.Region == "" || user.Division == "" {
+		region, division, subdivision, err := vatsim.GetLocation(fmt.Sprint(user.CID))
+		if err != nil {
+			log.Errorf("Error getting location: %s", err)
+			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+
+		user.Region = region
+		user.Division = division
+		user.Subdivision = subdivision
+
+		if user.Region == "AMAS" && user.Division == "USA" {
+			// Lookup facility in VATUSA
+			facility, err := vatusa.GetUserFacility(fmt.Sprint(user.CID))
+			if err != nil {
+				log.Errorf("Error getting facility: %s", err)
+				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+				return
+			}
+			user.Subdivision = facility
+		}
+		if err := database.DB.Save(&user).Error; err != nil {
+			log.Errorf("Error saving user: %s", err)
+			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+	}
+
 	if user.Status != constants.ControllerStatusNone {
 		response.RespondError(c, http.StatusConflict, "You are already a controller")
 		return
@@ -147,10 +176,14 @@ func putVisitor(c *gin.Context) {
 		return
 	}
 
-	if act.Action == "deny" && act.Reason == "" {
-		response.RespondError(c, http.StatusNotAcceptable, "Reason required for denials")
-		return
-	}
+	/*
+		@TODO We need to add a reason for denials to the UI
+
+		if act.Action == "deny" && act.Reason == "" {
+			response.RespondError(c, http.StatusNotAcceptable, "Reason required for denials")
+			return
+		}
+	*/
 
 	switch act.Action {
 	case "accept":
