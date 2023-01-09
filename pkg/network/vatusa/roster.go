@@ -181,6 +181,7 @@ func IsTransferEligible(cid string, needHomeController bool) (bool, bool, error)
 		HomeController bool `json:"homecontroller"`
 		Promo          int  `json:"promo"`
 		NinetyDays     bool `json:"90days"`
+		Days           int  `json:"days"`
 	}
 
 	err = json.Unmarshal(content, &checklist)
@@ -198,7 +199,7 @@ func IsTransferEligible(cid string, needHomeController bool) (bool, bool, error)
 	}
 
 	// Any transfers in the last 90 days?
-	if !checklist.NinetyDays {
+	if !checklist.NinetyDays || checklist.Days < 90 {
 		return false, false, nil
 	}
 
