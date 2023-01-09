@@ -129,7 +129,7 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 					log.Errorf("Error finding user with CID %d: %v", controller.CID, err)
 					return
 				}
-				_ = discord.NewMessage().SetContent("Ooooh! A new controller!").
+				_ = discord.NewMessage().
 					AddEmbed(
 						discord.NewEmbed().SetTitle(fmt.Sprintf("%s is now online!", callsign)).SetColor(
 							discord.GetColor("00", "00", "ff"),
