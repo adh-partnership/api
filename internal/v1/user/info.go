@@ -169,8 +169,8 @@ func patchUser(c *gin.Context) {
 		}
 	}
 
-	if user.ControllerType != constants.ControllerTypeNone && req.ControllerType != constants.ControllerTypeNone &&
-		user.OperatingInitials != req.OperatingInitials && req.OperatingInitials != "" {
+	if oldUser.ControllerType != constants.ControllerTypeNone && req.ControllerType != constants.ControllerTypeNone &&
+		oldUser.OperatingInitials != req.OperatingInitials && req.OperatingInitials != "" {
 		if database.IsOperatingInitialsAllocated(req.OperatingInitials) {
 			response.RespondError(c, http.StatusConflict, "Operating initials already allocated")
 			return
