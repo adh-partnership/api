@@ -13,21 +13,23 @@ type User struct {
 	// Must be one of: none, active, inactive, loa
 	ControllerType string `json:"controllerType" gorm:"type:varchar(10)" example:"home"`
 	// Must be one of : none, training, solo, certified, cantrain
-	GndCertification string `json:"gndCertification" gorm:"type:varchar(15)" example:"certified"`
+	GndCertification string `json:"gndCertification" gorm:"type:varchar(15),default:'none'" example:"certified"`
 	// Must be one of : none, training, solo, certified, cantrain
-	MajorGndCertification string `json:"majgndCertification" gorm:"type:varchar(15)" example:"certified"`
+	MajorGndCertification string `json:"majgndCertification" gorm:"type:varchar(15),default:'none'" example:"certified"`
 	// Must be one of : none, training, solo, certified, cantrain
-	LclCertification string `json:"lclCertification" gorm:"type:varchar(15)" example:"certified"`
+	LclCertification string `json:"lclCertification" gorm:"type:varchar(15),default:'none'" example:"certified"`
 	// Must be one of : none, training, solo, certified, cantrain
-	MajorLclCertification string `json:"majorlclCertification" gorm:"type:varchar(15)" example:"certified"`
+	MajorLclCertification string `json:"majorlclCertification" gorm:"type:varchar(15),default:'none'" example:"certified"`
 	// Must be one of : none, training, solo, certified, cantrain
-	AppCertification string `json:"appCertification" gorm:"type:varchar(15)" example:"certified"`
+	AppCertification string `json:"appCertification" gorm:"type:varchar(15),default:'none'" example:"certified"`
 	// Must be one of : none, training, solo, certified, cantrain
-	MajorAppCertification string `json:"majorappCertification" gorm:"type:varchar(15)" example:"certified"`
+	MajorAppCertification string `json:"majorappCertification" gorm:"type:varchar(15),default:'none'" example:"certified"`
 	// Must be one of : none, training, solo, certified, cantrain
-	CtrCertification string `json:"ctrCertification" gorm:"type:varchar(15)" example:"none"`
-	RatingID         int    `json:"-"`
-	Rating           Rating `json:"rating"`
+	CtrCertification string `json:"ctrCertification" gorm:"type:varchar(15),default:'none'" example:"none"`
+	// Must be one of : none, training, certified, cantrain
+	OceanicCertification string `json:"oceanicCertification" gorm:"type:varchar(15),default:'none'" example:"none"`
+	RatingID             int    `json:"-"`
+	Rating               Rating `json:"rating"`
 	// Must be one of: none, active, inactive, loa
 	Status    string  `json:"status" gorm:"type:varchar(10)" example:"active"`
 	Roles     []*Role `json:"roles" gorm:"many2many:user_roles"`

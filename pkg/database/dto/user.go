@@ -57,6 +57,7 @@ type UserResponseCertifications struct {
 	Approach      string `json:"approach" yaml:"approach" xml:"approach"`
 	MajorApproach string `json:"major_approach" yaml:"major_approach" xml:"major_approach"`
 	Enroute       string `json:"enroute" yaml:"enroute" xml:"enroute"`
+	Oceanic       string `json:"oceanic" yaml:"oceanic" xml:"oceanic"`
 }
 
 type FacilityStaffResponse struct {
@@ -95,6 +96,7 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 			Approach:      user.AppCertification,
 			MajorApproach: user.MajorAppCertification,
 			Enroute:       user.CtrCertification,
+			Oceanic:       user.OceanicCertification,
 		},
 		Roles:       roles,
 		Rating:      user.Rating.Short,
@@ -200,6 +202,14 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 			errs = append(errs, ErrInvalidCertification)
 		} else {
 			user.CtrCertification = userResponse.Certifications.Enroute
+		}
+	}
+
+	if userResponse.Certifications.Oceanic != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.Oceanic]; !ok {
+			errs = append(errs, ErrInvalidCertification)
+		} else {
+			user.OceanicCertification = userResponse.Certifications.Oceanic
 		}
 	}
 
