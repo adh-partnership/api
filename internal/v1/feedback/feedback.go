@@ -64,10 +64,10 @@ func getFeedback(c *gin.Context) {
 // @Failure 500 {object} response.R
 // @Router /v1/feedback [get]
 func getSingleFeedback(c *gin.Context) {
-	var feedback []*models.Feedback
+	var feedback *models.Feedback
 
 	id := database.Atoi(c.Query("id"))
-	if err := database.DB.Preload(clause.Associations).Where(&models.Feedback{ID: id}).Find(&feedback).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Where(&models.Feedback{ID: id}).First(&feedback).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			response.RespondError(c, http.StatusNotFound, "Invalid feedback ID")
 			return
@@ -81,7 +81,7 @@ func getSingleFeedback(c *gin.Context) {
 		includeEmail = true
 	}
 
-	response.Respond(c, http.StatusOK, dto.ConvertFeedbacktoResponse(feedback, includeEmail))
+	response.Respond(c, http.StatusOK, dto.ConvertSingleFeedbacktoResponse(feedback, includeEmail))
 }
 
 // Submit Pilot Feedback
