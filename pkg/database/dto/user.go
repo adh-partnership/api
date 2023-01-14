@@ -19,6 +19,7 @@ type UserResponse struct {
 	Division          string                     `json:"division" yaml:"division" xml:"division"`
 	Subdivision       string                     `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
 	DiscordID         string                     `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
+	RosterJoinDate    string                     `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
 	CreatedAt         string                     `json:"created_at" yaml:"created_at" xml:"created_at"`
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
@@ -38,6 +39,7 @@ type UserResponseAdmin struct {
 	Division          string                     `json:"division" yaml:"division" xml:"division"`
 	Subdivision       string                     `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
 	DiscordID         string                     `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
+	RosterJoinDate    string                     `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
 	CreatedAt         string                     `json:"created_at" yaml:"created_at" xml:"created_at"`
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
@@ -98,15 +100,16 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 			Enroute:       user.CtrCertification,
 			Oceanic:       user.OceanicCertification,
 		},
-		Roles:       roles,
-		Rating:      user.Rating.Short,
-		Status:      user.Status,
-		DiscordID:   user.DiscordID,
-		Region:      user.Region,
-		Division:    user.Division,
-		Subdivision: user.Subdivision,
-		CreatedAt:   user.CreatedAt.Format("2006-01-02T15:04:05Z"),
-		UpdatedAt:   user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
+		Roles:          roles,
+		Rating:         user.Rating.Short,
+		Status:         user.Status,
+		DiscordID:      user.DiscordID,
+		Region:         user.Region,
+		Division:       user.Division,
+		Subdivision:    user.Subdivision,
+		RosterJoinDate: user.RosterJoinDate.Format("2006-01-02T15:04:05Z"),
+		CreatedAt:      user.CreatedAt.Format("2006-01-02T15:04:05Z"),
+		UpdatedAt:      user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
 	}
 }
 
