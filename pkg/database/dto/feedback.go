@@ -17,7 +17,8 @@ type FeedbackRequest struct {
 }
 
 type FeedbackPatchRequest struct {
-	Status string `json:"status"`
+	Comments string `json:"comments"`
+	Status   string `json:"status"`
 }
 
 type FeedbackResponse struct {
