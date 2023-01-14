@@ -67,7 +67,7 @@ func getSingleFeedback(c *gin.Context) {
 	var feedback *models.Feedback
 
 	id := database.Atoi(c.Query("id"))
-	if err := database.DB.Preload(clause.Associations).Where(&models.Feedback{ID: id}).First(&feedback).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).First(&feedback, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			response.RespondError(c, http.StatusNotFound, "Invalid feedback ID")
 			return
