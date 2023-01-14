@@ -199,6 +199,7 @@ func patchFeedback(c *gin.Context) {
 
 	if dtoFeedback.Status != "" && feedback.Status != dtoFeedback.Status {
 		feedback.Status = dtoFeedback.Status
+		feedback.ContactEmail = ""
 		if shouldBroadcastFeedback(feedback) {
 			_ = discord.NewMessage().
 				SetContent("New feedback received!").
