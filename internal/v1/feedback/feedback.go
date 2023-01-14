@@ -223,7 +223,7 @@ func patchFeedback(c *gin.Context) {
 		}
 	}
 
-	if err := database.DB.Model(feedback).Update("status", dtoFeedback.Status).Error; err != nil {
+	if err := database.DB.Save(feedback).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
