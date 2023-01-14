@@ -84,7 +84,7 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 		}
 	}
 
-	return &UserResponse{
+	u := &UserResponse{
 		CID:               user.CID,
 		FirstName:         user.FirstName,
 		LastName:          user.LastName,
@@ -100,17 +100,22 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 			Enroute:       user.CtrCertification,
 			Oceanic:       user.OceanicCertification,
 		},
-		Roles:          roles,
-		Rating:         user.Rating.Short,
-		Status:         user.Status,
-		DiscordID:      user.DiscordID,
-		Region:         user.Region,
-		Division:       user.Division,
-		Subdivision:    user.Subdivision,
-		RosterJoinDate: user.RosterJoinDate.Format("2006-01-02T15:04:05Z"),
-		CreatedAt:      user.CreatedAt.Format("2006-01-02T15:04:05Z"),
-		UpdatedAt:      user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
+		Roles:       roles,
+		Rating:      user.Rating.Short,
+		Status:      user.Status,
+		DiscordID:   user.DiscordID,
+		Region:      user.Region,
+		Division:    user.Division,
+		Subdivision: user.Subdivision,
+		CreatedAt:   user.CreatedAt.Format("2006-01-02T15:04:05Z"),
+		UpdatedAt:   user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
 	}
+
+	if user.RosterJoinDate != nil {
+		u.RosterJoinDate = user.RosterJoinDate.Format("2006-01-02T15:04:05Z")
+	}
+
+	return u
 }
 
 func ConvVisitorApplicationsToResponse(applications []models.VisitorApplication) []*VisitorResponse {
