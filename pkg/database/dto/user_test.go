@@ -30,9 +30,10 @@ func TestConvUserToUserResponse(t *testing.T) {
 			{Name: "admin"},
 			{Name: "user"},
 		},
-		DiscordID: "123456789",
-		CreatedAt: tim,
-		UpdatedAt: tim,
+		DiscordID:      "123456789",
+		RosterJoinDate: &tim,
+		CreatedAt:      tim,
+		UpdatedAt:      tim,
 	}
 
 	expectedResponse := &UserResponse{
@@ -50,12 +51,13 @@ func TestConvUserToUserResponse(t *testing.T) {
 			MajorApproach: constants.CertificationCertified,
 			Enroute:       constants.CertificationCanTrain,
 		},
-		Rating:    "C1",
-		Roles:     []string{"admin", "user"},
-		Status:    constants.ControllerStatusActive,
-		DiscordID: "123456789",
-		CreatedAt: "2020-01-01T00:00:00Z",
-		UpdatedAt: "2020-01-01T00:00:00Z",
+		Rating:         "C1",
+		Roles:          []string{"admin", "user"},
+		Status:         constants.ControllerStatusActive,
+		DiscordID:      "123456789",
+		RosterJoinDate: "2020-01-01T00:00:00Z",
+		CreatedAt:      "2020-01-01T00:00:00Z",
+		UpdatedAt:      "2020-01-01T00:00:00Z",
 	}
 
 	userResponse := ConvUserToUserResponse(user)

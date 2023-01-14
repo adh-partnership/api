@@ -17,7 +17,8 @@ type FeedbackRequest struct {
 }
 
 type FeedbackPatchRequest struct {
-	Status string `json:"status"`
+	Comments string `json:"comments"`
+	Status   string `json:"status"`
 }
 
 type FeedbackResponse struct {
@@ -59,4 +60,26 @@ func ConvertFeedbacktoResponse(feedback []*models.Feedback, includeEmail bool) [
 	}
 
 	return ret
+}
+
+func ConvertSingleFeedbacktoResponse(feedback *models.Feedback, includeEmail bool) *FeedbackResponse {
+	controller, _ := database.FindUserByCID(fmt.Sprint(feedback.Controller.CID))
+	submitter, _ := database.FindUserByCID(fmt.Sprint(feedback.Submitter.CID))
+	fdbk := &FeedbackResponse{
+		ID:         feedback.ID,
+		Submitter:  ConvUserToUserResponse(submitter),
+		Controller: ConvUserToUserResponse(controller),
+		Rating:     feedback.Rating,
+		Position:   feedback.Position,
+		Callsign:   feedback.Callsign,
+		Comments:   feedback.Comments,
+		Status:     feedback.Status,
+		CreatedAt:  feedback.CreatedAt,
+	}
+
+	if includeEmail {
+		fdbk.ContactEmail = feedback.ContactEmail
+	}
+
+	return fdbk
 }

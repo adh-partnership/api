@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	"github.com/adh-partnership/api/pkg/auth"
@@ -50,6 +51,37 @@ func getFeedback(c *gin.Context) {
 	}
 
 	response.Respond(c, http.StatusOK, dto.ConvertFeedbacktoResponse(feedback, includeEmail))
+}
+
+// Get Individual Pilot Feedback
+// @Summary Get Individual Pilot Feedback
+// @Description Get Individual pilot feedback
+// @Tags Feedback
+// @Param id path string true "Feedback ID"
+// @Success 200 {object} []dto.FeedbackResponse
+// @Failure 400 {object} response.R
+// @Failure 403 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/feedback [get]
+func getSingleFeedback(c *gin.Context) {
+	var feedback *models.Feedback
+
+	id := database.Atoi(c.Param("id"))
+	if err := database.DB.Preload(clause.Associations).First(&feedback, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.RespondError(c, http.StatusNotFound, "Invalid feedback ID")
+			return
+		}
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	includeEmail := false
+	if auth.InGroup(c.MustGet("x-user").(*models.User), "admin") {
+		includeEmail = true
+	}
+
+	response.Respond(c, http.StatusOK, dto.ConvertSingleFeedbacktoResponse(feedback, includeEmail))
 }
 
 // Submit Pilot Feedback
@@ -134,7 +166,7 @@ func postFeedback(c *gin.Context) {
 
 // Patch Pilot Feedback
 // @Summary Patch Pilot Feedback
-// @Description Patch feedback for a pilot -- currently only the status field can be patched. Accepted values: approved, rejected
+// @Description Patch feedback for a pilot -- currently only the comments and status field can be patched. Accepted status values: approved, rejected
 // @Tags Feedback
 // @Param id path int true "Feedback ID"
 // @Param data body dto.FeedbackPatchRequest true "Feedback"
@@ -150,7 +182,7 @@ func patchFeedback(c *gin.Context) {
 		return
 	}
 
-	if !models.IsValidFeedbackStatus(dtoFeedback.Status) {
+	if dtoFeedback.Status != "" && !models.IsValidFeedbackStatus(dtoFeedback.Status) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid status")
 		return
 	}
@@ -161,31 +193,39 @@ func patchFeedback(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Model(feedback).Update("status", dtoFeedback.Status).Error; err != nil {
-		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-		return
+	if dtoFeedback.Comments != "" && feedback.Comments != dtoFeedback.Comments {
+		feedback.Comments = dtoFeedback.Comments
 	}
 
-	if shouldBroadcastFeedback(feedback) {
-		_ = discord.NewMessage().
-			SetContent("New feedback received!").
-			AddEmbed(
-				discord.NewEmbed().
-					AddField(
-						discord.NewField().SetName("Controller").SetValue(
-							fmt.Sprintf("%s %s (%s)", feedback.Controller.FirstName, feedback.Controller.LastName, feedback.Controller.OperatingInitials),
-						).SetInline(true),
-					).
-					AddField(
-						discord.NewField().SetName("Position").SetValue(feedback.Position).SetInline(true),
-					).
-					AddField(
-						discord.NewField().SetName("Rating").SetValue(feedback.Rating).SetInline(true),
-					).
-					AddField(
-						discord.NewField().SetName("Comments").SetValue(feedback.Comments).SetInline(false),
-					),
-			).Send("broadcast_feedback")
+	if dtoFeedback.Status != "" && feedback.Status != dtoFeedback.Status {
+		feedback.Status = dtoFeedback.Status
+		feedback.ContactEmail = ""
+		if shouldBroadcastFeedback(feedback) {
+			_ = discord.NewMessage().
+				SetContent("New feedback received!").
+				AddEmbed(
+					discord.NewEmbed().
+						AddField(
+							discord.NewField().SetName("Controller").SetValue(
+								fmt.Sprintf("%s %s (%s)", feedback.Controller.FirstName, feedback.Controller.LastName, feedback.Controller.OperatingInitials),
+							).SetInline(true),
+						).
+						AddField(
+							discord.NewField().SetName("Position").SetValue(feedback.Position).SetInline(true),
+						).
+						AddField(
+							discord.NewField().SetName("Rating").SetValue(feedback.Rating).SetInline(true),
+						).
+						AddField(
+							discord.NewField().SetName("Comments").SetValue(feedback.Comments).SetInline(false),
+						),
+				).Send("broadcast_feedback")
+		}
+	}
+
+	if err := database.DB.Save(feedback).Error; err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
 	}
 
 	response.RespondBlank(c, http.StatusNoContent)

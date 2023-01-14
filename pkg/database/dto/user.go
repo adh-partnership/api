@@ -19,6 +19,7 @@ type UserResponse struct {
 	Division          string                     `json:"division" yaml:"division" xml:"division"`
 	Subdivision       string                     `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
 	DiscordID         string                     `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
+	RosterJoinDate    string                     `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
 	CreatedAt         string                     `json:"created_at" yaml:"created_at" xml:"created_at"`
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
@@ -38,6 +39,7 @@ type UserResponseAdmin struct {
 	Division          string                     `json:"division" yaml:"division" xml:"division"`
 	Subdivision       string                     `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
 	DiscordID         string                     `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
+	RosterJoinDate    string                     `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
 	CreatedAt         string                     `json:"created_at" yaml:"created_at" xml:"created_at"`
 	UpdatedAt         string                     `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
@@ -57,6 +59,7 @@ type UserResponseCertifications struct {
 	Approach      string `json:"approach" yaml:"approach" xml:"approach"`
 	MajorApproach string `json:"major_approach" yaml:"major_approach" xml:"major_approach"`
 	Enroute       string `json:"enroute" yaml:"enroute" xml:"enroute"`
+	Oceanic       string `json:"oceanic" yaml:"oceanic" xml:"oceanic"`
 }
 
 type FacilityStaffResponse struct {
@@ -81,7 +84,7 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 		}
 	}
 
-	return &UserResponse{
+	u := &UserResponse{
 		CID:               user.CID,
 		FirstName:         user.FirstName,
 		LastName:          user.LastName,
@@ -95,6 +98,7 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 			Approach:      user.AppCertification,
 			MajorApproach: user.MajorAppCertification,
 			Enroute:       user.CtrCertification,
+			Oceanic:       user.OceanicCertification,
 		},
 		Roles:       roles,
 		Rating:      user.Rating.Short,
@@ -106,6 +110,12 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 		CreatedAt:   user.CreatedAt.Format("2006-01-02T15:04:05Z"),
 		UpdatedAt:   user.UpdatedAt.Format("2006-01-02T15:04:05Z"),
 	}
+
+	if user.RosterJoinDate != nil {
+		u.RosterJoinDate = user.RosterJoinDate.Format("2006-01-02T15:04:05Z")
+	}
+
+	return u
 }
 
 func ConvVisitorApplicationsToResponse(applications []models.VisitorApplication) []*VisitorResponse {
@@ -200,6 +210,14 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 			errs = append(errs, ErrInvalidCertification)
 		} else {
 			user.CtrCertification = userResponse.Certifications.Enroute
+		}
+	}
+
+	if userResponse.Certifications.Oceanic != "" {
+		if _, ok := models.CertificationOptions[userResponse.Certifications.Oceanic]; !ok {
+			errs = append(errs, ErrInvalidCertification)
+		} else {
+			user.OceanicCertification = userResponse.Certifications.Oceanic
 		}
 	}
 

@@ -129,6 +129,11 @@ func patchUser(c *gin.Context) {
 		return
 	}
 
+	if req.Certifications.Oceanic != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		return
+	}
+
 	if req.Rating != "" && !auth.InGroup(user, "admin") && !auth.HasRoleList(user, []string{"ta", "ins"}) {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
