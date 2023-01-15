@@ -66,7 +66,7 @@ func postVisitor(c *gin.Context) {
 		user.Division = division
 		user.Subdivision = subdivision
 
-		if user.Region == "AMAS" && user.Division == "USA" {
+		if region == "AMAS" && division == "USA" {
 			// Lookup facility in VATUSA
 			facility, err := vatusa.GetUserFacility(fmt.Sprint(user.CID))
 			if err != nil {
@@ -75,6 +75,7 @@ func postVisitor(c *gin.Context) {
 				return
 			}
 			user.Subdivision = facility
+			log.Infof("Found facility %s for %d", facility, user.CID)
 		}
 		if err := database.DB.Save(&user).Error; err != nil {
 			log.Errorf("Error saving user: %s", err)
