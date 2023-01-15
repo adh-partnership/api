@@ -12,6 +12,18 @@ import (
 	"github.com/adh-partnership/api/pkg/database"
 )
 
+func fetchRole(role string) []string {
+	var ret []string
+	users, err := database.FindUsersWithRole(role)
+	if err != nil {
+		return ret
+	}
+	for _, user := range users {
+		ret = append(ret, fmt.Sprintf("%s %s, %s", user.FirstName, user.LastName, strings.ToUpper(role)))
+	}
+	return ret
+}
+
 func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string, string, error) {
 	templ, err := database.FindEmailTemplate(name)
 	if err != nil {
@@ -20,28 +32,8 @@ func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string,
 
 	t, err := template.New(name).Funcs(template.FuncMap{
 		"urlEscape": url.QueryEscape,
-		"fetchRole": func(role string) []string {
-			var ret []string
-			users, err := database.FindUsersWithRole(role)
-			if err != nil {
-				return ret
-			}
-			for _, user := range users {
-				ret = append(ret, fmt.Sprintf("%s %s, %s", user.FirstName, user.LastName, strings.ToUpper(role)))
-			}
-			return ret
-		},
-		"findRole": func(role string) []string {
-			var ret []string
-			users, err := database.FindUsersWithRole(role)
-			if err != nil {
-				return ret
-			}
-			for _, user := range users {
-				ret = append(ret, fmt.Sprintf("%s %s, %s", user.FirstName, user.LastName, strings.ToUpper(role)))
-			}
-			return ret
-		},
+		"fetchRole": fetchRole,
+		"findRole":  fetchRole,
 	}).Parse(templ.Body)
 	if err != nil {
 		return nil, "", "", err
