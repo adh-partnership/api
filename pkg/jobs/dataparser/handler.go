@@ -15,6 +15,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
+	"github.com/adh-partnership/api/pkg/database/models/constants"
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/geo"
 	"github.com/adh-partnership/api/pkg/logger"
@@ -123,15 +124,31 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 
 		if c.Position == "" {
 			// Safe to assume this is a new controller
-			go func(callsign string) {
+			go func(controller *vatsim.VATSIMController) {
 				user, err := database.FindUserByCID(fmt.Sprint(controller.CID))
-				if err != nil || user == nil {
+				if err != nil {
 					log.Errorf("Error finding user with CID %d: %v", controller.CID, err)
 					return
 				}
+				if user == nil || user.ControllerType == constants.ControllerStatusNone {
+					_ = discord.NewMessage().AddEmbed(
+						discord.NewEmbed().SetTitle("Not active controller is on position").SetColor(
+							discord.GetColor("ff", "00", "00"),
+						).AddField(
+							discord.NewField().SetName("CID").SetValue(fmt.Sprint(controller.CID)).SetInline(true),
+						).AddField(
+							discord.NewField().SetName("Name").SetValue(controller.Name).SetInline(true),
+						).AddField(
+							discord.NewField().SetName("Position").SetValue(controller.Callsign).SetInline(true),
+						),
+					).Send("seniorstaff")
+
+					return
+				}
+
 				_ = discord.NewMessage().
 					AddEmbed(
-						discord.NewEmbed().SetTitle(fmt.Sprintf("%s is now online!", callsign)).SetColor(
+						discord.NewEmbed().SetTitle(fmt.Sprintf("%s is now online!", controller.Callsign)).SetColor(
 							discord.GetColor("00", "00", "ff"),
 						).
 							SetDescription(fmt.Sprintf(
@@ -139,10 +156,10 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 								user.FirstName,
 								user.LastName,
 								user.OperatingInitials,
-								callsign,
+								controller.Callsign,
 							)),
 					).Send("online")
-			}(controller.Callsign)
+			}(controller)
 		}
 
 		c.UserID = uint(controller.CID)

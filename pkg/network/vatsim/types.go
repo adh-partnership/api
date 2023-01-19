@@ -10,6 +10,7 @@ type VATSIMData struct {
 type VATSIMController struct {
 	CID       int        `json:"cid"`
 	Callsign  string     `json:"callsign"`
+	Name      string     `json:"name"`
 	Frequency string     `json:"frequency"`
 	Facility  int        `json:"facility"`
 	Rating    int        `json:"rating"`
