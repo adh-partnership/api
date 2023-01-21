@@ -152,16 +152,20 @@ func GetUserFacility(cid string) (string, error) {
 		return "", fmt.Errorf("invalid status code: %d", status)
 	}
 
-	var facility struct {
-		Facility string `json:"facility"`
+	type response struct {
+		Data struct {
+			Facility string `json:"facility"`
+		} `json:"data"`
 	}
+
+	facility := response{}
 
 	err = json.Unmarshal(content, &facility)
 	if err != nil {
 		return "", err
 	}
 
-	return facility.Facility, nil
+	return facility.Data.Facility, nil
 }
 
 // Check user transfer checklist
