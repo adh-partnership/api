@@ -103,6 +103,7 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 		}
 
 		if controller.Membership == "visit" {
+			user.ControllerType = constants.ControllerTypeVisitor
 			if controller.Facility != "ZZN" {
 				user.Region = "AMAS"
 				user.Division = "USA"
