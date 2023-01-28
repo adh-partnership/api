@@ -66,17 +66,6 @@ func postVisitor(c *gin.Context) {
 		user.Division = division
 		user.Subdivision = subdivision
 
-		if region == "AMAS" && division == "USA" {
-			// Lookup facility in VATUSA
-			facility, err := vatusa.GetUserFacility(fmt.Sprint(user.CID))
-			if err != nil {
-				log.Errorf("Error getting facility: %s", err)
-				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-				return
-			}
-			user.Subdivision = facility
-			log.Infof("Found facility %s for %d", facility, user.CID)
-		}
 		if err := database.DB.Save(&user).Error; err != nil {
 			log.Errorf("Error saving user: %s", err)
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
@@ -157,7 +146,7 @@ func postVisitor(c *gin.Context) {
 // @Router /v1/user/visitor/{id} [put]
 func putVisitor(c *gin.Context) {
 	var app models.VisitorApplication
-	if err := database.DB.Preload(clause.Associations).Find(&models.VisitorApplication{UserID: database.Atou(c.Param("id"))}).First(&app).Error; err != nil {
+	if err := database.DB.Preload(clause.Associations).Find(&app, database.Atou(c.Param("id"))).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.RespondError(c, http.StatusNotFound, "Not Found")
 			return
