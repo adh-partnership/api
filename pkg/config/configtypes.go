@@ -89,6 +89,20 @@ type ConfigFacility struct {
 	Activity ConfigFacilityActivity `json:"activity"`
 	Stats    ConfigFacilityStats    `json:"stats"`
 	Visiting ConfigFacilityVisiting `json:"visiting"`
+	Training ConfigFacilityTraining `json:"training"`
+}
+
+type ConfigFacilityTraining struct {
+	Enabled            bool                          `json:"enabled"`
+	Discord            ConfigFacilityTrainingDiscord `json:"discord"`
+	Positions          []string                      `json:"positions"`
+	MaxRequestsPerUser int                           `json:"max_requests_per_user"`
+}
+
+type ConfigFacilityTrainingDiscord struct {
+	TrainingStaff    string `json:"training_staff"`
+	Scheduled        string `json:"scheduled"`
+	ShowAllScheduled bool   `json:"show_all_scheduled"`
 }
 
 type ConfigFacilityStats struct {

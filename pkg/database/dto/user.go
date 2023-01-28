@@ -77,6 +77,10 @@ type FacilityStaffResponse struct {
 }
 
 func ConvUserToUserResponse(user *models.User) *UserResponse {
+	if user == nil {
+		return nil
+	}
+
 	roles := []string{}
 	if user.Roles != nil {
 		for _, role := range user.Roles {

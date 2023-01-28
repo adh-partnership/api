@@ -74,7 +74,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	}
 
 	log.Info("Running migrations...")
-	err = database.DB.AutoMigrate(
+	m := []interface{}{
 		&models.Airport{},
 		&models.AirportATC{},
 		&models.AirportChart{},
@@ -97,7 +97,12 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		&models.TrainingNote{},
 		&models.User{},
 		&models.VisitorApplication{},
-	)
+	}
+	// Only migrate training sessions if enabled
+	if config.Cfg.Facility.Training.Enabled {
+		m = append(m, &models.TrainingSessionRequest{})
+	}
+	err = database.DB.AutoMigrate(m)
 	if err != nil {
 		log.Errorf("Failed to run migrations: %v", err)
 		return nil, err
