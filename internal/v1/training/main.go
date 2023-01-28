@@ -16,7 +16,7 @@ func Routes(r *gin.RouterGroup) {
 	r.PUT("/:cid/:id", auth.NotGuest, auth.InGroup("training"), putTraining)
 	r.DELETE("/:cid/:id", auth.NotGuest, auth.InGroup("training"), deleteTraining)
 
-	if config.Cfg.Facility.Training.Enabled {
+	if config.Cfg.Facility.TrainingRequests.Enabled {
 		r.GET("/sessions", auth.NotGuest, getSessions)
 		r.POST("/sessions", auth.NotGuest, postSessions)
 	}

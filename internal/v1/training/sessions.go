@@ -99,7 +99,7 @@ func postSessions(c *gin.Context) {
 					AddField(
 						discord.NewField().SetName("Notes").SetValue(r.Notes).SetInline(false),
 					),
-			).Send(config.Cfg.Facility.Training.Discord.Scheduled)
+			).Send(config.Cfg.Facility.TrainingRequests.Discord.Scheduled)
 	}(req)
 
 	response.Respond(c, http.StatusCreated, dto.ConvertTrainingRequestToDTO(req))
