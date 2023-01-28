@@ -16,20 +16,28 @@ const (
 var log = logger.Logger.WithField("component", "network/vatusa")
 
 func handle(method, endpoint string, formdata map[string]string) (int, []byte, error) {
-	data := url.Values{}
-	for k, v := range formdata {
-		data.Set(k, v)
-	}
-
 	u, err := url.Parse(baseURL + endpoint)
 	if err != nil {
 		return 0, nil, err
 	}
+	data := url.Values{}
 	q := u.Query()
 	q.Set("apikey", config.Cfg.VATUSA.APIKey)
 	if config.Cfg.VATUSA.TestMode {
 		q.Set("test", "true")
 	}
+
+	if method == "DELETE" {
+		// VATUSA seems to have a problem with form data on delete requests... so add to query
+		for k, v := range formdata {
+			q.Set(k, v)
+		}
+	} else {
+		for k, v := range formdata {
+			data.Set(k, v)
+		}
+	}
+
 	u.RawQuery = q.Encode()
 
 	return network.Handle(method, u.String(), "application/x-www-form-urlencode", data.Encode())
