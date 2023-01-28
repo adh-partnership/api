@@ -270,3 +270,33 @@ func FindAirportChartsByID(id string) ([]*models.AirportChart, error) {
 
 	return charts, nil
 }
+
+func FindTrainingSessionRequests() ([]*models.TrainingSessionRequest, error) {
+	var requests []*models.TrainingSessionRequest
+	if err := DB.Preload(clause.Associations).Find(&requests).Error; err != nil {
+		return nil, err
+	}
+
+	return requests, nil
+}
+
+type TrainingSessionRequestFilter struct {
+	CID    string
+	Status string
+}
+
+func FindTrainingSessionRequestWithFilter(f *TrainingSessionRequestFilter) ([]*models.TrainingSessionRequest, error) {
+	var requests []*models.TrainingSessionRequest
+	tx := DB.Preload(clause.Associations)
+	if f.CID != "" {
+		tx = tx.Where("user_id = ?", atou(f.CID))
+	}
+	if f.Status != "" {
+		tx = tx.Where("status = ?", f.Status)
+	}
+	if err := tx.Find(&requests).Error; err != nil {
+		return nil, err
+	}
+
+	return requests, nil
+}
