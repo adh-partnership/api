@@ -86,10 +86,10 @@ type ConfigStorage struct {
 }
 
 type ConfigFacility struct {
-	Activity ConfigFacilityActivity `json:"activity"`
-	Stats    ConfigFacilityStats    `json:"stats"`
-	Visiting ConfigFacilityVisiting `json:"visiting"`
-	Training ConfigFacilityTraining `json:"training"`
+	Activity         ConfigFacilityActivity `json:"activity"`
+	Stats            ConfigFacilityStats    `json:"stats"`
+	Visiting         ConfigFacilityVisiting `json:"visiting"`
+	TrainingRequests ConfigFacilityTraining `json:"training_requests"`
 }
 
 type ConfigFacilityTraining struct {
