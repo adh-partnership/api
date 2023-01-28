@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -110,6 +110,12 @@ const docTemplate = `{
                         "name": "center",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Include ATC information",
+                        "name": "atc",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -146,6 +152,12 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Include ATC information",
+                        "name": "atc",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -858,23 +870,18 @@ const docTemplate = `{
         },
         "/v1/feedback": {
             "get": {
-                "description": "Get pilot feedback",
+                "description": "Get Individual pilot feedback",
                 "tags": [
                     "Feedback"
                 ],
-                "summary": "Get Pilot Feedback",
+                "summary": "Get Individual Pilot Feedback",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Controller CID filter",
-                        "name": "cid",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Status filter, valid values: pending, approved, rejected. Default: pending",
-                        "name": "status",
-                        "in": "query"
+                        "description": "Feedback ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -951,7 +958,7 @@ const docTemplate = `{
         },
         "/v1/feedback/{id}": {
             "patch": {
-                "description": "Patch feedback for a pilot -- currently only the status field can be patched. Accepted values: approved, rejected",
+                "description": "Patch feedback for a pilot -- currently only the comments and status field can be patched. Accepted status values: approved, rejected",
                 "tags": [
                     "Feedback"
                 ],
@@ -1019,7 +1026,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1052,7 +1059,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1708,6 +1715,97 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/training/sessions": {
+            "get": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Get Training Sessions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by CID",
+                        "name": "cid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by Status",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/dto.TrainingSessionRequest"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Create new training session request for user",
+                "parameters": [
+                    {
+                        "description": "Training Session Request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingSessionRequestCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingSessionRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
@@ -2626,6 +2724,9 @@ const docTemplate = `{
         "dto.FeedbackPatchRequest": {
             "type": "object",
             "properties": {
+                "comments": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 }
@@ -2751,6 +2852,52 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.TrainingSessionRequest": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "instructor": {
+                    "$ref": "#/definitions/dto.UserResponse"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "training_for": {
+                    "type": "string"
+                },
+                "training_type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.UserResponse"
+                }
+            }
+        },
+        "dto.TrainingSessionRequestCreateRequest": {
+            "type": "object",
+            "properties": {
+                "notes": {
+                    "type": "string"
+                },
+                "training_for": {
+                    "type": "string"
+                },
+                "training_type": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.UserResponse": {
             "type": "object",
             "properties": {
@@ -2793,6 +2940,9 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "roster_join_date": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 },
@@ -2826,6 +2976,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "major_local": {
+                    "type": "string"
+                },
+                "oceanic": {
                     "type": "string"
                 }
             }
@@ -2958,6 +3111,9 @@ const docTemplate = `{
                 "arpt_status": {
                     "type": "string",
                     "example": "O"
+                },
+                "atc": {
+                    "$ref": "#/definitions/models.AirportATC"
                 },
                 "city": {
                     "type": "string",
@@ -3456,6 +3612,11 @@ const docTemplate = `{
                     "type": "string",
                     "example": "certified"
                 },
+                "oceanicCertification": {
+                    "description": "Must be one of : none, training, certified, cantrain",
+                    "type": "string",
+                    "example": "none"
+                },
                 "operating_initials": {
                     "type": "string",
                     "example": "DH"
@@ -3472,6 +3633,10 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Role"
                     }
+                },
+                "roster_join_date": {
+                    "type": "string",
+                    "example": "2020-01-01T00:00:00Z"
                 },
                 "status": {
                     "description": "Must be one of: none, active, inactive, loa",

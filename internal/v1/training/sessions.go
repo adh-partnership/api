@@ -21,7 +21,7 @@ import (
 // @Tags training
 // @Param cid query string false "Filter by CID"
 // @Param status query string false "Filter by Status"
-// @Success 200 {array} []dto.TrainingSessionRequests
+// @Success 200 {array} []dto.TrainingSessionRequest
 // @Failure 403 {object} response.R
 // @Router /v1/training/sessions [GET]
 func getSessions(c *gin.Context) {

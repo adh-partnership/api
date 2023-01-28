@@ -189,6 +189,8 @@ definitions:
     type: object
   dto.FeedbackPatchRequest:
     properties:
+      comments:
+        type: string
       status:
         type: string
     type: object
@@ -273,6 +275,36 @@ definitions:
       type:
         type: string
     type: object
+  dto.TrainingSessionRequest:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      instructor:
+        $ref: '#/definitions/dto.UserResponse'
+      notes:
+        type: string
+      status:
+        type: string
+      training_for:
+        type: string
+      training_type:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.TrainingSessionRequestCreateRequest:
+    properties:
+      notes:
+        type: string
+      training_for:
+        type: string
+      training_type:
+        type: string
+    type: object
   dto.UserResponse:
     properties:
       certifications:
@@ -301,6 +333,8 @@ definitions:
         items:
           type: string
         type: array
+      roster_join_date:
+        type: string
       status:
         type: string
       subdivision:
@@ -323,6 +357,8 @@ definitions:
       major_ground:
         type: string
       major_local:
+        type: string
+      oceanic:
         type: string
     type: object
   github.com_adh-partnership_api_internal_v1_overflight.Flightsv1:
@@ -420,6 +456,8 @@ definitions:
       arpt_status:
         example: O
         type: string
+      atc:
+        $ref: '#/definitions/models.AirportATC'
       city:
         example: Fairbanks
         type: string
@@ -777,6 +815,10 @@ definitions:
         description: 'Must be one of : none, training, solo, certified, cantrain'
         example: certified
         type: string
+      oceanicCertification:
+        description: 'Must be one of : none, training, certified, cantrain'
+        example: none
+        type: string
       operating_initials:
         example: DH
         type: string
@@ -789,6 +831,9 @@ definitions:
         items:
           $ref: '#/definitions/models.Role'
         type: array
+      roster_join_date:
+        example: "2020-01-01T00:00:00Z"
+        type: string
       status:
         description: 'Must be one of: none, active, inactive, loa'
         example: active
@@ -848,7 +893,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -892,6 +937,10 @@ paths:
         name: center
         required: true
         type: string
+      - description: Include ATC information
+        in: query
+        name: atc
+        type: boolean
       responses:
         "200":
           description: OK
@@ -916,6 +965,10 @@ paths:
         name: id
         required: true
         type: string
+      - description: Include ATC information
+        in: query
+        name: atc
+        type: boolean
       responses:
         "200":
           description: OK
@@ -1390,16 +1443,12 @@ paths:
       - Events
   /v1/feedback:
     get:
-      description: Get pilot feedback
+      description: Get Individual pilot feedback
       parameters:
-      - description: Controller CID filter
-        in: query
-        name: cid
-        type: string
-      - description: 'Status filter, valid values: pending, approved, rejected. Default:
-          pending'
-        in: query
-        name: status
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
         type: string
       responses:
         "200":
@@ -1420,7 +1469,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Get Pilot Feedback
+      summary: Get Individual Pilot Feedback
       tags:
       - Feedback
     post:
@@ -1452,8 +1501,8 @@ paths:
       - Feedback
   /v1/feedback/{id}:
     patch:
-      description: 'Patch feedback for a pilot -- currently only the status field
-        can be patched. Accepted values: approved, rejected'
+      description: 'Patch feedback for a pilot -- currently only the comments and
+        status field can be patched. Accepted status values: approved, rejected'
       parameters:
       - description: Feedback ID
         in: path
@@ -1496,7 +1545,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1517,7 +1566,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1955,6 +2004,65 @@ paths:
           schema:
             $ref: '#/definitions/response.R'
       summary: Update Training Record
+      tags:
+      - training
+  /v1/training/sessions:
+    get:
+      parameters:
+      - description: Filter by CID
+        in: query
+        name: cid
+        type: string
+      - description: Filter by Status
+        in: query
+        name: status
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dto.TrainingSessionRequest'
+              type: array
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Training Sessions
+      tags:
+      - training
+    post:
+      parameters:
+      - description: Training Session Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TrainingSessionRequestCreateRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TrainingSessionRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Create new training session request for user
       tags:
       - training
   /v1/user/:cid:
