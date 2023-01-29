@@ -271,6 +271,18 @@ func FindAirportChartsByID(id string) ([]*models.AirportChart, error) {
 	return charts, nil
 }
 
+func FindTrainingSessionRequestByID(id string) (*models.TrainingSessionRequest, error) {
+	request := &models.TrainingSessionRequest{}
+	if err := DB.Preload(clause.Associations).Find(request, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return request, nil
+}
+
 func FindTrainingSessionRequests() ([]*models.TrainingSessionRequest, error) {
 	var requests []*models.TrainingSessionRequest
 	if err := DB.Preload(clause.Associations).Find(&requests).Error; err != nil {
