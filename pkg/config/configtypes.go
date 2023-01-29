@@ -90,6 +90,7 @@ type ConfigFacility struct {
 	Stats            ConfigFacilityStats    `json:"stats"`
 	Visiting         ConfigFacilityVisiting `json:"visiting"`
 	TrainingRequests ConfigFacilityTraining `json:"training_requests"`
+	FrontendURL      string                 `json:"frontend_url"`
 }
 
 type ConfigFacilityTraining struct {
