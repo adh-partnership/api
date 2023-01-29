@@ -173,7 +173,7 @@ func patchSession(c *gin.Context) {
 		return
 	}
 
-	if request.TrainingType != "" && !models.IsValidTrainingStatus(request.Status) {
+	if request.Status != "" && !models.IsValidTrainingStatus(request.Status) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid Status")
 		return
 	}
