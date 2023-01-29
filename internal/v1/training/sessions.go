@@ -266,7 +266,7 @@ func patchSession(c *gin.Context) {
 		req.Notes = request.Notes
 	}
 
-	if request.InstructorID > 0 && *req.InstructorID != request.InstructorID {
+	if request.InstructorID > 0 && (req.InstructorID != nil || *req.InstructorID != request.InstructorID) {
 		req.InstructorID = &request.InstructorID
 	}
 
