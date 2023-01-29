@@ -104,8 +104,7 @@ func postSessions(c *gin.Context) {
 		return
 	}
 
-	// Check if TrainingType is valid
-	if !models.IsValidTrainingType(req.TrainingType) {
+	if !models.IsValidTrainingStatus(req.Status) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid Training Type")
 		return
 	}
@@ -174,8 +173,8 @@ func patchSession(c *gin.Context) {
 		return
 	}
 
-	if request.TrainingType != "" && !models.IsValidTrainingType(request.TrainingType) {
-		response.RespondError(c, http.StatusBadRequest, "Invalid Training Type")
+	if request.TrainingType != "" && !models.IsValidTrainingStatus(request.Status) {
+		response.RespondError(c, http.StatusBadRequest, "Invalid Status")
 		return
 	}
 

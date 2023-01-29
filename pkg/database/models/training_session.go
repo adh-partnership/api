@@ -34,7 +34,7 @@ func IsValidPosition(pos string) bool {
 	return false
 }
 
-func IsValidTrainingType(t string) bool {
-	return t == constants.TrainingSessionStatusOpen || t == constants.TrainingSessionStatusAccepted ||
-		t == constants.TrainingSessionStatusCompleted || t == constants.TrainingSessionStatusCancelled
+func IsValidTrainingStatus(s string) bool {
+	return s == constants.TrainingSessionStatusOpen || s == constants.TrainingSessionStatusAccepted ||
+		s == constants.TrainingSessionStatusCompleted || s == constants.TrainingSessionStatusCancelled
 }
