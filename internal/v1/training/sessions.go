@@ -217,8 +217,8 @@ func patchSession(c *gin.Context) {
 		}
 	}
 
-	if req.Status != "" && req.Status != request.Status {
-		if req.Status != constants.TrainingSessionStatusOpen && req.Status != constants.TrainingSessionStatusCancelled {
+	if request.Status != "" && req.Status != request.Status {
+		if request.Status != constants.TrainingSessionStatusOpen && request.Status != constants.TrainingSessionStatusCancelled {
 			response.RespondError(c, http.StatusBadRequest, "Invalid Status")
 			return
 		}
