@@ -268,6 +268,12 @@ func patchSession(c *gin.Context) {
 
 	if request.InstructorID > 0 && (req.InstructorID == nil || *req.InstructorID != request.InstructorID) {
 		req.InstructorID = &request.InstructorID
+		ins, err := database.FindUserByCID(fmt.Sprint(req.InstructorID))
+		if err != nil {
+			response.RespondError(c, http.StatusBadRequest, "Invalid Instructor ID")
+			return
+		}
+		req.Instructor = ins
 	}
 
 	if err := database.DB.Save(req).Error; err != nil {
