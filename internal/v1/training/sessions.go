@@ -255,15 +255,15 @@ func patchSession(c *gin.Context) {
 		req.Status = request.Status
 	}
 
-	if req.TrainingType != "" && req.TrainingType != request.TrainingType {
+	if request.TrainingType != "" && req.TrainingType != request.TrainingType {
 		req.TrainingType = request.TrainingType
 	}
 
-	if req.TrainingFor != "" && req.TrainingFor != request.TrainingFor {
+	if request.TrainingFor != "" && req.TrainingFor != request.TrainingFor {
 		req.TrainingFor = request.TrainingFor
 	}
 
-	if req.Notes != "" && req.Notes != request.Notes {
+	if request.Notes != "" && req.Notes != request.Notes {
 		req.Notes = request.Notes
 	}
 
