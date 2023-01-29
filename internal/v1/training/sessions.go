@@ -169,12 +169,12 @@ func patchSession(c *gin.Context) {
 		return
 	}
 
-	if models.IsValidPosition(request.TrainingFor) {
+	if request.TrainingFor != "" && !models.IsValidPosition(request.TrainingFor) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid Training Position")
 		return
 	}
 
-	if models.IsValidTrainingType(request.TrainingType) {
+	if request.TrainingType != "" && !models.IsValidTrainingType(request.TrainingType) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid Training Type")
 		return
 	}
