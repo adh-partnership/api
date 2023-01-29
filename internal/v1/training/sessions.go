@@ -266,6 +266,10 @@ func patchSession(c *gin.Context) {
 		req.Notes = request.Notes
 	}
 
+	if request.InstructorID > 0 && *req.InstructorID != request.InstructorID {
+		req.InstructorID = &request.InstructorID
+	}
+
 	if err := database.DB.Save(req).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return

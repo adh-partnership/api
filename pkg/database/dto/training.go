@@ -26,6 +26,7 @@ type TrainingSessionRequestEditRequest struct {
 	Notes           string     `json:"notes"`
 	Status          string     `json:"status"`
 	Scheduled       *time.Time `json:"scheduled"`
+	InstructorID    uint       `json:"instructor_id"`
 	InstructorNotes string     `json:"instructor_notes"`
 }
 
