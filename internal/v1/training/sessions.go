@@ -98,7 +98,7 @@ func postSessions(c *gin.Context) {
 					).
 					AddField(
 						discord.NewField().SetName("Notes").SetValue(r.Notes).SetInline(false),
-					),
+					).SetURL(fmt.Sprintf("%s/training/sessions/%s", config.Cfg.Facility.FrontendURL, r.ID)),
 			).Send(config.Cfg.Facility.TrainingRequests.Discord.Scheduled)
 	}(req)
 
