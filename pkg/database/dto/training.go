@@ -20,6 +20,15 @@ type TrainingSessionRequestCreateRequest struct {
 	Notes        string `json:"notes"`
 }
 
+type TrainingSessionRequestEditRequest struct {
+	TrainingType    string     `json:"training_type"`
+	TrainingFor     string     `json:"training_for"`
+	Notes           string     `json:"notes"`
+	Status          string     `json:"status"`
+	Scheduled       *time.Time `json:"scheduled"`
+	InstructorNotes string     `json:"instructor_notes"`
+}
+
 type TrainingSessionRequest struct {
 	ID           string        `json:"id"`
 	User         *UserResponse `json:"user"`

@@ -19,5 +19,8 @@ func Routes(r *gin.RouterGroup) {
 	if config.Cfg.Facility.TrainingRequests.Enabled {
 		r.GET("/sessions", auth.NotGuest, getSessions)
 		r.POST("/sessions", auth.NotGuest, postSessions)
+
+		r.GET("/sessions/:id", auth.NotGuest, getSession)
+		r.PATCH("/sessions/:id", auth.NotGuest, patchSession)
 	}
 }

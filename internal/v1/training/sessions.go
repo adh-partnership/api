@@ -3,6 +3,7 @@ package training
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -15,6 +16,29 @@ import (
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
+
+// Get Specific Training Session
+// @Summary Get Specific Training Session
+// @Tags training
+// @Param id path string true "Training Session ID"
+// @Success 200 {object} dto.TrainingSessionRequest
+// @Failure 403 {object} response.R
+// @Failure 404 {object} response.R
+// @Router /v1/training/sessions/{id} [GET]
+func getSession(c *gin.Context) {
+	request, err := database.FindTrainingSessionRequestByID(c.Param("id"))
+	if err != nil {
+		response.RespondError(c, http.StatusNotFound, "Not Found")
+		return
+	}
+
+	if !auth.InGroup(c.MustGet("x-user").(*models.User), "training") && request.User.CID != c.MustGet("x-user").(*models.User).CID {
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+		return
+	}
+
+	response.Respond(c, http.StatusOK, dto.ConvertTrainingRequestToDTO(request))
+}
 
 // Get Training Sessions
 // @Summary Get Training Sessions
@@ -74,6 +98,18 @@ func postSessions(c *gin.Context) {
 		Status:       constants.TrainingSessionStatusOpen,
 	}
 
+	// Check if TrainingFor is valid
+	if !models.IsValidPosition(req.TrainingFor) {
+		response.RespondError(c, http.StatusBadRequest, "Invalid Training Position")
+		return
+	}
+
+	// Check if TrainingType is valid
+	if !models.IsValidTrainingType(req.TrainingType) {
+		response.RespondError(c, http.StatusBadRequest, "Invalid Training Type")
+		return
+	}
+
 	if err := database.DB.Create(req).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -103,4 +139,138 @@ func postSessions(c *gin.Context) {
 	}(req)
 
 	response.Respond(c, http.StatusCreated, dto.ConvertTrainingRequestToDTO(req))
+}
+
+// Edit Training Session Request
+// @Summary Edit Training Session Request
+// @Tags training
+// @Param id path string true "Training Session Request ID"
+// @Param data body dto.TrainingSessionRequestEditRequest true "Training Session Request"
+// @Success 200 {object} dto.TrainingSessionRequest
+// @Failure 400 {object} response.R
+// @Failure 401 {object} response.R
+// @Failure 403 {object} response.R
+// @Failure 404 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/training/sessions/{id} [PATCH]
+func patchSession(c *gin.Context) {
+	var request dto.TrainingSessionRequestEditRequest
+	if err := c.ShouldBind(&request); err != nil {
+		response.RespondError(c, http.StatusBadRequest, "Bad Request")
+		return
+	}
+
+	user := c.MustGet("x-user").(*models.User)
+	id := c.Param("id")
+
+	req, err := database.FindTrainingSessionRequestByID(id)
+	if err != nil {
+		response.RespondError(c, http.StatusNotFound, "Not Found")
+		return
+	}
+
+	if models.IsValidPosition(request.TrainingFor) {
+		response.RespondError(c, http.StatusBadRequest, "Invalid Training Position")
+		return
+	}
+
+	if models.IsValidTrainingType(request.TrainingType) {
+		response.RespondError(c, http.StatusBadRequest, "Invalid Training Type")
+		return
+	}
+
+	if auth.InGroup(user, "training") {
+		if request.InstructorNotes != "" {
+			req.InstructorNotes = request.InstructorNotes
+		}
+		if request.Scheduled != nil {
+			req.ScheduledSession = request.Scheduled
+		}
+
+		if request.Status != "" && request.Status != req.Status {
+			if request.Status == constants.TrainingSessionStatusAccepted && req.Status == constants.TrainingSessionStatusOpen {
+				go func(r *models.TrainingSessionRequest) {
+					u, _ := database.FindUserByCID(fmt.Sprint(r.User.CID))
+					_ = discord.NewMessage().
+						SetContent("Training Scheduled!").
+						AddEmbed(
+							discord.NewEmbed().
+								SetColor(discord.GetColor("00", "00", "ff")).
+								AddField(
+									discord.NewField().SetName("Controller").SetValue(
+										fmt.Sprintf("%s %s (%d/%s)", r.User.FirstName, r.User.LastName, r.User.CID, u.Rating.Short),
+									).SetInline(false),
+								).
+								AddField(
+									discord.NewField().SetName("Type").SetValue(r.TrainingType).SetInline(true),
+								).
+								AddField(
+									discord.NewField().SetName("Position").SetValue(r.TrainingFor).SetInline(true),
+								).
+								AddField(
+									discord.NewField().SetName("Scheduled At").SetValue(r.ScheduledSession.Format(time.RFC1123)).SetInline(false),
+								),
+						).Send(config.Cfg.Facility.TrainingRequests.Discord.TrainingStaff)
+				}(req)
+			}
+			req.Status = request.Status
+		}
+	}
+
+	if req.Status != "" && req.Status != request.Status {
+		if req.Status != constants.TrainingSessionStatusOpen && req.Status != constants.TrainingSessionStatusCancelled {
+			response.RespondError(c, http.StatusBadRequest, "Invalid Status")
+			return
+		}
+		if request.Status == constants.TrainingSessionStatusCancelled && req.Status == constants.TrainingSessionStatusAccepted {
+			req.ScheduledSession = nil
+			go func(r *models.TrainingSessionRequest) {
+				u, _ := database.FindUserByCID(fmt.Sprint(r.User.CID))
+				_ = discord.NewMessage().
+					SetContent("Scheduled Training Session set to Cancelled").
+					AddEmbed(
+						discord.NewEmbed().
+							SetColor(discord.GetColor("ff", "00", "00")).
+							AddField(
+								discord.NewField().SetName("Controller").SetValue(
+									fmt.Sprintf("%s %s (%d/%s)", r.User.FirstName, r.User.LastName, r.User.CID, u.Rating.Short),
+								).SetInline(false),
+							).
+							AddField(
+								discord.NewField().SetName("Type").SetValue(r.TrainingType).SetInline(true),
+							).
+							AddField(
+								discord.NewField().SetName("Position").SetValue(r.TrainingFor).SetInline(true),
+							).
+							AddField(
+								discord.NewField().SetName("Scheduled At").SetValue(r.ScheduledSession.Format(time.RFC1123)).SetInline(false),
+							).
+							AddField(
+								discord.NewField().SetName("Notes").SetValue(r.Notes).SetInline(false),
+							).SetURL(fmt.Sprintf("%s/training/sessions/%s", config.Cfg.Facility.FrontendURL, r.ID)),
+					).Send(config.Cfg.Facility.TrainingRequests.Discord.TrainingStaff)
+			}(req)
+		}
+
+		req.Status = request.Status
+	}
+
+	if req.TrainingType != "" && req.TrainingType != request.TrainingType {
+		req.TrainingType = request.TrainingType
+	}
+
+	if req.TrainingFor != "" && req.TrainingFor != request.TrainingFor {
+		req.TrainingFor = request.TrainingFor
+	}
+
+	if req.Notes != "" && req.Notes != request.Notes {
+		req.Notes = request.Notes
+	}
+
+	if err := database.DB.Save(req).Error; err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	response.Respond(c, http.StatusOK, dto.ConvertTrainingRequestToDTO(req))
 }
