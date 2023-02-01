@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gdex-lab/go-render/render"
 	"github.com/gin-gonic/gin"
 
 	"github.com/adh-partnership/api/pkg/bloom"
@@ -82,6 +83,8 @@ func (m *Monitor) monitorInterceptor(ctx *gin.Context) {
 func (m *Monitor) ginMetricHandle(ctx *gin.Context, start time.Time) {
 	r := ctx.Request
 	w := ctx.Writer
+
+	log.Tracef("gin metrics: %s", render.Render(ctx))
 
 	// set request total
 	_ = m.GetMetric(MetricRequestTotal).Inc(nil)
