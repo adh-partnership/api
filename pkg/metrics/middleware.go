@@ -84,7 +84,7 @@ func (m *Monitor) ginMetricHandle(ctx *gin.Context, start time.Time) {
 	w := ctx.Writer
 	latency := time.Since(start)
 
-	log.Tracef("Handling metric for %s", ctx.FullPath())
+	log.Infof("Handling metric for %s (%s)", ctx.FullPath(), r.URL.Path)
 
 	// set request total
 	_ = m.GetMetric(MetricRequestTotal).Inc(nil)

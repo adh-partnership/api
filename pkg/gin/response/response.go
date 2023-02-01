@@ -21,7 +21,6 @@ func RespondMessage(c *gin.Context, status int, message string) {
 
 func RespondBlank(c *gin.Context, status int) {
 	c.Status(status)
-	c.Abort()
 }
 
 func RespondError(c *gin.Context, status int, message string) {
