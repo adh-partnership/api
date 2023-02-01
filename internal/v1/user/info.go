@@ -139,6 +139,13 @@ func patchUser(c *gin.Context) {
 		return
 	}
 
+	if req.ExemptedFromActivity != nil && req.ExemptedFromActivity != &oldUser.ExemptedFromActivity {
+		if !auth.InGroup(user, "admin") {
+			response.RespondError(c, http.StatusForbidden, "Forbidden")
+			return
+		}
+	}
+
 	if req.ControllerType != "" && req.ControllerType != oldUser.ControllerType {
 		if (oldUser.ControllerType == constants.ControllerTypeHome ||
 			oldUser.ControllerType == constants.ControllerTypeVisitor) &&

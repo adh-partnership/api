@@ -5,11 +5,12 @@ type Config struct {
 	Database ConfigDatabase `json:"database"`
 	Discord  ConfigDiscord  `json:"discord"`
 	Email    ConfigEmail    `json:"email"`
-	Session  ConfigSession  `json:"session"`
-	OAuth    ConfigOAuth    `json:"oauth"`
-	VATUSA   ConfigVATUSA   `json:"vatusa"`
 	Facility ConfigFacility `json:"facility"`
+	Metrics  ConfigMetrics  `json:"metrics"`
+	OAuth    ConfigOAuth    `json:"oauth"`
+	Session  ConfigSession  `json:"session"`
 	Storage  ConfigStorage  `json:"storage"`
+	VATUSA   ConfigVATUSA   `json:"vatusa"`
 }
 
 type ConfigServer struct {
@@ -116,10 +117,25 @@ type ConfigFacilityVisiting struct {
 }
 
 type ConfigFacilityActivity struct {
-	Enabled     bool `json:"enabled"`
-	MinHours    int  `json:"min_hours"`
-	Period      int  `json:"period"`
-	RunOnDay    int  `json:"run_on_day"`
-	RunAtHour   int  `json:"run_at_hour"`
-	RunAtMinute int  `json:"run_at_minute"`
+	Inactive ConfigFacilityActivityInactive `json:"inactive"`
+	Warning  ConfigFacilityActivityWarning  `json:"warning"`
+}
+
+type ConfigFacilityActivityWarning struct {
+	Enabled    bool  `json:"enabled"`
+	DaysBefore int   `json:"days_before"`
+	Months     []int `json:"months"`
+}
+
+type ConfigFacilityActivityInactive struct {
+	Enabled  bool  `json:"enabled"`
+	Period   int   `json:"period"`
+	MinHours int   `json:"min_hours"`
+	Months   []int `json:"months"`
+}
+
+type ConfigMetrics struct {
+	Enabled bool   `json:"enabled"`
+	Port    int    `json:"port"`
+	Path    string `json:"path"`
 }

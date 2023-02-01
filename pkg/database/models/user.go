@@ -28,6 +28,7 @@ type User struct {
 	CtrCertification string `json:"ctrCertification" gorm:"type:varchar(15);default:'none'" example:"none"`
 	// Must be one of : none, training, certified, cantrain
 	OceanicCertification string `json:"oceanicCertification" gorm:"type:varchar(15);default:'none'" example:"none"`
+	ExemptedFromActivity bool   `json:"exemptedFromActivity" gorm:"default:false" example:"false"`
 	RatingID             int    `json:"-"`
 	Rating               Rating `json:"rating"`
 	// Must be one of: none, active, inactive, loa
