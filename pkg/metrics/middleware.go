@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gdex-lab/go-render/render"
 	"github.com/gin-gonic/gin"
 
 	"github.com/adh-partnership/api/pkg/bloom"
@@ -83,8 +82,9 @@ func (m *Monitor) monitorInterceptor(ctx *gin.Context) {
 func (m *Monitor) ginMetricHandle(ctx *gin.Context, start time.Time) {
 	r := ctx.Request
 	w := ctx.Writer
+	latency := time.Since(start)
 
-	log.Tracef("gin metrics: %s", render.Render(ctx))
+	log.Tracef("Handling metric for %s", ctx.FullPath())
 
 	// set request total
 	_ = m.GetMetric(MetricRequestTotal).Inc(nil)
@@ -105,7 +105,6 @@ func (m *Monitor) ginMetricHandle(ctx *gin.Context, start time.Time) {
 	}
 
 	// set slow request
-	latency := time.Since(start)
 	if int32(latency.Seconds()) > m.slowTime {
 		_ = m.GetMetric(MetricSlowRequest).Inc([]string{ctx.FullPath(), r.Method, strconv.Itoa(w.Status())})
 	}
