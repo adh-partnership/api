@@ -14,6 +14,7 @@ import (
 	"github.com/adh-partnership/api/pkg/jobs/dataparser"
 	"github.com/adh-partnership/api/pkg/jobs/roster"
 	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/metrics"
 	"github.com/adh-partnership/api/pkg/server"
 )
 
@@ -59,6 +60,17 @@ func newServerCommand() *cli.Command {
 			err = dataparser.Initialize(s)
 			if err != nil {
 				return err
+			}
+
+			if srvr.Config.Metrics.Enabled {
+				log.Infof("Building Metrics")
+				m := metrics.GetMonitor()
+				m.SetMetricPath(srvr.Config.Metrics.Path)
+				m.SetMetricPort(srvr.Config.Metrics.Port)
+				log.Info("Registering Metrics middleware")
+				m.Use(srvr.Engine)
+				log.Info("Starting Metrics server on :%s%s", srvr.Config.Metrics.Port, srvr.Config.Metrics.Path)
+				m.Start()
 			}
 
 			log.Info("Starting scheduled jobs")
