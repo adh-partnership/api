@@ -79,7 +79,7 @@ func handleInactive() {
 			continue
 		}
 
-		log.Infof("Controller %s is inactive", controller.CID)
+		log.Infof("Controller %d is inactive", controller.CID)
 		controller.Status = constants.ControllerStatusInactive
 		if err := database.DB.Save(controller).Error; err != nil {
 			log.Errorf("Failed to save controller: %s", err)
