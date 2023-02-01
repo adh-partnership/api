@@ -63,13 +63,13 @@ func newServerCommand() *cli.Command {
 			}
 
 			if srvr.Config.Metrics.Enabled {
-				log.Infof("Building Metrics")
+				log.Info("Configuring Metrics")
 				m := metrics.GetMonitor()
 				m.SetMetricPath(srvr.Config.Metrics.Path)
 				m.SetMetricPort(srvr.Config.Metrics.Port)
 				log.Info("Registering Metrics middleware")
 				m.Use(srvr.Engine)
-				log.Info("Starting Metrics server on :%s%s", srvr.Config.Metrics.Port, srvr.Config.Metrics.Path)
+				log.Infof("Starting Metrics server on :%d%s", srvr.Config.Metrics.Port, srvr.Config.Metrics.Path)
 				m.Start()
 			}
 

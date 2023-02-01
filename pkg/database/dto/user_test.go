@@ -10,6 +10,7 @@ import (
 )
 
 func TestConvUserToUserResponse(t *testing.T) {
+	boolTrue := true
 	tim, _ := time.Parse("2006-01-02 15:04:05", "2020-01-01 00:00:00")
 	user := &models.User{
 		CID:                   123,
@@ -30,10 +31,11 @@ func TestConvUserToUserResponse(t *testing.T) {
 			{Name: "admin"},
 			{Name: "user"},
 		},
-		DiscordID:      "123456789",
-		RosterJoinDate: &tim,
-		CreatedAt:      tim,
-		UpdatedAt:      tim,
+		DiscordID:            "123456789",
+		ExemptedFromActivity: true,
+		RosterJoinDate:       &tim,
+		CreatedAt:            tim,
+		UpdatedAt:            tim,
 	}
 
 	expectedResponse := &UserResponse{
@@ -51,13 +53,14 @@ func TestConvUserToUserResponse(t *testing.T) {
 			MajorApproach: constants.CertificationCertified,
 			Enroute:       constants.CertificationCanTrain,
 		},
-		Rating:         "C1",
-		Roles:          []string{"admin", "user"},
-		Status:         constants.ControllerStatusActive,
-		DiscordID:      "123456789",
-		RosterJoinDate: "2020-01-01T00:00:00Z",
-		CreatedAt:      "2020-01-01T00:00:00Z",
-		UpdatedAt:      "2020-01-01T00:00:00Z",
+		Rating:               "C1",
+		Roles:                []string{"admin", "user"},
+		Status:               constants.ControllerStatusActive,
+		ExemptedFromActivity: &boolTrue,
+		DiscordID:            "123456789",
+		RosterJoinDate:       "2020-01-01T00:00:00Z",
+		CreatedAt:            "2020-01-01T00:00:00Z",
+		UpdatedAt:            "2020-01-01T00:00:00Z",
 	}
 
 	userResponse := ConvUserToUserResponse(user)
