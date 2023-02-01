@@ -23,6 +23,7 @@ import (
 	ginLogger "github.com/adh-partnership/api/pkg/gin/middleware/logger"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/logger"
+	"github.com/adh-partnership/api/pkg/metrics"
 	"github.com/adh-partnership/api/pkg/oauth"
 	"github.com/adh-partnership/api/pkg/storage"
 )
@@ -125,6 +126,18 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	s.Engine = gin.New()
 	s.Engine.Use(gin.Recovery())
 	s.Engine.Use(ginLogger.Logger)
+
+	if s.Config.Metrics.Enabled {
+		log.Info("Configuring Metrics")
+		m := metrics.GetMonitor()
+		m.SetMetricPath(s.Config.Metrics.Path)
+		m.SetMetricPort(s.Config.Metrics.Port)
+		log.Info("Registering Metrics middleware")
+		m.Use(s.Engine)
+		log.Infof("Starting Metrics server on :%d%s", s.Config.Metrics.Port, s.Config.Metrics.Path)
+		m.Start()
+	}
+
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowMethods = []string{"GET", "PATCH", "POST", "PUT", "DELETE", "OPTIONS"}
 	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "X-Requested-With", "Accept", "x-xsrf-token"}
