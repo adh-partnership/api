@@ -49,7 +49,7 @@ type VATUSAFacilityRole struct {
 // RemoveController removes a home controller from the roster at VATUSA.
 func RemoveController(cid string, by uint, reason string) (int, error) {
 	status, _, err := handle("DELETE", "/facility/"+config.Cfg.VATUSA.Facility+"/roster/"+cid, map[string]string{
-		"by":     string(by),
+		"by":     fmt.Sprintf("%d", by),
 		"reason": reason,
 	})
 
