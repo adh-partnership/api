@@ -97,7 +97,9 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		&models.TrainingNote{},
 		&models.User{},
 		&models.VisitorApplication{},
-		&models.TrainingSessionRequest{})
+		&models.TrainingRequest{},
+		&models.TrainingRequestSlot{},
+	)
 	if err != nil {
 		log.Errorf("Failed to run migrations: %v", err)
 		return nil, err

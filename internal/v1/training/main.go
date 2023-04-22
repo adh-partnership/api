@@ -17,10 +17,11 @@ func Routes(r *gin.RouterGroup) {
 	r.DELETE("/:cid/:id", auth.NotGuest, auth.InGroup("training"), deleteTraining)
 
 	if config.Cfg.Facility.TrainingRequests.Enabled {
-		r.GET("/sessions", auth.NotGuest, getSessions)
-		r.POST("/sessions", auth.NotGuest, postSessions)
-
-		r.GET("/sessions/:id", auth.NotGuest, getSession)
-		r.PATCH("/sessions/:id", auth.NotGuest, patchSession)
+		r.GET("/training/requests", auth.NotGuest, getTrainingRequests)
+		r.GET("/training/requests/:id", auth.NotGuest, getTrainingRequest)
+		r.POST("/training/requests", auth.NotGuest, postTrainingRequest)
+		r.PATCH("/training/requests/:id", auth.NotGuest, patchTrainingRequest)
+		r.POST("/training/requests/:id/slots", auth.NotGuest, postTrainingRequestSlot)
+		r.DELETE("/training/requests/:id/slots/:slot_id", auth.NotGuest, deleteTrainingRequestSlot)
 	}
 }

@@ -271,9 +271,9 @@ func FindAirportChartsByID(id string) ([]*models.AirportChart, error) {
 	return charts, nil
 }
 
-func FindTrainingSessionRequestByID(id string) (*models.TrainingSessionRequest, error) {
-	request := &models.TrainingSessionRequest{}
-	if err := DB.Preload("User.Rating").Preload("Instructor.Rating").Preload(clause.Associations).First(request, "id = ?", id).Error; err != nil {
+func FindTrainingSessionRequestByID(id string) (*models.TrainingRequest, error) {
+	request := &models.TrainingRequest{}
+	if err := DB.Preload("Student.Rating").Preload("Instructor.Rating").Preload(clause.Associations).First(request, "id = ?", id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -283,9 +283,9 @@ func FindTrainingSessionRequestByID(id string) (*models.TrainingSessionRequest, 
 	return request, nil
 }
 
-func FindTrainingSessionRequests() ([]*models.TrainingSessionRequest, error) {
-	var requests []*models.TrainingSessionRequest
-	if err := DB.Preload(clause.Associations).Find(&requests).Error; err != nil {
+func FindTrainingSessionRequests() ([]*models.TrainingRequest, error) {
+	var requests []*models.TrainingRequest
+	if err := DB.Preload("Student.Rating").Preload("Instructor.Rating").Preload(clause.Associations).Find(&requests).Error; err != nil {
 		return nil, err
 	}
 
@@ -297,11 +297,11 @@ type TrainingSessionRequestFilter struct {
 	Status string
 }
 
-func FindTrainingSessionRequestWithFilter(f *TrainingSessionRequestFilter) ([]*models.TrainingSessionRequest, error) {
-	var requests []*models.TrainingSessionRequest
-	tx := DB.Preload(clause.Associations)
+func FindTrainingSessionRequestWithFilter(f *TrainingSessionRequestFilter) ([]*models.TrainingRequest, error) {
+	var requests []*models.TrainingRequest
+	tx := DB.Preload("Student.Rating").Preload("Instructor.Rating").Preload(clause.Associations)
 	if f.CID != "" {
-		tx = tx.Where("user_id = ?", atou(f.CID))
+		tx = tx.Where("student_id = ?", atou(f.CID))
 	}
 	if f.Status != "" {
 		tx = tx.Where("status = ?", f.Status)
