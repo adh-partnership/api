@@ -5,11 +5,10 @@ import (
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
-	"github.com/adh-partnership/api/pkg/database/types"
 )
 
 type TrainingRequest struct {
-	ID              types.BinaryData       `json:"id" gorm:"primary_key;default:(UUID_TO_BIN(UUID()));"`
+	UUIDBase
 	Student         *User                  `json:"student" gorm:"foreignKey:StudentID;references:ID"`
 	StudentID       uint                   `json:"-" gorm:"not null"`
 	Position        string                 `json:"position" gorm:"not null"`
@@ -21,8 +20,6 @@ type TrainingRequest struct {
 	Slots           []*TrainingRequestSlot `json:"slots" gorm:"foreignKey:TrainingRequestID;references:ID"`
 	Start           *time.Time             `json:"start" gorm:"default:null"`
 	End             *time.Time             `json:"end" gorm:"default:null"`
-	CreatedAt       *time.Time             `json:"created_at"`
-	UpdatedAt       *time.Time             `json:"updated_at"`
 }
 
 func IsValidPosition(pos string) bool {
