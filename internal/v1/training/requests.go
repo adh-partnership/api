@@ -122,8 +122,8 @@ func postTrainingRequest(c *gin.Context) {
 	for _, slot := range request.Slots {
 		s := &models.TrainingRequestSlot{
 			TrainingRequestID: req.ID,
-			StartTime:         slot.StartTime,
-			EndTime:           slot.EndTime,
+			Start:             slot.Start,
+			End:               slot.End,
 		}
 
 		if err := database.DB.Create(s).Error; err != nil {
@@ -324,7 +324,7 @@ func postTrainingRequestSlot(c *gin.Context) {
 	}
 
 	// Check if start time or end time is nil
-	if request.StartTime == nil || request.EndTime == nil {
+	if request.Start == nil || request.End == nil {
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
@@ -341,8 +341,8 @@ func postTrainingRequestSlot(c *gin.Context) {
 	}
 
 	trainingrequest.Slots = append(trainingrequest.Slots, &models.TrainingRequestSlot{
-		StartTime: request.StartTime,
-		EndTime:   request.EndTime,
+		Start: request.Start,
+		End:   request.End,
 	})
 
 	trd := dto.ConvertTrainingRequestToDTO(trainingrequest)
@@ -379,7 +379,7 @@ func deleteTrainingRequestSlot(c *gin.Context) {
 	}
 
 	// Check if start time or end time is nil
-	if request.StartTime == nil || request.EndTime == nil {
+	if request.Start == nil || request.End == nil {
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
@@ -423,8 +423,8 @@ func deleteTrainingRequestSlot(c *gin.Context) {
 
 func areSlotsValid(slots []*dto.TrainingRequestSlot) bool {
 	validSlots := true
-	firstDate := slots[0].StartTime
-	endDate := slots[len(slots)-1].EndTime // Just filler data
+	firstDate := slots[0].Start
+	endDate := slots[len(slots)-1].End // Just filler data
 
 	/* Rules for valid slots:
 	 *
@@ -434,26 +434,26 @@ func areSlotsValid(slots []*dto.TrainingRequestSlot) bool {
 	 * - No single slot can be less than 1 hour long
 	 */
 	for _, slot := range slots {
-		if slot.StartTime.Before(time.Now().Add(time.Hour * 24)) {
+		if slot.Start.Before(time.Now().Add(time.Hour * 24)) {
 			validSlots = false
 			break
 		}
-		if slot.EndTime.Sub(*slot.StartTime) > time.Hour*24 || slot.EndTime.Sub(*slot.StartTime) < time.Hour {
+		if slot.End.Sub(*slot.Start) > time.Hour*24 || slot.End.Sub(*slot.Start) < time.Hour {
 			validSlots = false
 			break
 		}
 		// Check if end is before start
-		if slot.EndTime.Before(*slot.StartTime) {
+		if slot.End.Before(*slot.Start) {
 			validSlots = false
 			break
 		}
 		// Update firstDate if this slot's start time is before it
-		if slot.StartTime.Before(*firstDate) {
-			firstDate = slot.StartTime
+		if slot.Start.Before(*firstDate) {
+			firstDate = slot.Start
 		}
 		// Update endDate if this slot's end time is after it
-		if slot.StartTime.After(*endDate) {
-			endDate = slot.StartTime
+		if slot.Start.After(*endDate) {
+			endDate = slot.Start
 		}
 	}
 	// Check if endDate is within 14 days of firstDate
