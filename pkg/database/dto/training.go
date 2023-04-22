@@ -14,50 +14,74 @@ type TrainingNoteRequest struct {
 	SessionDate time.Time `json:"session_date"`
 }
 
-type TrainingSessionRequestCreateRequest struct {
-	TrainingType string `json:"training_type"`
-	TrainingFor  string `json:"training_for"`
-	Notes        string `json:"notes"`
+type TrainingRequestCreateRequest struct {
+	Position string                 `json:"position"`
+	Notes    string                 `json:"notes"`
+	Slots    []*TrainingRequestSlot `json:"slots"`
 }
 
-type TrainingSessionRequestEditRequest struct {
-	TrainingType    string     `json:"training_type"`
-	TrainingFor     string     `json:"training_for"`
-	Notes           string     `json:"notes"`
-	Status          string     `json:"status"`
-	Scheduled       *time.Time `json:"scheduled"`
-	InstructorID    uint       `json:"instructor_id"`
-	InstructorNotes string     `json:"instructor_notes"`
+type TrainingRequestEditRequest struct {
+	Position        string `json:"position"`
+	Notes           string `json:"notes"`
+	Status          string `json:"status"`
+	InstructorNotes string `json:"instructor_notes"`
+	Instructor      uint   `json:"instructor"`
+	Start           string `json:"start"`
+	End             string `json:"end"`
 }
 
-type TrainingSessionRequest struct {
-	ID           string        `json:"id"`
-	User         *UserResponse `json:"user"`
-	TrainingType string        `json:"training_type"`
-	TrainingFor  string        `json:"training_for"`
-	Notes        string        `json:"notes"`
-	Status       string        `json:"status"`
-	Instructor   *UserResponse `json:"instructor"`
-	CreatedAt    time.Time     `json:"created_at"`
-	UpdatedAt    time.Time     `json:"updated_at"`
+type TrainingRequest struct {
+	ID              string                 `json:"id"`
+	Student         *UserResponse          `json:"student"`
+	Instructor      *UserResponse          `json:"instructor"`
+	Position        string                 `json:"position"`
+	Status          string                 `json:"status"`
+	Notes           string                 `json:"notes"`
+	InstructorNotes string                 `json:"instructor_notes"`
+	Start           *time.Time             `json:"start"`
+	End             *time.Time             `json:"end"`
+	Slots           []*TrainingRequestSlot `json:"slots"`
+	CreatedAt       *time.Time             `json:"created_at"`
+	UpdatedAt       *time.Time             `json:"updated_at"`
 }
 
-func ConvertTrainingRequestToDTO(t *models.TrainingSessionRequest) *TrainingSessionRequest {
-	return &TrainingSessionRequest{
-		ID:           t.ID.String(),
-		User:         ConvUserToUserResponse(t.User),
-		TrainingType: t.TrainingType,
-		TrainingFor:  t.TrainingFor,
-		Notes:        t.Notes,
-		Status:       t.Status,
-		Instructor:   ConvUserToUserResponse(t.Instructor),
-		CreatedAt:    t.CreatedAt,
-		UpdatedAt:    t.UpdatedAt,
+type TrainingRequestSlot struct {
+	ID        string     `json:"id"`
+	StartTime *time.Time `json:"start_time"`
+	EndTime   *time.Time `json:"end_time"`
+}
+
+func ConvertTrainingRequestToDTO(t *models.TrainingRequest) *TrainingRequest {
+	ret := &TrainingRequest{
+		ID:        t.ID.String(),
+		Student:   ConvUserToUserResponse(t.Student),
+		Position:  t.Position,
+		Status:    t.Status,
+		Notes:     t.Notes,
+		CreatedAt: t.CreatedAt,
+		UpdatedAt: t.UpdatedAt,
 	}
+
+	if t.Instructor != nil {
+		ret.Instructor = ConvUserToUserResponse(t.Instructor)
+		ret.InstructorNotes = t.InstructorNotes
+		ret.Start = t.Start
+		ret.End = t.End
+	}
+
+	for _, v := range t.Slots {
+		ret.Slots = append(ret.Slots, &TrainingRequestSlot{
+			ID:        v.ID.String(),
+			StartTime: v.StartTime,
+			EndTime:   v.EndTime,
+		})
+	}
+
+	return ret
 }
 
-func ConvertTrainingRequestsToDTO(t []*models.TrainingSessionRequest) []*TrainingSessionRequest {
-	var res []*TrainingSessionRequest
+func ConvertTrainingRequestsToDTO(t []*models.TrainingRequest) []*TrainingRequest {
+	var res []*TrainingRequest
 	for _, v := range t {
 		res = append(res, ConvertTrainingRequestToDTO(v))
 	}

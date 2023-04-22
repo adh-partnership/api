@@ -9,17 +9,20 @@ import (
 )
 
 type TrainingRequest struct {
-	ID           types.BinaryData `json:"id" gorm:"primary_key;default:(UUID_TO_BIN(UUID()));"`
-	Student      *User            `json:"student" gorm:"foreignKey:StudentID;references:ID"`
-	StudentID    uint             `json:"-" gorm:"not null"`
-	Position     string           `json:"position" gorm:"not null"`
-	Status       string           `json:"status" gorm:"not null"`
-	Notes        string           `json:"notes"`
-	Instructor   *User            `json:"instructor" gorm:"foreignKey:InstructorID;references:ID"`
-	InstructorID *uint            `json:"-" gorm:"default:null"`
-	Availability string           `json:"availability"`
-	CreatedAt    *time.Time       `json:"created_at"`
-	UpdatedAt    *time.Time       `json:"updated_at"`
+	ID              types.BinaryData       `json:"id" gorm:"primary_key;default:(UUID_TO_BIN(UUID()));"`
+	Student         *User                  `json:"student" gorm:"foreignKey:StudentID;references:ID"`
+	StudentID       uint                   `json:"-" gorm:"not null"`
+	Position        string                 `json:"position" gorm:"not null"`
+	Status          string                 `json:"status" gorm:"not null"`
+	Notes           string                 `json:"notes"`
+	Instructor      *User                  `json:"instructor" gorm:"foreignKey:InstructorID;references:ID"`
+	InstructorID    *uint                  `json:"-" gorm:"default:null"`
+	InstructorNotes string                 `json:"instructor_notes"`
+	Slots           []*TrainingRequestSlot `json:"slots" gorm:"foreignKey:TrainingRequestID;references:ID"`
+	Start           *time.Time             `json:"start" gorm:"default:null"`
+	End             *time.Time             `json:"end" gorm:"default:null"`
+	CreatedAt       *time.Time             `json:"created_at"`
+	UpdatedAt       *time.Time             `json:"updated_at"`
 }
 
 func IsValidPosition(pos string) bool {
