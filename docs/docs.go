@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1026,7 +1026,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1059,7 +1059,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1728,7 +1728,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/training/sessions": {
+        "/v1/training/requests": {
             "get": {
                 "tags": [
                     "training"
@@ -1756,7 +1756,7 @@ const docTemplate = `{
                             "items": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/definitions/dto.TrainingSessionRequest"
+                                    "$ref": "#/definitions/dto.TrainingRequest"
                                 }
                             }
                         }
@@ -1768,7 +1768,234 @@ const docTemplate = `{
                         }
                     }
                 }
+            }
+        },
+        "/v1/training/requests/{id}": {
+            "get": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Get Specific Training Request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Training Session ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingRequest"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
             },
+            "patch": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Edit Training Session Request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Training Session Request ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Training Session Request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingRequestEditRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/training/requests/{id}/slots": {
+            "post": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Add a slot to a request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Training Session Request ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Training Session Request Slot",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingRequestSlot"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/training/requests/{id}/slots/{slot_id}": {
+            "delete": {
+                "tags": [
+                    "training"
+                ],
+                "summary": "Delete a slot from a request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Training Session Request ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Training Session Request Slot ID",
+                        "name": "slot_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrainingRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/training/sessions": {
             "post": {
                 "tags": [
                     "training"
@@ -1781,7 +2008,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.TrainingSessionRequestCreateRequest"
+                            "$ref": "#/definitions/dto.TrainingRequestCreateRequest"
                         }
                     }
                 ],
@@ -1789,7 +2016,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.TrainingSessionRequest"
+                            "$ref": "#/definitions/dto.TrainingRequest"
                         }
                     },
                     "400": {
@@ -2852,10 +3079,13 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.TrainingSessionRequest": {
+        "dto.TrainingRequest": {
             "type": "object",
             "properties": {
                 "created_at": {
+                    "type": "string"
+                },
+                "end": {
                     "type": "string"
                 },
                 "id": {
@@ -2864,36 +3094,88 @@ const docTemplate = `{
                 "instructor": {
                     "$ref": "#/definitions/dto.UserResponse"
                 },
+                "instructor_notes": {
+                    "type": "string"
+                },
                 "notes": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "slots": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TrainingRequestSlot"
+                    }
+                },
+                "start": {
                     "type": "string"
                 },
                 "status": {
                     "type": "string"
                 },
-                "training_for": {
-                    "type": "string"
-                },
-                "training_type": {
-                    "type": "string"
+                "student": {
+                    "$ref": "#/definitions/dto.UserResponse"
                 },
                 "updated_at": {
                     "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/dto.UserResponse"
                 }
             }
         },
-        "dto.TrainingSessionRequestCreateRequest": {
+        "dto.TrainingRequestCreateRequest": {
             "type": "object",
             "properties": {
                 "notes": {
                     "type": "string"
                 },
-                "training_for": {
+                "position": {
                     "type": "string"
                 },
-                "training_type": {
+                "slots": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TrainingRequestSlot"
+                    }
+                }
+            }
+        },
+        "dto.TrainingRequestEditRequest": {
+            "type": "object",
+            "properties": {
+                "end": {
+                    "type": "string"
+                },
+                "instructor": {
+                    "type": "integer"
+                },
+                "instructor_notes": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "start": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TrainingRequestSlot": {
+            "type": "object",
+            "properties": {
+                "end_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "start_time": {
                     "type": "string"
                 }
             }
@@ -2918,6 +3200,9 @@ const docTemplate = `{
                 },
                 "division": {
                     "type": "string"
+                },
+                "exempted_from_activity": {
+                    "type": "boolean"
                 },
                 "first_name": {
                     "type": "string"
@@ -3578,6 +3863,10 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "example": "wm@denartcc.org"
+                },
+                "exemptedFromActivity": {
+                    "type": "boolean",
+                    "example": false
                 },
                 "first_name": {
                     "type": "string",

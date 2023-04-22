@@ -275,34 +275,70 @@ definitions:
       type:
         type: string
     type: object
-  dto.TrainingSessionRequest:
+  dto.TrainingRequest:
     properties:
       created_at:
+        type: string
+      end:
         type: string
       id:
         type: string
       instructor:
         $ref: '#/definitions/dto.UserResponse'
+      instructor_notes:
+        type: string
       notes:
+        type: string
+      position:
+        type: string
+      slots:
+        items:
+          $ref: '#/definitions/dto.TrainingRequestSlot'
+        type: array
+      start:
         type: string
       status:
         type: string
-      training_for:
-        type: string
-      training_type:
-        type: string
+      student:
+        $ref: '#/definitions/dto.UserResponse'
       updated_at:
         type: string
-      user:
-        $ref: '#/definitions/dto.UserResponse'
     type: object
-  dto.TrainingSessionRequestCreateRequest:
+  dto.TrainingRequestCreateRequest:
     properties:
       notes:
         type: string
-      training_for:
+      position:
         type: string
-      training_type:
+      slots:
+        items:
+          $ref: '#/definitions/dto.TrainingRequestSlot'
+        type: array
+    type: object
+  dto.TrainingRequestEditRequest:
+    properties:
+      end:
+        type: string
+      instructor:
+        type: integer
+      instructor_notes:
+        type: string
+      notes:
+        type: string
+      position:
+        type: string
+      start:
+        type: string
+      status:
+        type: string
+    type: object
+  dto.TrainingRequestSlot:
+    properties:
+      end_time:
+        type: string
+      id:
+        type: string
+      start_time:
         type: string
     type: object
   dto.UserResponse:
@@ -319,6 +355,8 @@ definitions:
         type: string
       division:
         type: string
+      exempted_from_activity:
+        type: boolean
       first_name:
         type: string
       last_name:
@@ -789,6 +827,9 @@ definitions:
       email:
         example: wm@denartcc.org
         type: string
+      exemptedFromActivity:
+        example: false
+        type: boolean
       first_name:
         example: Daniel
         type: string
@@ -893,7 +934,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1545,7 +1586,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1566,7 +1607,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -2006,7 +2047,7 @@ paths:
       summary: Update Training Record
       tags:
       - training
-  /v1/training/sessions:
+  /v1/training/requests:
     get:
       parameters:
       - description: Filter by CID
@@ -2023,7 +2064,7 @@ paths:
           schema:
             items:
               items:
-                $ref: '#/definitions/dto.TrainingSessionRequest'
+                $ref: '#/definitions/dto.TrainingRequest'
               type: array
             type: array
         "403":
@@ -2033,6 +2074,155 @@ paths:
       summary: Get Training Sessions
       tags:
       - training
+  /v1/training/requests/{id}:
+    get:
+      parameters:
+      - description: Training Session ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TrainingRequest'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Specific Training Request
+      tags:
+      - training
+    patch:
+      parameters:
+      - description: Training Session Request ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Training Session Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TrainingRequestEditRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TrainingRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Edit Training Session Request
+      tags:
+      - training
+  /v1/training/requests/{id}/slots:
+    post:
+      parameters:
+      - description: Training Session Request ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Training Session Request Slot
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TrainingRequestSlot'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TrainingRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Add a slot to a request
+      tags:
+      - training
+  /v1/training/requests/{id}/slots/{slot_id}:
+    delete:
+      parameters:
+      - description: Training Session Request ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Training Session Request Slot ID
+        in: path
+        name: slot_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TrainingRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Delete a slot from a request
+      tags:
+      - training
+  /v1/training/sessions:
     post:
       parameters:
       - description: Training Session Request
@@ -2040,12 +2230,12 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/dto.TrainingSessionRequestCreateRequest'
+          $ref: '#/definitions/dto.TrainingRequestCreateRequest'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.TrainingSessionRequest'
+            $ref: '#/definitions/dto.TrainingRequest'
         "400":
           description: Bad Request
           schema:

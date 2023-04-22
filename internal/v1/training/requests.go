@@ -21,7 +21,7 @@ import (
 // @Summary Get Specific Training Request
 // @Tags training
 // @Param id path string true "Training Session ID"
-// @Success 200 {object} dto.TrainingSessionRequest
+// @Success 200 {object} dto.TrainingRequest
 // @Failure 403 {object} response.R
 // @Failure 404 {object} response.R
 // @Router /v1/training/requests/{id} [GET]
@@ -45,7 +45,7 @@ func getTrainingRequest(c *gin.Context) {
 // @Tags training
 // @Param cid query string false "Filter by CID"
 // @Param status query string false "Filter by Status"
-// @Success 200 {array} []dto.TrainingSessionRequest
+// @Success 200 {array} []dto.TrainingRequest
 // @Failure 403 {object} response.R
 // @Router /v1/training/requests [GET]
 func getTrainingRequests(c *gin.Context) {
@@ -75,7 +75,7 @@ func getTrainingRequests(c *gin.Context) {
 // @Summary Create new training session request for user
 // @Tags training
 // @Param data body dto.TrainingRequestCreateRequest true "Training Session Request"
-// @Success 201 {object} dto.TrainingSessionRequest
+// @Success 201 {object} dto.TrainingRequest
 // @Failure 400 {object} response.R
 // @Failure 401 {object} response.R
 // @Failure 403 {object} response.R
@@ -160,7 +160,7 @@ func postTrainingRequest(c *gin.Context) {
 // @Tags training
 // @Param id path string true "Training Session Request ID"
 // @Param data body dto.TrainingRequestEditRequest true "Training Session Request"
-// @Success 200 {object} dto.TrainingSessionRequest
+// @Success 200 {object} dto.TrainingRequest
 // @Failure 400 {object} response.R
 // @Failure 401 {object} response.R
 // @Failure 403 {object} response.R
@@ -309,7 +309,7 @@ func patchTrainingRequest(c *gin.Context) {
 // @Tags training
 // @Param id path string true "Training Session Request ID"
 // @Param data body dto.TrainingRequestSlot true "Training Session Request Slot"
-// @Success 200 {object} dto.TrainingSessionRequest
+// @Success 200 {object} dto.TrainingRequest
 // @Failure 400 {object} response.R
 // @Failure 401 {object} response.R
 // @Failure 403 {object} response.R
@@ -364,7 +364,7 @@ func postTrainingRequestSlot(c *gin.Context) {
 // @Tags training
 // @Param id path string true "Training Session Request ID"
 // @Param slot_id path string true "Training Session Request Slot ID"
-// @Success 200 {object} dto.TrainingSessionRequest
+// @Success 200 {object} dto.TrainingRequest
 // @Failure 400 {object} response.R
 // @Failure 401 {object} response.R
 // @Failure 403 {object} response.R
