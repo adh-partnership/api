@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type TrainingRequestSlot struct {
@@ -16,7 +17,7 @@ type TrainingRequestSlot struct {
 	UpdatedAt         *time.Time       `json:"updated_at"`
 }
 
-func (t *TrainingRequestSlot) BeforeCreate() (err error) {
+func (t *TrainingRequestSlot) BeforeCreate(tx *gorm.DB) (err error) {
 	t.ID = uuid.New()
 	return nil
 }

@@ -3,9 +3,11 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
-	"github.com/google/uuid"
 )
 
 type TrainingRequest struct {
@@ -25,7 +27,7 @@ type TrainingRequest struct {
 	UpdatedAt       *time.Time             `json:"updated_at"`
 }
 
-func (t *TrainingRequest) BeforeCreate() (err error) {
+func (t *TrainingRequest) BeforeCreate(tx *gorm.DB) (err error) {
 	t.ID = uuid.New()
 	return nil
 }
