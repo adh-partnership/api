@@ -46,9 +46,9 @@ type TrainingRequest struct {
 }
 
 type TrainingRequestSlot struct {
-	ID        string     `json:"id"`
-	StartTime *time.Time `json:"start_time"`
-	EndTime   *time.Time `json:"end_time"`
+	ID    string     `json:"id"`
+	Start *time.Time `json:"start"`
+	End   *time.Time `json:"end"`
 }
 
 func ConvertTrainingRequestToDTO(t *models.TrainingRequest) *TrainingRequest {
@@ -71,9 +71,9 @@ func ConvertTrainingRequestToDTO(t *models.TrainingRequest) *TrainingRequest {
 
 	for _, v := range t.Slots {
 		ret.Slots = append(ret.Slots, &TrainingRequestSlot{
-			ID:        v.ID.String(),
-			StartTime: v.StartTime,
-			EndTime:   v.EndTime,
+			ID:    v.ID.String(),
+			Start: v.Start,
+			End:   v.End,
 		})
 	}
 
