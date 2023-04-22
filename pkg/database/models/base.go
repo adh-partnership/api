@@ -8,9 +8,9 @@ import (
 )
 
 type UUIDBase struct {
-	ID        uuid.UUID `json:"id" gorm:"primary_key;type:char(36);not null;unique_index"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        uuid.UUID  `json:"id" gorm:"primary_key;type:char(36);not null;unique_index"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }
 
 func (u *UUIDBase) BeforeCreate(tx *gorm.DB) error {
