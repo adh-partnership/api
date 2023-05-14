@@ -6,11 +6,28 @@ import (
 	"html/template"
 	"net/smtp"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
+	"sigs.k8s.io/yaml"
 )
+
+var Templates = map[string]string{
+	"visiting_rejected": "visiting_rejected",
+	"visiting_added":    "visiting_added",
+	"visiting_removed":  "visiting_removed",
+	"inactive_warning":  "inactive_warning",
+	"inactive":          "inactive",
+}
+
+type Template struct {
+	Subject string   `json:"subject"`
+	CC      []string `json:"cc"`
+	BCC     []string `json:"bcc"`
+	Body    string   `json:"body"`
+}
 
 func fetchRole(role string) []string {
 	var ret []string
@@ -24,10 +41,36 @@ func fetchRole(role string) []string {
 	return ret
 }
 
-func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string, string, error) {
-	templ, err := database.FindEmailTemplate(name)
+func GetTemplate(name string) (*Template, error) {
+	if _, err := os.Stat(config.Cfg.Email.TemplateDir + "/" + name + ".tmpl"); err != nil {
+		return nil, err
+	}
+
+	f, err := os.Open(config.Cfg.Email.TemplateDir + "/" + name + ".tmpl")
 	if err != nil {
-		return nil, "", "", err
+		return nil, err
+	}
+	defer f.Close()
+
+	buf := new(bytes.Buffer)
+	_, err = buf.ReadFrom(f)
+	if err != nil {
+		return nil, err
+	}
+
+	templ := &Template{}
+	err = yaml.Unmarshal(buf.Bytes(), &templ)
+	if err != nil {
+		return nil, err
+	}
+
+	return templ, nil
+}
+
+func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string, string, string, error) {
+	templ, err := GetTemplate(name)
+	if err != nil {
+		return nil, "", "", "", err
 	}
 
 	t, err := template.New(name).Funcs(template.FuncMap{
@@ -36,16 +79,16 @@ func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string,
 		"findRole":  fetchRole,
 	}).Parse(templ.Body)
 	if err != nil {
-		return nil, "", "", err
+		return nil, "", "", "", err
 	}
 
 	out := new(bytes.Buffer)
 	err = t.Execute(out, data)
 	if err != nil {
-		return nil, "", "", err
+		return nil, "", "", "", err
 	}
 
-	return out, templ.Subject, templ.CC, nil
+	return out, templ.Subject, strings.Join(templ.CC, ", "), strings.Join(templ.BCC, ", "), nil
 }
 
 func BuildEmail(from, to, subject string, cc string, body *bytes.Buffer) []byte {
@@ -64,8 +107,8 @@ Content-Transfer-Encoding: quoted-printable
 	return []byte(msg)
 }
 
-func Send(to, from, subject string, bcc []string, template string, data map[string]interface{}) error {
-	body, subj, cc, err := BuildBody(template, data)
+func Send(to, from, subject string, template string, data map[string]interface{}) error {
+	body, subj, cc, bcc, err := BuildBody(template, data)
 	if err != nil {
 		return err
 	}
@@ -86,7 +129,7 @@ func Send(to, from, subject string, bcc []string, template string, data map[stri
 		tolist = append(tolist, strings.Split(cc, ", ")...)
 	}
 	if len(bcc) > 0 {
-		tolist = append(tolist, bcc...)
+		tolist = append(tolist, strings.Split(bcc, ", ")...)
 	}
 
 	auth := smtp.PlainAuth("", config.Cfg.Email.User, config.Cfg.Email.Password, config.Cfg.Email.Host)

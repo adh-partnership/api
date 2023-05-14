@@ -52,7 +52,6 @@ func newUpdateRosterCommand() *cli.Command {
 			log.Info("Running database migrations")
 			err = database.DB.AutoMigrate(
 				&models.DelayedJob{},
-				&models.EmailTemplate{},
 				&models.User{},
 			)
 			if err != nil {

@@ -82,7 +82,6 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		&models.ControllerStat{},
 		&models.DelayedJob{},
 		&models.Document{},
-		&models.EmailTemplate{},
 		&models.EventPosition{},
 		&models.Event{},
 		&models.EventSignup{},

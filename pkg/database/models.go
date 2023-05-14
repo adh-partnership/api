@@ -69,18 +69,6 @@ func GetEvent(id string) (*models.Event, error) {
 	return event, nil
 }
 
-func FindEmailTemplate(name string) (*models.EmailTemplate, error) {
-	template := &models.EmailTemplate{}
-	if err := DB.Where(models.EmailTemplate{Name: name}).First(template).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
-		return nil, err
-	}
-
-	return template, nil
-}
-
 func FindRole(name string) (*models.Role, error) {
 	role := &models.Role{}
 	if err := DB.Where(models.Role{Name: name}).First(role).Error; err != nil {
