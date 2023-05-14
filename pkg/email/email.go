@@ -9,9 +9,10 @@ import (
 	"os"
 	"strings"
 
+	"sigs.k8s.io/yaml"
+
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
-	"sigs.k8s.io/yaml"
 )
 
 var Templates = map[string]string{
