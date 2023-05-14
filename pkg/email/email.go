@@ -101,7 +101,7 @@ func BuildEmail(from, to, subject string, cc string, body *bytes.Buffer) []byte 
 	}
 	msg += "Subject: " + subject + "\r\n"
 	msg += fmt.Sprintf(`MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 %s`, body.String())
