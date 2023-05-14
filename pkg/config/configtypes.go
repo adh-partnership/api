@@ -35,11 +35,12 @@ type ConfigDatabase struct {
 }
 
 type ConfigEmail struct {
-	Host     string `json:"host"`
-	Port     string `json:"port"`
-	User     string `json:"user"`
-	Password string `json:"password"`
-	From     string `json:"from"`
+	Host        string `json:"host"`
+	Port        string `json:"port"`
+	User        string `json:"user"`
+	Password    string `json:"password"`
+	From        string `json:"from"`
+	TemplateDir string `json:"template_dir"`
 }
 
 type ConfigSession struct {
@@ -113,7 +114,10 @@ type ConfigFacilityStats struct {
 }
 
 type ConfigFacilityVisiting struct {
-	MinRating string `json:"min_rating"`
+	MinRating    string `json:"min_rating"`
+	SendWelcome  bool   `json:"send_welcome"`
+	SendRemoval  bool   `json:"send_removal"`
+	SendRejected bool   `json:"send_rejected"`
 }
 
 type ConfigFacilityActivity struct {

@@ -177,23 +177,24 @@ func putVisitor(c *gin.Context) {
 
 	switch act.Action {
 	case "accept":
-		go func() {
-			err := email.Send(
-				app.User.Email,
-				"",
-				"Visitor Application Accepted",
-				[]string{},
-				"visitor_accepted",
-				map[string]interface{}{
-					"FirstName": app.User.FirstName,
-					"LastName":  app.User.LastName,
-					"Rating":    app.User.Rating.Short,
-				},
-			)
-			if err != nil {
-				log.Errorf("Error sending visitor accepted email to %s: %s", app.User.Email, err)
-			}
-		}()
+		if config.Cfg.Facility.Visiting.SendWelcome {
+			go func() {
+				err := email.Send(
+					app.User.Email,
+					"",
+					"",
+					email.Templates["visiting_added"],
+					map[string]interface{}{
+						"FirstName": app.User.FirstName,
+						"LastName":  app.User.LastName,
+						"Rating":    app.User.Rating.Short,
+					},
+				)
+				if err != nil {
+					log.Errorf("Error sending visitor accepted email to %s: %s", app.User.Email, err)
+				}
+			}()
+		}
 		status, err := vatusa.AddVisitingController(fmt.Sprint(app.User.CID))
 		if err != nil || status > 299 {
 			log.Errorf("Error adding visiting controller to VATUSA for %d: %s", app.User.CID, err)
@@ -211,24 +212,25 @@ func putVisitor(c *gin.Context) {
 			log.Errorf("Error updating user controller type to visitor for %d: %s", app.User.CID, err)
 		}
 	case "deny":
-		go func() {
-			err := email.Send(
-				app.User.Email,
-				"",
-				"Visitor Application Denied",
-				[]string{},
-				"visitor_denied",
-				map[string]interface{}{
-					"FirstName": app.User.FirstName,
-					"LastName":  app.User.LastName,
-					"Rating":    app.User.Rating.Short,
-					"Reason":    act.Reason,
-				},
-			)
-			if err != nil {
-				log.Errorf("Error sending visitor rejected email to %s: %s", app.User.Email, err)
-			}
-		}()
+		if config.Cfg.Facility.Visiting.SendRejected {
+			go func() {
+				err := email.Send(
+					app.User.Email,
+					"",
+					"",
+					email.Templates["visiting_rejected"],
+					map[string]interface{}{
+						"FirstName": app.User.FirstName,
+						"LastName":  app.User.LastName,
+						"Rating":    app.User.Rating.Short,
+						"Reason":    act.Reason,
+					},
+				)
+				if err != nil {
+					log.Errorf("Error sending visitor rejected email to %s: %s", app.User.Email, err)
+				}
+			}()
+		}
 	default:
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return

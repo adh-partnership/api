@@ -148,8 +148,7 @@ func handleWarning() {
 				controller.Email,
 				"",
 				"",
-				[]string{},
-				"activity_warning",
+				email.Templates["inactive_warning"],
 				map[string]interface{}{
 					"FirstName": controller.FirstName,
 					"LastName":  controller.LastName,

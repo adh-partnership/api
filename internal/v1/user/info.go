@@ -8,10 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/adh-partnership/api/pkg/auth"
+	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
+	"github.com/adh-partnership/api/pkg/email"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
@@ -162,6 +164,23 @@ func patchUser(c *gin.Context) {
 			status, err = vatusa.RemoveController(c.Param("cid"), user.CID, req.RemovalReason)
 		} else if oldUser.ControllerType == constants.ControllerTypeVisitor {
 			status, err = vatusa.RemoveVisitingController(c.Param("cid"), user.CID, req.RemovalReason)
+			if config.Cfg.Facility.Visiting.SendRemoval {
+				go func(user *models.User) {
+					err := email.Send(
+						user.Email,
+						"",
+						"",
+						email.Templates["visiting_removed"],
+						map[string]interface{}{
+							"FirstName": user.FirstName,
+							"LastName":  user.LastName,
+						},
+					)
+					if err != nil {
+						log.Errorf("Error sending visiting controller removal email: %s", err)
+					}
+				}(oldUser)
+			}
 		} else if req.ControllerType == constants.ControllerTypeVisitor {
 			status, err = vatusa.AddVisitingController(c.Param("cid"))
 		} else {
