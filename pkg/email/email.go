@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Shopify/gomail"
 	"istio.io/pkg/log"
 	"sigs.k8s.io/yaml"
 
-	"github.com/Shopify/gomail"
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
 )
@@ -120,7 +120,7 @@ func Send(to, from, subject string, template string, data map[string]interface{}
 	m.SetHeader("To", strings.Split(to, ", ")...)
 	m.SetHeader("Cc", strings.Split(cc, ", ")...)
 	m.SetHeader("Bcc", strings.Split(bcc, ", ")...)
-	m.SetHeader("Subject", subj)
+	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", body.String())
 
 	if err := d.DialAndSend(m); err != nil {
