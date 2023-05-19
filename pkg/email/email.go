@@ -119,6 +119,8 @@ func Send(to, from, subject string, template string, data map[string]interface{}
 	d := gomail.NewDialer(config.Cfg.Email.Host, i, config.Cfg.Email.User, config.Cfg.Email.Password)
 	d.StartTLSPolicy = gomail.OpportunisticStartTLS
 
+	log.Infof("Generating message... from=%s, to=%s, cc=%s, bcc=%s, subject=%s", from, to, cc, bcc, subject)
+
 	m := gomail.NewMessage()
 	m.SetHeader("From", from)
 	m.SetHeader("To", strings.Split(to, ", ")...)
