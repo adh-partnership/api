@@ -95,10 +95,14 @@ func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string,
 }
 
 func Send(to, from, subject string, template string, data map[string]interface{}) error {
+	log.Infof("Sending email to %s", to)
+	log.Infof("from=%s, subject=%s, template=%s, data=%v", from, subject, template, data)
 	body, subj, cc, bcc, err := BuildBody(template, data)
 	if err != nil {
 		return fmt.Errorf("error building email body: %s", err)
 	}
+
+	log.Infof("template built, subj=%s, cc=%s, bcc=%s", subj, cc, bcc)
 
 	if from == "" {
 		from = config.Cfg.Email.From
