@@ -4,13 +4,15 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
-	"net/smtp"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 
+	"istio.io/pkg/log"
 	"sigs.k8s.io/yaml"
 
+	"github.com/Shopify/gomail"
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
 )
@@ -44,12 +46,12 @@ func fetchRole(role string) []string {
 
 func GetTemplate(name string) (*Template, error) {
 	if _, err := os.Stat(config.Cfg.Email.TemplateDir + "/" + name + ".tmpl"); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error stating template: %s", err)
 	}
 
 	f, err := os.Open(config.Cfg.Email.TemplateDir + "/" + name + ".tmpl")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error opening template: %s", err)
 	}
 	defer f.Close()
 
@@ -62,7 +64,7 @@ func GetTemplate(name string) (*Template, error) {
 	templ := &Template{}
 	err = yaml.Unmarshal(buf.Bytes(), &templ)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error unmarshalling template: %s", err)
 	}
 
 	return templ, nil
@@ -71,7 +73,7 @@ func GetTemplate(name string) (*Template, error) {
 func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string, string, string, error) {
 	templ, err := GetTemplate(name)
 	if err != nil {
-		return nil, "", "", "", err
+		return nil, "", "", "", fmt.Errorf("error getting template: %s", err)
 	}
 
 	t, err := template.New(name).Funcs(template.FuncMap{
@@ -80,38 +82,22 @@ func BuildBody(name string, data map[string]interface{}) (*bytes.Buffer, string,
 		"findRole":  fetchRole,
 	}).Parse(templ.Body)
 	if err != nil {
-		return nil, "", "", "", err
+		return nil, "", "", "", fmt.Errorf("error parsing template: %s", err)
 	}
 
 	out := new(bytes.Buffer)
 	err = t.Execute(out, data)
 	if err != nil {
-		return nil, "", "", "", err
+		return nil, "", "", "", fmt.Errorf("error executing template: %s", err)
 	}
 
 	return out, templ.Subject, strings.Join(templ.CC, ", "), strings.Join(templ.BCC, ", "), nil
 }
 
-func BuildEmail(from, to, subject string, cc string, body *bytes.Buffer) []byte {
-	var msg string
-	msg = "To: " + to + "\r\n"
-	msg += "From: " + from + "\r\n"
-	if len(cc) > 0 {
-		msg += "Cc: " + cc + "\n"
-	}
-	msg += "Subject: " + subject + "\r\n"
-	msg += fmt.Sprintf(`MIME-Version: 1.0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-%s`, body.String())
-	return []byte(msg)
-}
-
 func Send(to, from, subject string, template string, data map[string]interface{}) error {
 	body, subj, cc, bcc, err := BuildBody(template, data)
 	if err != nil {
-		return err
+		return fmt.Errorf("error building email body: %s", err)
 	}
 
 	if from == "" {
@@ -122,17 +108,25 @@ func Send(to, from, subject string, template string, data map[string]interface{}
 		subject = subj
 	}
 
-	msg := BuildEmail(from, to, subject, cc, body)
-
-	var tolist []string
-	tolist = append(tolist, to)
-	if len(cc) > 0 {
-		tolist = append(tolist, strings.Split(cc, ", ")...)
+	i, err := strconv.Atoi(config.Cfg.Email.Port)
+	if err != nil {
+		return err
 	}
-	if len(bcc) > 0 {
-		tolist = append(tolist, strings.Split(bcc, ", ")...)
+	d := gomail.NewDialer(config.Cfg.Email.Host, i, config.Cfg.Email.User, config.Cfg.Email.Password)
+	d.StartTLSPolicy = gomail.OpportunisticStartTLS
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", from)
+	m.SetHeader("To", strings.Split(to, ", ")...)
+	m.SetHeader("Cc", strings.Split(cc, ", ")...)
+	m.SetHeader("Bcc", strings.Split(bcc, ", ")...)
+	m.SetHeader("Subject", subj)
+	m.SetBody("text/html", body.String())
+
+	if err := d.DialAndSend(m); err != nil {
+		log.Errorf("Failed to send email: %s", err)
+		return err
 	}
 
-	auth := smtp.PlainAuth("", config.Cfg.Email.User, config.Cfg.Email.Password, config.Cfg.Email.Host)
-	return smtp.SendMail(config.Cfg.Email.Host+":"+config.Cfg.Email.Port, auth, from, tolist, msg)
+	return nil
 }
