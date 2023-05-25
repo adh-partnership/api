@@ -39,21 +39,6 @@ definitions:
         example: 0.5
         type: number
     type: object
-  dto.EmailTemplateRequest:
-    properties:
-      body:
-        type: string
-      cc:
-        type: string
-      edit_group:
-        type: string
-      subject:
-        type: string
-    required:
-    - body
-    - edit_group
-    - subject
-    type: object
   dto.EventPositionRequest:
     properties:
       cid:
@@ -138,6 +123,15 @@ definitions:
       title:
         type: string
       updated_at:
+        type: string
+    type: object
+  dto.FacilityReportDTO:
+    properties:
+      duration:
+        type: integer
+      logon_time:
+        type: string
+      position:
         type: string
     type: object
   dto.FacilityStaffResponse:
@@ -334,11 +328,11 @@ definitions:
     type: object
   dto.TrainingRequestSlot:
     properties:
-      end_time:
+      end:
         type: string
       id:
         type: string
-      start_time:
+      start:
         type: string
     type: object
   dto.UserResponse:
@@ -651,36 +645,6 @@ definitions:
         example: https://www.example.com/document.pdf
         type: string
     type: object
-  models.EmailTemplate:
-    description: Email Templates, there will be no "new" for this object. These will
-      be pre-existing but can be edited.
-    properties:
-      body:
-        description: HTML-formatted email body
-        example: <h1>Welcome to the Virtual Denver ARTCC</h1>
-        type: string
-      cc:
-        example: atm@denartcc.org,datm@denartcc.org
-        type: string
-      created_at:
-        example: "2020-01-01T00:00:00Z"
-        type: string
-      edit_group:
-        example: admin
-        type: string
-      id:
-        example: 1
-        type: integer
-      name:
-        example: welcome_message
-        type: string
-      subject:
-        example: Welcome to the Virtual Denver ARTCC
-        type: string
-      updated_at:
-        example: "2020-01-01T00:00:00Z"
-        type: string
-    type: object
   models.Event:
     properties:
       banner:
@@ -934,7 +898,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1088,66 +1052,6 @@ paths:
       summary: Get Airport Weather
       tags:
       - Airports
-  /v1/email/templates/:name:
-    get:
-      description: Get Email Template(s)
-      parameters:
-      - description: Name of email template
-        in: path
-        name: name
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.EmailTemplate'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Email Template(s)
-      tags:
-      - Email
-    post:
-      description: Update Email Template
-      parameters:
-      - description: Name of email template
-        in: path
-        name: name
-        required: true
-        type: string
-      - description: Email Template
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.EmailTemplateRequest'
-      responses:
-        "204":
-          description: ""
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Update Email Template
-      tags:
-      - Email
   /v1/events:
     get:
       description: Get Upcoming Events
@@ -1586,7 +1490,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1607,7 +1511,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1731,6 +1635,48 @@ paths:
           schema:
             $ref: '#/definitions/response.R'
       summary: Get Online Controllers
+      tags:
+      - Stats
+  /v1/stats/reports/facility:
+    get:
+      description: Get Historical Stats
+      parameters:
+      - description: Prefix, ie ANC
+        in: query
+        name: prefix
+        type: string
+      - description: Suffix, ie CTR
+        in: query
+        name: suffix
+        type: string
+      - description: From, ie 2020-01-01
+        in: query
+        name: from
+        type: string
+      - description: To, ie 2020-01-31
+        in: query
+        name: to
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.FacilityReportDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get Historical Stats
       tags:
       - Stats
   /v1/storage:

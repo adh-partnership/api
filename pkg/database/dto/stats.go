@@ -1,9 +1,17 @@
 package dto
 
 import (
+	"time"
+
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
 )
+
+type FacilityReportDTO struct {
+	Position  string
+	Duration  int
+	LogonTime *time.Time `json:"logon_time"`
+}
 
 type ControllerStats struct {
 	CID               uint    `json:"cid" example:"1"`
@@ -23,6 +31,18 @@ type OnlineController struct {
 	Position    string        `json:"position" example:"ANC_00_CTR"`
 	Frequency   string        `json:"frequency" example:"118.000"`
 	OnlineSince string        `json:"online_since" example:"2020-01-01T00:00:00Z"`
+}
+
+func ConvertControllerStatsToFacilityReport(stats []*models.ControllerStat) []*FacilityReportDTO {
+	var facilityReport []*FacilityReportDTO
+	for _, stat := range stats {
+		facilityReport = append(facilityReport, &FacilityReportDTO{
+			Position:  stat.Position,
+			Duration:  stat.Duration,
+			LogonTime: &stat.LogonTime,
+		})
+	}
+	return facilityReport
 }
 
 func GetDTOForUserAndMonth(user *models.User, month int, year int) (*ControllerStats, error) {

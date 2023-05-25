@@ -76,3 +76,39 @@ func getHistoricalStats(c *gin.Context) {
 
 	response.Respond(c, http.StatusOK, ret)
 }
+
+// Get Historical Stats
+// @Summary Get Historical Stats
+// @Description Get Historical Stats
+// @Tags Stats
+// @Param prefix query string false "Prefix, ie ANC"
+// @Param suffix query string false "Suffix, ie CTR"
+// @Param from query string false "From, ie 2020-01-01"
+// @Param to query string false "To, ie 2020-01-31"
+// @Success 200 {object} []dto.FacilityReportDTO
+// @Failure 400 {object} response.R
+// @Failure 403 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/stats/reports/facility [get]
+func getFacilityReport(c *gin.Context) {
+	results := []*models.ControllerStat{}
+	if c.Query("prefix") != "" {
+		database.DB.Where("position LIKE ?", c.Query("prefix")+"_%")
+	}
+	if c.Query("suffix") != "" {
+		database.DB.Where("position LIKE ?", "%_"+c.Query("suffix"))
+	}
+	if c.Query("from") != "" {
+		database.DB.Where("logon_time >= ?", c.Query("from"))
+	}
+	if c.Query("to") != "" {
+		database.DB.Where("logon_time <= ?", c.Query("to"))
+	}
+
+	if err := database.DB.Find(&results).Error; err != nil {
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	response.Respond(c, http.StatusOK, dto.ConvertControllerStatsToFacilityReport(results))
+}

@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -270,97 +270,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.AirportWeatherDTO"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/email/templates/:name": {
-            "get": {
-                "description": "Get Email Template(s)",
-                "tags": [
-                    "Email"
-                ],
-                "summary": "Get Email Template(s)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Name of email template",
-                        "name": "name",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.EmailTemplate"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Update Email Template",
-                "tags": [
-                    "Email"
-                ],
-                "summary": "Update Email Template",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Name of email template",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Email Template",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.EmailTemplateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
                         }
                     }
                 }
@@ -1026,7 +935,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1059,7 +968,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1226,6 +1135,70 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/dto.OnlineController"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/stats/reports/facility": {
+            "get": {
+                "description": "Get Historical Stats",
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get Historical Stats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Prefix, ie ANC",
+                        "name": "prefix",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Suffix, ie CTR",
+                        "name": "suffix",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "From, ie 2020-01-01",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "To, ie 2020-01-31",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.FacilityReportDTO"
                             }
                         }
                     },
@@ -2723,28 +2696,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.EmailTemplateRequest": {
-            "type": "object",
-            "required": [
-                "body",
-                "edit_group",
-                "subject"
-            ],
-            "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "cc": {
-                    "type": "string"
-                },
-                "edit_group": {
-                    "type": "string"
-                },
-                "subject": {
-                    "type": "string"
-                }
-            }
-        },
         "dto.EventPositionRequest": {
             "type": "object",
             "properties": {
@@ -2873,6 +2824,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.FacilityReportDTO": {
+            "type": "object",
+            "properties": {
+                "duration": {
+                    "type": "integer"
+                },
+                "logon_time": {
+                    "type": "string"
+                },
+                "position": {
                     "type": "string"
                 }
             }
@@ -3169,13 +3134,13 @@ const docTemplate = `{
         "dto.TrainingRequestSlot": {
             "type": "object",
             "properties": {
-                "end_time": {
+                "end": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "start_time": {
+                "start": {
                     "type": "string"
                 }
             }
@@ -3608,45 +3573,6 @@ const docTemplate = `{
                 "url": {
                     "type": "string",
                     "example": "https://www.example.com/document.pdf"
-                }
-            }
-        },
-        "models.EmailTemplate": {
-            "description": "Email Templates, there will be no \"new\" for this object. These will be pre-existing but can be edited.",
-            "type": "object",
-            "properties": {
-                "body": {
-                    "description": "HTML-formatted email body",
-                    "type": "string",
-                    "example": "\u003ch1\u003eWelcome to the Virtual Denver ARTCC\u003c/h1\u003e"
-                },
-                "cc": {
-                    "type": "string",
-                    "example": "atm@denartcc.org,datm@denartcc.org"
-                },
-                "created_at": {
-                    "type": "string",
-                    "example": "2020-01-01T00:00:00Z"
-                },
-                "edit_group": {
-                    "type": "string",
-                    "example": "admin"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "welcome_message"
-                },
-                "subject": {
-                    "type": "string",
-                    "example": "Welcome to the Virtual Denver ARTCC"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "example": "2020-01-01T00:00:00Z"
                 }
             }
         },
