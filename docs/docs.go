@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -935,7 +935,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -968,7 +968,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
