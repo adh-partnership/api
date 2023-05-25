@@ -77,9 +77,9 @@ func getHistoricalStats(c *gin.Context) {
 	response.Respond(c, http.StatusOK, ret)
 }
 
-// Get Historical Stats
-// @Summary Get Historical Stats
-// @Description Get Historical Stats
+// Get Facility Report
+// @Summary Get Facility Stats Report
+// @Description Get Facility Stats Report
 // @Tags Stats
 // @Param prefix query string false "Prefix, ie ANC"
 // @Param suffix query string false "Suffix, ie CTR"
