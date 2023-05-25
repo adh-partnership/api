@@ -23,8 +23,11 @@ jobs:
           git config --global user.email "dhawton+adh@gmail.com"
           git checkout -b chore/upgrade-dependencies-$(date +%Y-%m-%d)
           git push --set-upstream origin chore/upgrade-dependencies-$(date +%Y-%m-%d)
-      - name: Install go dependencies
-        run: go get -v ./...
+      - name: Bump dependencies
+        run: |
+          go get -u ./...
+          go mod tidy
+          go mod vendor
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.ADH_BOT_TOKEN }}

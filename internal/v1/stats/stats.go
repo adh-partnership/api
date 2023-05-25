@@ -92,20 +92,21 @@ func getHistoricalStats(c *gin.Context) {
 // @Router /v1/stats/reports/facility [get]
 func getFacilityReport(c *gin.Context) {
 	results := []*models.ControllerStat{}
+	tx := database.DB
 	if c.Query("prefix") != "" {
-		database.DB.Where("position LIKE ?", c.Query("prefix")+"_%")
+		tx = tx.Where("position LIKE ?", c.Query("prefix")+"_%")
 	}
 	if c.Query("suffix") != "" {
-		database.DB.Where("position LIKE ?", "%_"+c.Query("suffix"))
+		tx = tx.Where("position LIKE ?", "%_"+c.Query("suffix"))
 	}
 	if c.Query("from") != "" {
-		database.DB.Where("logon_time >= ?", c.Query("from"))
+		tx = tx.Where("logon_time >= ?", c.Query("from"))
 	}
 	if c.Query("to") != "" {
-		database.DB.Where("logon_time <= ?", c.Query("to"))
+		tx = tx.Where("logon_time <= ?", c.Query("to"))
 	}
 
-	if err := database.DB.Find(&results).Error; err != nil {
+	if err := tx.Find(&results).Error; err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
