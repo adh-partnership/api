@@ -7,6 +7,7 @@ import (
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/email"
+	"github.com/adh-partnership/api/pkg/gin/middleware/auth"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/logger"
 )
@@ -14,7 +15,7 @@ import (
 var log = logger.Logger.WithField("component", "email")
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("/test", getTest)
+	r.GET("/test", auth.NotGuest, auth.InGroup("admin"), getTest)
 }
 
 func getTest(c *gin.Context) {

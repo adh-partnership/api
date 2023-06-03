@@ -2,6 +2,9 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
+	"net/http"
 	"regexp"
 	"strings"
 )
@@ -32,4 +35,25 @@ func StringToSlug(s string) string {
 func DumpToJSON(v interface{}) string {
 	b, _ := json.MarshalIndent(v, "", "  ")
 	return string(b)
+}
+
+func GetAirportTAF(icao string) ([]byte, error) {
+	// Get TAF Data
+	resp, err := http.Get("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/" + icao + ".TXT")
+	if err != nil {
+		return nil, errors.New("internal server error")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, errors.New("not found")
+	}
+
+	// Read Body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, errors.New("internal server error")
+	}
+
+	return body, nil
 }

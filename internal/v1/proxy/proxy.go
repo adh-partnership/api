@@ -10,8 +10,8 @@ import (
 )
 
 // Proxy METAR Data
-// @Summary Proxy METAR Data
-// @Description Proxy METAR Data
+// @Summary [Deprecated] Proxy METAR Data
+// @Description Proxy METAR Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/metar/:icao)
 // @Tags Proxy
 // @Param icao path string true "ICAO, multiple ICAOs can be separated by a comma"
 // @Success 200 {object} string
@@ -45,8 +45,8 @@ func getMetar(c *gin.Context) {
 }
 
 // Proxy TAF Data
-// @Summary Proxy TAF Data
-// @Description Proxy TAF Data
+// @Summary [Deprecated] Proxy TAF Data
+// @Description Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/taf/:icao)
 // @Tags Proxy
 // @Param icao path string true "ICAO"
 // @Success 200 {object} string

@@ -14,6 +14,7 @@ import (
 	"github.com/adh-partnership/api/internal/v1/storage"
 	"github.com/adh-partnership/api/internal/v1/training"
 	"github.com/adh-partnership/api/internal/v1/user"
+	"github.com/adh-partnership/api/internal/v1/weather"
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
@@ -34,6 +35,7 @@ func init() {
 	routeGroups["/storage"] = storage.Routes
 	routeGroups["/training"] = training.Routes
 	routeGroups["/user"] = user.Routes
+	routeGroups["/weather"] = weather.Routes
 }
 
 func SetupRoutes(r *gin.Engine) {

@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Airport struct {
 	ID          string      `json:"arpt_id" example:"FAI" gorm:"primary_key"`
@@ -15,6 +17,10 @@ type Airport struct {
 	Latitude    float32     `json:"latitude" example:"40.639801"`
 	Longitude   float32     `json:"longitude" example:"-73.778900"`
 	ATC         *AirportATC `json:"atc,omitempty" gorm:"foreignKey:ID;references:ID"`
+	HasMETAR    bool        `json:"-"`
+	HasTAF      bool        `json:"-"`
+	METAR       string      `json:"metar,omitempty"`
+	TAF         string      `json:"taf,omitempty"`
 	CreatedAt   time.Time   `json:"created_at" example:"2021-09-01T00:00:00Z"`
 	UpdatedAt   time.Time   `json:"updated_at" example:"2021-09-01T00:00:00Z"`
 }

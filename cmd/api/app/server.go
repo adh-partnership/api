@@ -13,6 +13,7 @@ import (
 	"github.com/adh-partnership/api/pkg/jobs/activity"
 	"github.com/adh-partnership/api/pkg/jobs/dataparser"
 	"github.com/adh-partnership/api/pkg/jobs/roster"
+	"github.com/adh-partnership/api/pkg/jobs/weather"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/server"
 )
@@ -57,6 +58,11 @@ func newServerCommand() *cli.Command {
 			}
 			log.Info(" - VATSIM Data Parser")
 			err = dataparser.Initialize(s)
+			if err != nil {
+				return err
+			}
+			log.Info(" - Weather Data Parser")
+			err = weather.ScheduleJobs(s)
 			if err != nil {
 				return err
 			}
