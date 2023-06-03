@@ -18,13 +18,21 @@ var log = logger.Logger.WithField("component", "weather")
 
 func populate(c *gin.Context) {
 	go func() {
-		airports := []models.Airport{}
-		if err := database.DB.Find(&airports).Error; err != nil {
-			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		// We use charts here because charts is already filtered to the areas we may want, at least for AK and HI... ZDV might be another issue
+		// since charts are generally filtered by state and ZDV has some partial state coverage... but if we cache weather for those areas, is
+		// it really a problem?
+		charts := []models.AirportChart{}
+		if err := database.DB.Distinct("airport_id").Find(&charts).Error; err != nil {
+			log.Errorf("Failed to get charts: %s", err.Error())
 			return
 		}
 
-		for _, airport := range airports {
+		for _, chart := range charts {
+			airport, err := database.FindAirportByID(chart.AirportID)
+			if err != nil {
+				continue
+			}
+
 			metar, err := idsWeather.GetMetar(airport.ICAO)
 			if err != nil {
 				continue
