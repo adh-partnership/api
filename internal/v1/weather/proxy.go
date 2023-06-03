@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-
 	idsWeather "github.com/vpaza/ids/pkg/weather"
 
 	"github.com/adh-partnership/api/pkg/database"
