@@ -43,12 +43,14 @@ func ScheduleJobs(s *gocron.Scheduler) error {
 func UpdateRoster() error {
 	controllers, err := vatusa.GetFacilityRoster("both")
 	if err != nil {
+		log.Errorf("Error getting facility roster: %s", err)
 		return err
 	}
 
 	updateid, _ := gonanoid.New(24)
 	err = facility.UpdateControllerRoster(controllers, updateid)
 	if err != nil {
+		log.Errorf("Error updating controller roster: %s", err)
 		return err
 	}
 
@@ -57,6 +59,7 @@ func UpdateRoster() error {
 		Updates(map[string]interface{}{
 			"operating_initials": "",
 		}).Error; err != nil {
+		log.Errorf("Error cleaning up operating initials: %s", err)
 		return err
 	}
 
@@ -67,6 +70,7 @@ func UpdateRoster() error {
 			ControllerType: constants.ControllerTypeNone,
 			UpdateID:       updateid,
 		}).Error; err != nil {
+		log.Errorf("Error cleaning up users not in VATUSA roster: %s", err)
 		return err
 	}
 
