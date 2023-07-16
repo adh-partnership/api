@@ -79,7 +79,7 @@ jobs:
       run: cosign sign --key env://COSIGN_PRIVATE_KEY ${{ env.image_digest_sha }} ${{ env.image_digest_branch }} -y
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PRIVATE_KEY_PASSWORD }}
-        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}      
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
 ###########################################################################################################
   deploy-kzdv:
     name: Update KZDV GitOps Repo
@@ -109,7 +109,7 @@ jobs:
       run: |-
         cd $GITHUB_WORKSPACE/gitops
         git config user.name "${{ secrets.GH_PIPELINE_USERNAME }}"
-        git config user.email "wm@denartcc.org"
+        git config user.email "wm@zdvartcc.org"
     - name: Setup Kustomize
       uses: imranismail/setup-kustomize@v2
       with:

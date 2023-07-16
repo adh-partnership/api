@@ -789,7 +789,7 @@ definitions:
         example: USA
         type: string
       email:
-        example: wm@denartcc.org
+        example: wm@zdvartcc.org
         type: string
       exemptedFromActivity:
         example: false
@@ -874,7 +874,7 @@ definitions:
       status:
         type: string
     type: object
-host: network.denartcc.org
+host: network.zdvartcc.org
 info:
   contact:
     email: daniel@hawton.org

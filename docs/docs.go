@@ -3788,7 +3788,7 @@ const docTemplate = `{
                 },
                 "email": {
                     "type": "string",
-                    "example": "wm@denartcc.org"
+                    "example": "wm@zdvartcc.org"
                 },
                 "exemptedFromActivity": {
                     "type": "boolean",
@@ -3913,7 +3913,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "network.denartcc.org",
+	Host:             "network.zdvartcc.org",
 	BasePath:         "/v1",
 	Schemes:          []string{},
 	Title:            "ADH API",

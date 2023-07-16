@@ -8,7 +8,7 @@ type User struct {
 	CID               uint   `json:"cid" gorm:"primaryKey" example:"876594"`
 	FirstName         string `json:"first_name" gorm:"type:varchar(128)" example:"Daniel"`
 	LastName          string `json:"last_name" gorm:"type:varchar(128)" example:"Hawton"`
-	Email             string `json:"email" gorm:"type:varchar(128)" example:"wm@denartcc.org"`
+	Email             string `json:"email" gorm:"type:varchar(128)" example:"wm@zdvartcc.org"`
 	OperatingInitials string `json:"operating_initials" gorm:"type:varchar(2)" example:"DH"`
 	// Must be one of: none, active, inactive, loa
 	ControllerType string `json:"controllerType" gorm:"type:varchar(10)" example:"home"`

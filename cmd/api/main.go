@@ -26,7 +26,7 @@ func main() {
 // @license.name Apache
 // @license.URL https://github.com/adh-partnership/api/blob/main/LICENSE
 
-// @host network.denartcc.org
+// @host network.zdvartcc.org
 // @BasePath /v1
 // @query.collection.format multi
 
