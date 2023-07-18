@@ -22,10 +22,10 @@ func handle(method, endpoint string, formdata map[string]string) (int, []byte, e
 	}
 	data := url.Values{}
 	q := u.Query()
-	// q.Set("apikey", config.Cfg.VATUSA.APIKey)
-	// if config.Cfg.VATUSA.TestMode {
-	// 	q.Set("test", "true")
-	// }
+	q.Set("apikey", config.Cfg.VATUSA.APIKey)
+	if config.Cfg.VATUSA.TestMode {
+		q.Set("test", "true")
+	}
 
 	if method == "DELETE" {
 		// VATUSA seems to have a problem with form data on delete requests... so add to query
