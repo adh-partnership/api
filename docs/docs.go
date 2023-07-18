@@ -1076,12 +1076,29 @@ const docTemplate = `{
                     "Staffing"
                 ],
                 "summary": "Submit a staffing request",
+                "parameters": [
+                    {
+                        "description": "Request Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.StaffingRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "202": {
                         "description": ""
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid form submission",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in",
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
@@ -3121,6 +3138,40 @@ const docTemplate = `{
                 "position": {
                     "type": "string",
                     "example": "ANC_00_CTR"
+                }
+            }
+        },
+        "dto.StaffingRequest": {
+            "type": "object",
+            "required": [
+                "arrival",
+                "date",
+                "departure",
+                "end",
+                "pilots",
+                "start"
+            ],
+            "properties": {
+                "arrival": {
+                    "type": "string"
+                },
+                "comments": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "departure": {
+                    "type": "string"
+                },
+                "end": {
+                    "type": "string"
+                },
+                "pilots": {
+                    "type": "string"
+                },
+                "start": {
+                    "type": "string"
                 }
             }
         },

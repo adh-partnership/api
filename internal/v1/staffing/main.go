@@ -21,9 +21,11 @@ func Routes(r *gin.RouterGroup) {
 // @Summary Submit a staffing request
 // @Description Submit a staffing request
 // @Tags Staffing
+// @Param data body dto.StaffingRequest true "Request Data"
 // @Success 202
-// @Success 400 {object} response.R
-// @Success 500 {object} response.R
+// @Failure 400 {object} response.R "Invalid form submission"
+// @Failure 401 {object} response.R "Not logged in"
+// @Failure 500 {object} response.R
 // @Router /v1/staffing/ [post]
 func requestStaffing(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
