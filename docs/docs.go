@@ -983,11 +983,11 @@ const docTemplate = `{
         },
         "/v1/proxy/metar/{icao}": {
             "get": {
-                "description": "Proxy METAR Data",
+                "description": "Proxy METAR Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/metar/:icao)",
                 "tags": [
                     "Proxy"
                 ],
-                "summary": "Proxy METAR Data",
+                "summary": "[Deprecated] Proxy METAR Data",
                 "parameters": [
                     {
                         "type": "string",
@@ -1027,11 +1027,11 @@ const docTemplate = `{
         },
         "/v1/proxy/taf/{icao}": {
             "get": {
-                "description": "Proxy TAF Data",
+                "description": "Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/taf/:icao)",
                 "tags": [
                     "Proxy"
                 ],
-                "summary": "Proxy TAF Data",
+                "summary": "[Deprecated] Proxy TAF Data",
                 "parameters": [
                     {
                         "type": "string",
@@ -1056,6 +1056,32 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/staffing/": {
+            "post": {
+                "description": "Submit a staffing request",
+                "tags": [
+                    "Staffing"
+                ],
+                "summary": "Submit a staffing request",
+                "responses": {
+                    "202": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
@@ -1161,11 +1187,11 @@ const docTemplate = `{
         },
         "/v1/stats/reports/facility": {
             "get": {
-                "description": "Get Historical Stats",
+                "description": "Get Facility Stats Report",
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get Historical Stats",
+                "summary": "Get Facility Stats Report",
                 "parameters": [
                     {
                         "type": "string",
@@ -2638,6 +2664,94 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/weather/metar/{icao}": {
+            "get": {
+                "description": "Get METAR Data",
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get METAR Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ICAO",
+                        "name": "icao",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/weather/taf/{icao}": {
+            "get": {
+                "description": "Get TAF Data",
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get TAF Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ICAO",
+                        "name": "icao",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -3389,6 +3503,9 @@ const docTemplate = `{
                     "type": "number",
                     "example": -73.7789
                 },
+                "metar": {
+                    "type": "string"
+                },
                 "resp_artcc_id": {
                     "type": "string",
                     "example": "ZNY"
@@ -3396,6 +3513,9 @@ const docTemplate = `{
                 "state_code": {
                     "type": "string",
                     "example": "AK"
+                },
+                "taf": {
+                    "type": "string"
                 },
                 "twr_type_code": {
                     "type": "string",

@@ -508,11 +508,15 @@ definitions:
       longitude:
         example: -73.7789
         type: number
+      metar:
+        type: string
       resp_artcc_id:
         example: ZNY
         type: string
       state_code:
         example: AK
+        type: string
+      taf:
         type: string
       twr_type_code:
         example: T
@@ -1522,7 +1526,8 @@ paths:
       - overflight
   /v1/proxy/metar/{icao}:
     get:
-      description: Proxy METAR Data
+      description: Proxy METAR Data. Deprecated. VATSIM's Cloudflare front may throttle
+        this, so use our job fetched data where possible (/v1/weather/metar/:icao)
       parameters:
       - description: ICAO, multiple ICAOs can be separated by a comma
         in: path
@@ -1546,12 +1551,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Proxy METAR Data
+      summary: '[Deprecated] Proxy METAR Data'
       tags:
       - Proxy
   /v1/proxy/taf/{icao}:
     get:
-      description: Proxy TAF Data
+      description: Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle
+        this, so use our job fetched data where possible (/v1/weather/taf/:icao)
       parameters:
       - description: ICAO
         in: path
@@ -1575,9 +1581,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Proxy TAF Data
+      summary: '[Deprecated] Proxy TAF Data'
       tags:
       - Proxy
+  /v1/staffing/:
+    post:
+      description: Submit a staffing request
+      responses:
+        "202":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Submit a staffing request
+      tags:
+      - Staffing
   /v1/stats/historical/{year}/{month}:
     get:
       description: Get Historical Stats
@@ -1639,7 +1662,7 @@ paths:
       - Stats
   /v1/stats/reports/facility:
     get:
-      description: Get Historical Stats
+      description: Get Facility Stats Report
       parameters:
       - description: Prefix, ie ANC
         in: query
@@ -1676,7 +1699,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Get Historical Stats
+      summary: Get Facility Stats Report
       tags:
       - Stats
   /v1/storage:
@@ -2607,6 +2630,64 @@ paths:
       summary: Handle Visitor Application
       tags:
       - user
+  /v1/weather/metar/{icao}:
+    get:
+      description: Get METAR Data
+      parameters:
+      - description: ICAO
+        in: path
+        name: icao
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get METAR Data
+      tags:
+      - Weather
+  /v1/weather/taf/{icao}:
+    get:
+      description: Get TAF Data
+      parameters:
+      - description: ICAO
+        in: path
+        name: icao
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get TAF Data
+      tags:
+      - Weather
 securityDefinitions:
   BasicAuth:
     type: basic
