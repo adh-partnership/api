@@ -249,27 +249,21 @@ definitions:
     type: object
   dto.StaffingRequest:
     properties:
-      arrival:
+      arrivalAirport:
         type: string
       comments:
         type: string
       date:
         type: string
-      departure:
-        type: string
-      end:
+      departureAirport:
         type: string
       pilots:
-        type: string
-      start:
-        type: string
+        type: integer
     required:
-    - arrival
+    - arrivalAirport
     - date
-    - departure
-    - end
+    - departureAirport
     - pilots
-    - start
     type: object
   dto.StorageRequest:
     properties:

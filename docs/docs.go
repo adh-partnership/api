@@ -3144,15 +3144,13 @@ const docTemplate = `{
         "dto.StaffingRequest": {
             "type": "object",
             "required": [
-                "arrival",
+                "arrivalAirport",
                 "date",
-                "departure",
-                "end",
-                "pilots",
-                "start"
+                "departureAirport",
+                "pilots"
             ],
             "properties": {
-                "arrival": {
+                "arrivalAirport": {
                     "type": "string"
                 },
                 "comments": {
@@ -3161,17 +3159,11 @@ const docTemplate = `{
                 "date": {
                     "type": "string"
                 },
-                "departure": {
-                    "type": "string"
-                },
-                "end": {
+                "departureAirport": {
                     "type": "string"
                 },
                 "pilots": {
-                    "type": "string"
-                },
-                "start": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },

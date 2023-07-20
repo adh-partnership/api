@@ -2,10 +2,8 @@ package dto
 
 type StaffingRequest struct {
 	Date             string `json:"date" binding:"required"`
-	Start            string `json:"start" binding:"required"`
-	End              string `json:"end" binding:"required"`
-	DepartureAirport string `json:"departure" binding:"required"`
-	ArrivalAirport   string `json:"arrival" binding:"required"`
-	Pilots           string `json:"pilots" binding:"required"`
+	DepartureAirport string `json:"departureAirport" binding:"required"`
+	ArrivalAirport   string `json:"arrivalAirport" binding:"required"`
+	Pilots           int    `json:"pilots" binding:"required"`
 	Comments         string `json:"comments"`
 }

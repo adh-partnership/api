@@ -3,6 +3,7 @@ package staffing
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
@@ -40,14 +41,11 @@ func requestStaffing(c *gin.Context) {
 	_ = discord.NewMessage().
 		SetContent("New staffing request").
 		AddEmbed(discord.NewEmbed().
-			AddField(discord.NewField().SetName("Requester").SetValue(fmt.Sprintf("%s %s", user.FirstName, user.LastName))).
-			AddField(discord.NewField().SetName("CID").SetValue(fmt.Sprintf("%d", user.CID))).
+			AddField(discord.NewField().SetName("Requester").SetValue(fmt.Sprintf("%s %s (%d)", user.FirstName, user.LastName, user.CID))).
 			AddField(discord.NewField().SetName("Date").SetValue(dto.Date)).
-			AddField(discord.NewField().SetName("Start").SetValue(dto.Start)).
-			AddField(discord.NewField().SetName("End").SetValue(dto.End)).
 			AddField(discord.NewField().SetName("DepartureAirport").SetValue(dto.DepartureAirport)).
 			AddField(discord.NewField().SetName("ArrivalAirport").SetValue(dto.ArrivalAirport)).
-			AddField(discord.NewField().SetName("Pilots").SetValue(dto.Pilots)).
+			AddField(discord.NewField().SetName("Pilots").SetValue(strconv.Itoa(dto.Pilots))).
 			AddField(discord.NewField().SetName("Comments").SetValue(dto.Comments)),
 		).Send("staffing_request")
 
