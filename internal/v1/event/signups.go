@@ -38,7 +38,7 @@ func postEventSignup(c *gin.Context) {
 	}
 
 	data := &dto.EventSignupRequest{}
-	if err := c.ShouldBindJSON(&data); err != nil {
+	if err := c.ShouldBind(&data); err != nil {
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
 	}

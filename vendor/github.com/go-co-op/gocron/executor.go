@@ -37,12 +37,13 @@ const (
 )
 
 type executor struct {
-	jobFunctions chan jobFunction   // the chan upon which the jobFunctions are passed in from the scheduler
-	ctx          context.Context    // used to tell the executor to stop
-	cancel       context.CancelFunc // used to tell the executor to stop
-	wg           *sync.WaitGroup    // used by the scheduler to wait for the executor to stop
-	jobsWg       *sync.WaitGroup    // used by the executor to wait for all jobs to finish
-	singletonWgs *sync.Map          // used by the executor to wait for the singleton runners to complete
+	jobFunctions  chan jobFunction   // the chan upon which the jobFunctions are passed in from the scheduler
+	ctx           context.Context    // used to tell the executor to stop
+	cancel        context.CancelFunc // used to tell the executor to stop
+	wg            *sync.WaitGroup    // used by the scheduler to wait for the executor to stop
+	jobsWg        *sync.WaitGroup    // used by the executor to wait for all jobs to finish
+	singletonWgs  *sync.Map          // used by the executor to wait for the singleton runners to complete
+	skipExecution *atomic.Bool       // used to pause the execution of jobs
 
 	limitMode               limitMode        // when SetMaxConcurrentJobs() is set upon the scheduler
 	limitModeMaxRunningJobs int              // stores the maximum number of concurrently running jobs
@@ -72,7 +73,14 @@ func runJob(f jobFunction) {
 	f.runStartCount.Add(1)
 	f.isRunning.Store(true)
 	callJobFunc(f.eventListeners.onBeforeJobExecution)
-	callJobFuncWithParams(f.function, f.parameters)
+	_ = callJobFuncWithParams(f.eventListeners.beforeJobRuns, []interface{}{f.getName()})
+	err := callJobFuncWithParams(f.function, f.parameters)
+	if err != nil {
+		_ = callJobFuncWithParams(f.eventListeners.onError, []interface{}{f.getName(), err})
+	} else {
+		_ = callJobFuncWithParams(f.eventListeners.noError, []interface{}{f.getName()})
+	}
+	_ = callJobFuncWithParams(f.eventListeners.afterJobRuns, []interface{}{f.getName()})
 	callJobFunc(f.eventListeners.onAfterJobExecution)
 	f.isRunning.Store(false)
 	f.runFinishCount.Add(1)
@@ -80,13 +88,17 @@ func runJob(f jobFunction) {
 
 func (jf *jobFunction) singletonRunner() {
 	jf.singletonRunnerOn.Store(true)
+	jf.singletonWgMu.Lock()
 	jf.singletonWg.Add(1)
+	jf.singletonWgMu.Unlock()
 	for {
 		select {
 		case <-jf.ctx.Done():
 			jf.singletonWg.Done()
 			jf.singletonRunnerOn.Store(false)
+			jf.singletonQueueMu.Lock()
 			jf.singletonQueue = make(chan struct{}, 1000)
+			jf.singletonQueueMu.Unlock()
 			jf.stopped.Store(false)
 			return
 		case <-jf.singletonQueue:
@@ -123,6 +135,7 @@ func (e *executor) start() {
 	e.jobsWg = &sync.WaitGroup{}
 
 	e.stopped = atomic.NewBool(false)
+	e.skipExecution = atomic.NewBool(false)
 
 	e.limitModeQueueMu.Lock()
 	e.limitModeQueue = make(chan jobFunction, 1000)
@@ -161,12 +174,14 @@ func (e *executor) runJob(f jobFunction) {
 		}
 		runJob(f)
 	case singletonMode:
-		e.singletonWgs.Store(f.singletonWg, struct{}{})
+		e.singletonWgs.Store(f.singletonWg, f.singletonWgMu)
 
 		if !f.singletonRunnerOn.Load() {
 			go f.singletonRunner()
 		}
+		f.singletonQueueMu.Lock()
 		f.singletonQueue <- struct{}{}
+		f.singletonQueueMu.Unlock()
 	}
 }
 
@@ -174,7 +189,7 @@ func (e *executor) run() {
 	for {
 		select {
 		case f := <-e.jobFunctions:
-			if e.stopped.Load() {
+			if e.stopped.Load() || e.skipExecution.Load() {
 				continue
 			}
 
@@ -239,8 +254,12 @@ func (e *executor) stop() {
 	e.wg.Wait()
 	if e.singletonWgs != nil {
 		e.singletonWgs.Range(func(key, value interface{}) bool {
-			if wg, ok := key.(*sync.WaitGroup); ok {
+			wg, wgOk := key.(*sync.WaitGroup)
+			mu, muOk := value.(*sync.Mutex)
+			if wgOk && muOk {
+				mu.Lock()
 				wg.Wait()
+				mu.Unlock()
 			}
 			return true
 		})

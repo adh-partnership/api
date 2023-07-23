@@ -60,7 +60,7 @@ func addEventPosition(c *gin.Context) {
 	}
 
 	data := &dto.EventPositionRequest{}
-	if err := c.ShouldBindJSON(&data); err != nil || data.Position == "" {
+	if err := c.ShouldBind(&data); err != nil || data.Position == "" {
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
@@ -124,7 +124,7 @@ func updateEventPosition(c *gin.Context) {
 	}
 
 	data := &dto.EventPositionRequest{}
-	if err := c.ShouldBindJSON(&data); err != nil {
+	if err := c.ShouldBind(&data); err != nil {
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
 	}
