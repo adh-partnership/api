@@ -23,7 +23,7 @@ func Routes(r *gin.RouterGroup) {
 // @Description Submit a staffing request
 // @Tags Staffing
 // @Param data body dto.StaffingRequest true "Request Data"
-// @Success 202
+// @Success 204
 // @Failure 400 {object} response.R "Invalid form submission"
 // @Failure 401 {object} response.R "Not logged in"
 // @Failure 500 {object} response.R
@@ -32,7 +32,7 @@ func requestStaffing(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
 	var dto dto.StaffingRequest
-	if err := c.ShouldBindJSON(&dto); err != nil {
+	if err := c.ShouldBind(&dto); err != nil {
 		log.Debugf("Error binding dto: %s", err)
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
@@ -49,5 +49,5 @@ func requestStaffing(c *gin.Context) {
 			AddField(discord.NewField().SetName("Comments").SetValue(dto.Comments)),
 		).Send("staffing_request")
 
-	response.RespondBlank(c, http.StatusAccepted)
+	response.RespondBlank(c, http.StatusNoContent)
 }
