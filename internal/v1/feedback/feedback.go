@@ -96,7 +96,7 @@ func getSingleFeedback(c *gin.Context) {
 // @Router /v1/feedback [post]
 func postFeedback(c *gin.Context) {
 	var dto dto.FeedbackRequest
-	if err := c.ShouldBindJSON(&dto); err != nil {
+	if err := c.ShouldBind(&dto); err != nil {
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
 	}
@@ -177,7 +177,7 @@ func postFeedback(c *gin.Context) {
 // @Router /v1/feedback/{id} [patch]
 func patchFeedback(c *gin.Context) {
 	var dtoFeedback dto.FeedbackPatchRequest
-	if err := c.ShouldBindJSON(&dtoFeedback); err != nil {
+	if err := c.ShouldBind(&dtoFeedback); err != nil {
 		response.RespondError(c, http.StatusBadRequest, "Invalid request")
 		return
 	}

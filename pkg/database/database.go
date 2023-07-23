@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"time"
 
+	"dario.cat/mergo"
 	gomysql "github.com/go-sql-driver/mysql"
-	"github.com/imdario/mergo"
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
