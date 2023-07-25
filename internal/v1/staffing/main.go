@@ -5,14 +5,17 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/adh-partnership/api/pkg/database/dto"
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/gin/middleware/auth"
 	"github.com/adh-partnership/api/pkg/gin/response"
-	"github.com/gin-gonic/gin"
-	"istio.io/pkg/log"
+	"github.com/adh-partnership/api/pkg/logger"
 )
+
+var log = logger.Logger.WithField("component", "overflight")
 
 func Routes(r *gin.RouterGroup) {
 	r.POST("", auth.NotGuest, requestStaffing)
