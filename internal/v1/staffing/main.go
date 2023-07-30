@@ -41,7 +41,7 @@ func requestStaffing(c *gin.Context) {
 		return
 	}
 
-	_ = discord.NewMessage().
+	err := discord.NewMessage().
 		SetContent("New staffing request").
 		AddEmbed(discord.NewEmbed().
 			AddField(discord.NewField().SetName("Requester").SetValue(fmt.Sprintf("%s %s (%d)", user.FirstName, user.LastName, user.CID))).
@@ -51,6 +51,9 @@ func requestStaffing(c *gin.Context) {
 			AddField(discord.NewField().SetName("Pilots").SetValue(strconv.Itoa(dto.Pilots))).
 			AddField(discord.NewField().SetName("Comments").SetValue(dto.Comments)),
 		).Send("staffing_request")
+	if err != nil {
+		log.Errorf("Error sending staffing request message to Discord: %s", err.Error())
+	}
 
 	response.RespondBlank(c, http.StatusNoContent)
 }
