@@ -15,7 +15,7 @@ import (
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
-var log = logger.Logger.WithField("component", "overflight")
+var log = logger.Logger.WithField("component", "staffing")
 
 func Routes(r *gin.RouterGroup) {
 	r.POST("", auth.NotGuest, requestStaffing)
