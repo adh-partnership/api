@@ -247,6 +247,24 @@ definitions:
         example: ANC_00_CTR
         type: string
     type: object
+  dto.StaffingRequest:
+    properties:
+      arrivalAirport:
+        type: string
+      comments:
+        type: string
+      date:
+        type: string
+      departureAirport:
+        type: string
+      pilots:
+        type: integer
+    required:
+    - arrivalAirport
+    - date
+    - departureAirport
+    - pilots
+    type: object
   dto.StorageRequest:
     properties:
       category:
@@ -508,11 +526,15 @@ definitions:
       longitude:
         example: -73.7789
         type: number
+      metar:
+        type: string
       resp_artcc_id:
         example: ZNY
         type: string
       state_code:
         example: AK
+        type: string
+      taf:
         type: string
       twr_type_code:
         example: T
@@ -898,7 +920,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1490,7 +1512,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1511,7 +1533,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1522,7 +1544,8 @@ paths:
       - overflight
   /v1/proxy/metar/{icao}:
     get:
-      description: Proxy METAR Data
+      description: Proxy METAR Data. Deprecated. VATSIM's Cloudflare front may throttle
+        this, so use our job fetched data where possible (/v1/weather/metar/:icao)
       parameters:
       - description: ICAO, multiple ICAOs can be separated by a comma
         in: path
@@ -1546,12 +1569,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Proxy METAR Data
+      summary: '[Deprecated] Proxy METAR Data'
       tags:
       - Proxy
   /v1/proxy/taf/{icao}:
     get:
-      description: Proxy TAF Data
+      description: Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle
+        this, so use our job fetched data where possible (/v1/weather/taf/:icao)
       parameters:
       - description: ICAO
         in: path
@@ -1575,9 +1599,37 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Proxy TAF Data
+      summary: '[Deprecated] Proxy TAF Data'
       tags:
       - Proxy
+  /v1/staffing/:
+    post:
+      description: Submit a staffing request
+      parameters:
+      - description: Request Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.StaffingRequest'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Invalid form submission
+          schema:
+            $ref: '#/definitions/response.R'
+        "401":
+          description: Not logged in
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Submit a staffing request
+      tags:
+      - Staffing
   /v1/stats/historical/{year}/{month}:
     get:
       description: Get Historical Stats
@@ -1639,7 +1691,7 @@ paths:
       - Stats
   /v1/stats/reports/facility:
     get:
-      description: Get Historical Stats
+      description: Get Facility Stats Report
       parameters:
       - description: Prefix, ie ANC
         in: query
@@ -1676,7 +1728,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.R'
-      summary: Get Historical Stats
+      summary: Get Facility Stats Report
       tags:
       - Stats
   /v1/storage:
@@ -2607,6 +2659,64 @@ paths:
       summary: Handle Visitor Application
       tags:
       - user
+  /v1/weather/metar/{icao}:
+    get:
+      description: Get METAR Data
+      parameters:
+      - description: ICAO
+        in: path
+        name: icao
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get METAR Data
+      tags:
+      - Weather
+  /v1/weather/taf/{icao}:
+    get:
+      description: Get TAF Data
+      parameters:
+      - description: ICAO
+        in: path
+        name: icao
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get TAF Data
+      tags:
+      - Weather
 securityDefinitions:
   BasicAuth:
     type: basic

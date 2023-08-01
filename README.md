@@ -43,6 +43,7 @@ These should be configured in the config.yaml file with appropriate webhook URLs
 - broadcast_feedback - Approved feedback reports are broadcast to this webhook, intended to be public praises
 - role - Notifications about added/removed roles
 - visitng_application - Notifications related to Visiting Applications (new, approved, denied, etc), should be restricted
+- staffing_request - Webhook for displaying requests for future staffing
 
 ### Kubernetes
 

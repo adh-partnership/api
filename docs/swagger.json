@@ -36,7 +36,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -928,7 +928,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -961,7 +961,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -976,11 +976,11 @@
         },
         "/v1/proxy/metar/{icao}": {
             "get": {
-                "description": "Proxy METAR Data",
+                "description": "Proxy METAR Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/metar/:icao)",
                 "tags": [
                     "Proxy"
                 ],
-                "summary": "Proxy METAR Data",
+                "summary": "[Deprecated] Proxy METAR Data",
                 "parameters": [
                     {
                         "type": "string",
@@ -1020,11 +1020,11 @@
         },
         "/v1/proxy/taf/{icao}": {
             "get": {
-                "description": "Proxy TAF Data",
+                "description": "Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/taf/:icao)",
                 "tags": [
                     "Proxy"
                 ],
-                "summary": "Proxy TAF Data",
+                "summary": "[Deprecated] Proxy TAF Data",
                 "parameters": [
                     {
                         "type": "string",
@@ -1049,6 +1049,49 @@
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/staffing/": {
+            "post": {
+                "description": "Submit a staffing request",
+                "tags": [
+                    "Staffing"
+                ],
+                "summary": "Submit a staffing request",
+                "parameters": [
+                    {
+                        "description": "Request Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.StaffingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Invalid form submission",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in",
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
@@ -1154,11 +1197,11 @@
         },
         "/v1/stats/reports/facility": {
             "get": {
-                "description": "Get Historical Stats",
+                "description": "Get Facility Stats Report",
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get Historical Stats",
+                "summary": "Get Facility Stats Report",
                 "parameters": [
                     {
                         "type": "string",
@@ -2631,6 +2674,94 @@
                     }
                 }
             }
+        },
+        "/v1/weather/metar/{icao}": {
+            "get": {
+                "description": "Get METAR Data",
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get METAR Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ICAO",
+                        "name": "icao",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/weather/taf/{icao}": {
+            "get": {
+                "description": "Get TAF Data",
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get TAF Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ICAO",
+                        "name": "icao",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -3000,6 +3131,32 @@
                 "position": {
                     "type": "string",
                     "example": "ANC_00_CTR"
+                }
+            }
+        },
+        "dto.StaffingRequest": {
+            "type": "object",
+            "required": [
+                "arrivalAirport",
+                "date",
+                "departureAirport",
+                "pilots"
+            ],
+            "properties": {
+                "arrivalAirport": {
+                    "type": "string"
+                },
+                "comments": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "departureAirport": {
+                    "type": "string"
+                },
+                "pilots": {
+                    "type": "integer"
                 }
             }
         },
@@ -3382,6 +3539,9 @@
                     "type": "number",
                     "example": -73.7789
                 },
+                "metar": {
+                    "type": "string"
+                },
                 "resp_artcc_id": {
                     "type": "string",
                     "example": "ZNY"
@@ -3389,6 +3549,9 @@
                 "state_code": {
                     "type": "string",
                     "example": "AK"
+                },
+                "taf": {
+                    "type": "string"
                 },
                 "twr_type_code": {
                     "type": "string",
