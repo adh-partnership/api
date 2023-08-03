@@ -57,6 +57,9 @@ facility:
     - PUB
     - RAP
     - RCA
+  traffic_alerts:
+    enabled: false
+    entries: []
 session:
   cookie:
     name: "zdv_session"

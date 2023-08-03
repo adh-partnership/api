@@ -93,6 +93,7 @@ type ConfigFacility struct {
 	Visiting         ConfigFacilityVisiting `json:"visiting"`
 	TrainingRequests ConfigFacilityTraining `json:"training_requests"`
 	FrontendURL      string                 `json:"frontend_url"`
+	TrafficAlerts    ConfigFacilityAlerts   `json:"traffic_alerts"`
 }
 
 type ConfigFacilityTraining struct {
@@ -111,6 +112,17 @@ type ConfigFacilityTrainingDiscord struct {
 type ConfigFacilityStats struct {
 	Enabled  bool     `json:"enabled"`
 	Prefixes []string `json:"prefixes"`
+}
+
+type ConfigFacilityAlerts struct {
+	Enabled bool                        `json:"enabled"`
+	Entries []ConfigFacilityAlertsEntry `json:"entries"`
+}
+
+type ConfigFacilityAlertsEntry struct {
+	Airport   string   `json:"airport"`
+	Threshold uint     `json:"threshold"`
+	CoveredBy []string `json:"coveredBy"`
 }
 
 type ConfigFacilityVisiting struct {
