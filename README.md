@@ -44,6 +44,7 @@ These should be configured in the config.yaml file with appropriate webhook URLs
 - role - Notifications about added/removed roles
 - visitng_application - Notifications related to Visiting Applications (new, approved, denied, etc), should be restricted
 - staffing_request - Webhook for displaying requests for future staffing
+- uncovered_traffic - Webhook for displaying unstaffed traffic notifications
 
 ### Kubernetes
 
