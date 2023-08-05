@@ -35,5 +35,5 @@ approval_rules:
     if:
       has_labels:
       - "auto-merge"
-    has_author_in:
-      users: ["adh-bot"]
+      has_author_in:
+        users: ["adh-bot"]
