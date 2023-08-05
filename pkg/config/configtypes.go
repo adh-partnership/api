@@ -1,16 +1,18 @@
 package config
 
 type Config struct {
-	Server   ConfigServer   `json:"server"`
-	Database ConfigDatabase `json:"database"`
-	Discord  ConfigDiscord  `json:"discord"`
-	Email    ConfigEmail    `json:"email"`
-	Facility ConfigFacility `json:"facility"`
-	Metrics  ConfigMetrics  `json:"metrics"`
-	OAuth    ConfigOAuth    `json:"oauth"`
-	Session  ConfigSession  `json:"session"`
-	Storage  ConfigStorage  `json:"storage"`
-	VATUSA   ConfigVATUSA   `json:"vatusa"`
+	Database ConfigDatabase      `json:"database"`
+	Discord  ConfigDiscord       `json:"discord"`
+	Email    ConfigEmail         `json:"email"`
+	Facility ConfigFacility      `json:"facility"`
+	Features ConfigFeatures      `json:"features"`
+	Groups   map[string][]string `json:"groups"`
+	Metrics  ConfigMetrics       `json:"metrics"`
+	OAuth    ConfigOAuth         `json:"oauth"`
+	Server   ConfigServer        `json:"server"`
+	Session  ConfigSession       `json:"session"`
+	Storage  ConfigStorage       `json:"storage"`
+	VATUSA   ConfigVATUSA        `json:"vatusa"`
 }
 
 type ConfigServer struct {
@@ -41,6 +43,10 @@ type ConfigEmail struct {
 	Password    string `json:"password"`
 	From        string `json:"from"`
 	TemplateDir string `json:"template_dir"`
+}
+
+type ConfigFeatures struct {
+	StaffingRequest bool `json:"staffing_request"`
 }
 
 type ConfigSession struct {

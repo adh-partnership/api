@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"dario.cat/mergo"
+
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/logger"
 )
@@ -139,38 +141,6 @@ var Roles = map[string]Role{
 			"wm",
 		},
 	},
-	"k8s-cluster-admin": {
-		Name: "k8s-cluster-admin",
-		RolesCanAdd: []string{
-			"atm",
-			"datm",
-			"wm",
-		},
-	},
-	"k8s-cluster-webteam": {
-		Name: "k8s-cluster-webteam",
-		RolesCanAdd: []string{
-			"atm",
-			"datm",
-			"wm",
-		},
-	},
-	"k8s-cluster-mysql": {
-		Name: "k8s-cluster-mysql",
-		RolesCanAdd: []string{
-			"atm",
-			"datm",
-			"wm",
-		},
-	},
-	"k8s-cluster-mysql-write": {
-		Name: "k8s-cluster-mysql-write",
-		RolesCanAdd: []string{
-			"atm",
-			"datm",
-			"wm",
-		},
-	},
 }
 
 func CanUserModifyRole(user *models.User, role string) bool {
@@ -215,4 +185,10 @@ func HasRole(user *models.User, role string) bool {
 		}
 	}
 	return false
+}
+
+func SetupGroups(groups map[string][]string) {
+	if err := mergo.Merge(&Groups, groups, mergo.WithOverride); err != nil {
+		log.Fatalf("Error merging groups: %v", err)
+	}
 }
