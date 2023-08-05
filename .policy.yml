@@ -10,6 +10,7 @@ approval_rules:
     options:
       request_review:
         enabled: true
+        invalidate_on_push: false
         mode: teams
       methods:
         comments:
@@ -23,6 +24,7 @@ approval_rules:
     options:
       allow_author: true
       allow_contributor: true
+      invalidate_on_push: false
       methods:
         comments:
           - "LGTM"
