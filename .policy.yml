@@ -1,0 +1,39 @@
+policy:
+  approval:
+  - or:
+    - the maintainers-backend team has approved
+    - an admin has approved
+    - has auto-merge label
+
+approval_rules:
+  - name: the maintainers-backend team has approved
+    options:
+      request_review:
+        enabled: true
+        mode: teams
+      methods:
+        comments:
+          - "LGTM"
+          - "/lgtm"
+    requires:
+      count: 1
+      teams:
+      - "adh-partnership/maintainers-backend"
+  - name: an admin has approved
+    options:
+      allow_author: true
+      allow_contributor: true
+      methods:
+        comments:
+          - "LGTM"
+          - "/lgtm"
+    requires:
+      count: 1
+      teams:
+      - "adh-partnership/admin"
+  - name: has auto-merge label
+    if:
+      has_labels:
+      - "auto-merge"
+      has_author_in:
+        users: ["adh-bot"]
