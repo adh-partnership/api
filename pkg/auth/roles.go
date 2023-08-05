@@ -42,6 +42,7 @@ var Groups = map[string][]string{
 		"ta",
 		"ec",
 		"fe",
+		"facilities",
 	},
 }
 
