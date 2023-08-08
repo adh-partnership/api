@@ -13,6 +13,7 @@ import (
 	"github.com/adh-partnership/api/pkg/jobs/activity"
 	"github.com/adh-partnership/api/pkg/jobs/dataparser"
 	"github.com/adh-partnership/api/pkg/jobs/roster"
+	"github.com/adh-partnership/api/pkg/jobs/traffic"
 	"github.com/adh-partnership/api/pkg/jobs/weather"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/server"
@@ -65,6 +66,13 @@ func newServerCommand() *cli.Command {
 			err = weather.ScheduleJobs(s)
 			if err != nil {
 				return err
+			}
+			if srvr.Config.Facility.TrafficAlerts.Enabled {
+				log.Info(" - Traffic notifications")
+				err = traffic.ScheduleJobs(s)
+				if err != nil {
+					return err
+				}
 			}
 
 			log.Info("Starting scheduled jobs")

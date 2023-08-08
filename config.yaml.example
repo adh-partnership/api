@@ -13,6 +13,7 @@ discord:
   webhooks:
     online: "https://discordapp.com/api/webhooks/..."
     staffing_request: "https://discordapp.com/api/webhooks/..."
+    uncovered_traffic: "https://discordapp.com/api/webhooks/..."
   client_id: "..."
   client_secret: "..."
 email:
@@ -57,6 +58,9 @@ facility:
     - PUB
     - RAP
     - RCA
+  traffic_alerts:
+    enabled: false
+    entries: []
 session:
   cookie:
     name: "zdv_session"
