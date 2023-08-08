@@ -36,12 +36,12 @@ func ParseConfig(file string) (*Config, error) {
 
 	// Merge in default, which will only "add" undefined values
 	// We use this to set feature flags to disabled by default
-	err = mergo.Merge(cfg, defaultConfig)
+	err = mergo.Merge(defaultConfig, cfg, mergo.WithOverride)
 	if err != nil {
 		return nil, err
 	}
 
-	return cfg, nil
+	return defaultConfig, nil
 }
 
 func sanitizeConfig(cfg *Config) {
