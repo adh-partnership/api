@@ -5,6 +5,7 @@ import (
 
 	"github.com/adh-partnership/api/internal/v1/admin"
 	"github.com/adh-partnership/api/internal/v1/airport"
+	"github.com/adh-partnership/api/internal/v1/authorization"
 	"github.com/adh-partnership/api/internal/v1/email"
 	"github.com/adh-partnership/api/internal/v1/event"
 	"github.com/adh-partnership/api/internal/v1/feedback"
@@ -16,6 +17,7 @@ import (
 	"github.com/adh-partnership/api/internal/v1/training"
 	"github.com/adh-partnership/api/internal/v1/user"
 	"github.com/adh-partnership/api/internal/v1/weather"
+	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
@@ -27,10 +29,13 @@ func init() {
 	routeGroups = make(map[string]func(*gin.RouterGroup))
 	routeGroups["/admin"] = admin.Routes
 	routeGroups["/airports"] = airport.Routes
+	routeGroups["/authorization"] = authorization.Routes
 	routeGroups["/email"] = email.Routes
 	routeGroups["/events"] = event.Routes
 	routeGroups["/feedback"] = feedback.Routes
-	routeGroups["/staffing"] = staffing.Routes
+	if config.Cfg.Features.StaffingRequest {
+		routeGroups["/staffing"] = staffing.Routes
+	}
 	routeGroups["/overflight"] = overflight.Routes
 	routeGroups["/proxy"] = proxy.Routes
 	routeGroups["/stats"] = stats.Routes

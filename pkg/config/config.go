@@ -4,10 +4,20 @@ import (
 	"os"
 	"strings"
 
+	"dario.cat/mergo"
 	"sigs.k8s.io/yaml"
 )
 
 var Cfg *Config
+
+// Primarily used to define Features and disable them by default
+// should facilities not configure them
+// We may extend this later with other defaults
+var defaultConfig = &Config{
+	Features: ConfigFeatures{
+		StaffingRequest: false,
+	},
+}
 
 func ParseConfig(file string) (*Config, error) {
 	// Read config file disk
@@ -23,6 +33,13 @@ func ParseConfig(file string) (*Config, error) {
 	}
 
 	sanitizeConfig(cfg)
+
+	// Merge in default, which will only "add" undefined values
+	// We use this to set feature flags to disabled by default
+	err = mergo.Merge(cfg, defaultConfig)
+	if err != nil {
+		return nil, err
+	}
 
 	return cfg, nil
 }

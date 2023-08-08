@@ -1,0 +1,22 @@
+name: Produce New Prod Build
+on:
+  workflow_dispatch: {}
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: dev
+    - name: Open Pull Request to main
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GH_PIPELINE_PAT }}
+        title: "Produce New Prod Build"
+        body: |
+          This PR was opened by the GitHub Action workflow **Produce New Prod Build**.
+          Triggered by ${{ github.actor }}.
+        base: main
