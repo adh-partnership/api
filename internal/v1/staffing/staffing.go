@@ -13,14 +13,15 @@ import (
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
-// Submit a staffing request.
-// @Summary Submit a staffing request
-// @Description Submit a staffing request
+// Submit a staffing request. [Feature Gated]
+// @Summary Submit a staffing request [Feature Gated]
+// @Description Submit a staffing request [Feature Gated]
 // @Tags Staffing
 // @Param data body dto.StaffingRequest true "Request Data"
 // @Success 204
 // @Failure 400 {object} response.R "Invalid form submission"
 // @Failure 401 {object} response.R "Not logged in"
+// @Failure 404 {object} response.R "Not Found -- feature disabled"
 // @Failure 500 {object} response.R
 // @Router /v1/staffing/ [post]
 func requestStaffing(c *gin.Context) {

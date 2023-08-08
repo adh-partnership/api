@@ -17,7 +17,6 @@ import (
 	"github.com/adh-partnership/api/internal/v1/training"
 	"github.com/adh-partnership/api/internal/v1/user"
 	"github.com/adh-partnership/api/internal/v1/weather"
-	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
@@ -33,9 +32,7 @@ func init() {
 	routeGroups["/email"] = email.Routes
 	routeGroups["/events"] = event.Routes
 	routeGroups["/feedback"] = feedback.Routes
-	if config.Cfg.Features.StaffingRequest {
-		routeGroups["/staffing"] = staffing.Routes
-	}
+	routeGroups["/staffing"] = staffing.Routes
 	routeGroups["/overflight"] = overflight.Routes
 	routeGroups["/proxy"] = proxy.Routes
 	routeGroups["/stats"] = stats.Routes
