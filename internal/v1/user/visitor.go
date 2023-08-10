@@ -54,7 +54,7 @@ func getVisitor(c *gin.Context) {
 func postVisitor(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
-	if user.Region == "" || user.Division == "" {
+	if user.Region == "" || user.Division == "" || user.Subdivision == "" {
 		region, division, subdivision, err := vatsim.GetLocation(fmt.Sprint(user.CID))
 		if err != nil {
 			log.Errorf("Error getting location: %s", err)
@@ -106,7 +106,7 @@ func postVisitor(c *gin.Context) {
 		return
 	}
 
-	_ = discord.NewMessage().
+	err = discord.NewMessage().
 		SetContent("New Visiting Application").
 		AddEmbed(
 			discord.NewEmbed().
@@ -127,6 +127,9 @@ func postVisitor(c *gin.Context) {
 					discord.NewField().SetName("Visiting From").SetValue(fmt.Sprintf("%s/%s/%s", user.Region, user.Division, user.Subdivision)).SetInline(true),
 				),
 		).Send("visiting_application")
+	if err != nil {
+		log.Errorf("Error sending discord message: %s", err)
+	}
 
 	response.Respond(c, http.StatusNoContent, nil)
 }
@@ -198,9 +201,12 @@ func putVisitor(c *gin.Context) {
 		status, err := vatusa.AddVisitingController(fmt.Sprint(app.User.CID))
 		if err != nil || status > 299 {
 			log.Errorf("Error adding visiting controller to VATUSA for %d: %s", app.User.CID, err)
-			_ = discord.NewMessage().SetContent(
+			err = discord.NewMessage().SetContent(
 				fmt.Sprintf("Error adding visiting controller %s %s (%d) to VATUSA roster", app.User.FirstName, app.User.LastName, app.User.CID),
 			).Send("visiting_application")
+			if err != nil {
+				log.Errorf("Error sending discord message: %s", err)
+			}
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
@@ -261,7 +267,8 @@ func isEligibleVisiting(user *models.User) bool {
 	}
 
 	// Check that ratechange is more than 90 days ago
-	if ratechange.After(time.Now().AddDate(0, 0, -90)) {
+	// VATSIM API apparently returns nil if it was a long time ago... so we can assume this check is true
+	if ratechange != nil && ratechange.After(time.Now().AddDate(0, 0, -90)) {
 		return false
 	}
 
