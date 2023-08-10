@@ -5,5 +5,5 @@ import (
 )
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("", getGroups)
+	r.GET("groups", getGroups)
 }
