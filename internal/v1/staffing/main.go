@@ -3,6 +3,7 @@ package staffing
 import (
 	"github.com/gin-gonic/gin"
 
+	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/gin/middleware/auth"
 	"github.com/adh-partnership/api/pkg/logger"
 )
@@ -10,5 +11,7 @@ import (
 var log = logger.Logger.WithField("component", "staffing")
 
 func Routes(r *gin.RouterGroup) {
-	r.POST("", auth.NotGuest, requestStaffing)
+	if config.Cfg.Features.StaffingRequest {
+		r.POST("", auth.NotGuest, requestStaffing)
+	}
 }

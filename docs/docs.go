@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -270,6 +270,29 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.AirportWeatherDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/authorization/groups": {
+            "get": {
+                "description": "Get Authorization Groups",
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get Authorization Groups",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
                         }
                     }
                 }
@@ -935,7 +958,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -968,7 +991,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -1071,11 +1094,11 @@ const docTemplate = `{
         },
         "/v1/staffing/": {
             "post": {
-                "description": "Submit a staffing request",
+                "description": "Submit a staffing request [Feature Gated]",
                 "tags": [
                     "Staffing"
                 ],
-                "summary": "Submit a staffing request",
+                "summary": "Submit a staffing request [Feature Gated]",
                 "parameters": [
                     {
                         "description": "Request Data",
@@ -1099,6 +1122,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Not logged in",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found -- feature disabled",
                         "schema": {
                             "$ref": "#/definitions/response.R"
                         }
