@@ -229,7 +229,12 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 	}
 
 	if userResponse.DiscordID != "" {
-		user.DiscordID = userResponse.DiscordID
+		// @TODO: This is a dirty hack.. revisit this at another point.
+		if userResponse.DiscordID == "-1" {
+			user.DiscordID = ""
+		} else {
+			user.DiscordID = userResponse.DiscordID
+		}
 	}
 
 	if userResponse.ExemptedFromActivity != nil {
