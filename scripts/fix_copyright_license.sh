@@ -23,11 +23,11 @@ for fn in "$@"; do
   if ! grep -L -q -e "Apache License, Version 2" -e "Copyright" "${fn}"; then
     if [[ "${fn}" == *.go ]]; then
       echo "Fixing license: ${fn}"
-      newfile=$(cat "${WD}/banners/golang.txt" "${fn}")
+      newfile=$(cat "${WD}/banners/golang.txt" <(echo) "${fn}")
       echo "${newfile}" > "${fn}"
     elif [[ "${fn}" == *.sh ]]; then
       echo "Fixing license: ${fn}"
-      newfile=$(cat "${WD}/banners/shell.txt" "${fn}")
+      newfile=$(cat "${WD}/banners/shell.txt" <(echo) "${fn}")
       echo "${newfile}" > "${fn}"
     else
       echo "Cannot fix license: ${fn}. Not supported file type."
