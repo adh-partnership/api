@@ -50,6 +50,10 @@ mod-vendor:
 dev:
 	@go run ./cmd/api/main.go server
 
+.phony: gen-docs
+gen-docs:
+	@bash scripts/docs.sh
+
 .PHONY: clean
 clean:
 	@rm -rf out
