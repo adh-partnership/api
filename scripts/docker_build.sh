@@ -52,7 +52,7 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-HUB=${HUB:-docker.io/denartcc}
+HUB=${HUB:-adhp}
 IMAGE=${IMAGE:-api}
 TAG=${TAG:-latest}
 
@@ -62,10 +62,10 @@ fi
 
 pushd $dir/..
 
-make test
+make --no-print-directory -e -f Makefile.core.mk test
 go get -v ./...
-make docs
-make build
+make --no-print-directory -e -f Makefile.core.mk docs
+make --no-print-directory -e -f Makefile.core.mk build
 docker build . -t $HUB$IMAGE:$TAG
 
 if [[ ! -z "$PUSH" ]]; then

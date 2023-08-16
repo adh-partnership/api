@@ -47,6 +47,7 @@ MOUNT_DEST="${MOUNT_DEST:-/work}"
 read -ra DOCKER_RUN_OPTIONS <<< "${DOCKER_RUN_OPTIONS:-}"
 
 [[ -t 1 ]] && DOCKER_RUN_OPTIONS+=("-it")
+DOCKER_GID="${DOCKER_GID:-$(grep '^docker:' /etc/group | cut -f3 -d:)}"
 [[ ${UID} -ne 0 ]] && DOCKER_RUN_OPTIONS+=(-u "${UID}:${DOCKER_GID}")
 
 MISC_OPTIONS="${MISC_OPTIONS:-}"
