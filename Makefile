@@ -1,19 +1,14 @@
-.PHONY: lint
-lint:
-	golangci-lint run
+RUN=./scripts/run.sh
+MAKE_CONTAINER=$(RUN) make --no-print-directory -e -f Makefile.core.mk
+FRONTEND_MAKE_CONTAINER=$(RUN) make --no-print-directory -C frontend -e -f Makefile
 
-.PHONY: lint-fix
-lint-fix:
-	golangci-lint run --fix
+%:
+	@$(MAKE_CONTAINER) $@
 
-.PHONY: test
-test:
-	go test ./...
+default:
+	@$(MAKE_CONTAINER)
 
-.PHONY: build
-build:
-	bash scripts/build
+shell:
+	@$(RUN) /bin/bash
 
-.PHONY: docs
-docs:
-	bash scripts/docs
+.PHONY: default shell

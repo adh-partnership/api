@@ -92,6 +92,11 @@ func newBootstrapCommand() *cli.Command {
 						Short: "INA",
 					},
 					&models.Rating{
+						ID:    0,
+						Long:  "Suspended",
+						Short: "SUS",
+					},
+					&models.Rating{
 						ID:    1,
 						Long:  "Observer",
 						Short: "OBS",
