@@ -66,7 +66,8 @@ To run locally, you'll need to setup a MySQL instance.
 1. How do I start the API automatically on boot?
 
     - Use a systemd service file, or utilize Docker/Containerd/Kubernetes.
-      - For systemd, see the `systemd` directory for an example service file or visit [this link](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units) for more information.
+
+        - For systemd, see the `systemd` directory for an example service file or visit [this link](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units) for more information.
 
 2. How do I update the API?
 
@@ -87,17 +88,22 @@ Yes, we have Swagger (OpenAPI 2.0) documentation available. When you start the A
 The following are the coded email templates and available variables:
 
 - activity_warning
-  - FirstName
-  - LastName
+
+    - FirstName
+    - LastName
+
 - visitor_accepted
-  - FirstName
-  - LastName
-  - Rating
+
+    - FirstName
+    - LastName
+    - Rating
+
 - visitor_denied
-  - FirstName
-  - LastName
-  - Rating
-  - Reason
+
+    - FirstName
+    - LastName
+    - Rating
+    - Reason
 
 ### Email Template Format
 
