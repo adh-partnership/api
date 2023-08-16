@@ -77,6 +77,8 @@ func newBootstrapCommand() *cli.Command {
 					&models.TrainingNote{},
 					&models.User{},
 					&models.VisitorApplication{},
+					&models.TrainingRequest{},
+					&models.TrainingRequestSlot{},
 				)
 				if err != nil {
 					return err
