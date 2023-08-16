@@ -2,7 +2,7 @@ version: 1
 
 merge:
   ignore:
-    labels: ["do not merge"]
+    labels: ["do not merge", "do not merge/wip"]
   method: squash
   options:
     squash:
