@@ -52,7 +52,7 @@ dev:
 
 .phony: gen-docs
 gen-docs:
-	@bash scripts/docs.sh
+	@bash scripts/gen_docs.sh
 
 .PHONY: clean
 clean:
