@@ -65,9 +65,21 @@ jobs:
     - name: Build Binaries
       run: make build
     - name: Build Image
-      run: HUB=${${{ secrets.DOCKER_USERNAME }} TAG=${{ env.branch }} make docker-push
+      run: |
+        # if event is push, we'll do make docker-push, otherwise make docker
+        cmd="docker"
+        if [[ "${{ github.event_name }}" == "push" ]]; then
+          cmd="docker-push"
+        fi
+        HUB=${{ secrets.DOCKER_USERNAME }} TAG=${{ env.branch }} make "$cmd"
     - name: Build Image with sha
-      run: HUB=${{ secrets.DOCKER_USERNAME }} TAG=${{env.branch}}-${{ env.sha_short }} make docker-push
+      run: |
+        # if event is push, we'll do make docker-push, otherwise make docker
+        cmd="docker"
+        if [[ "${{ github.event_name }}" == "push" ]]; then
+          cmd="docker-push"
+        fi
+        HUB=${{ secrets.DOCKER_USERNAME }} TAG=${{ env.branch }}-${{ env.sha_short }} make "$cmd"
     - name: Get image digest
       if: ${{ github.event_name == 'push' }}
       run: |
