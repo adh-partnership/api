@@ -17,8 +17,8 @@ import (
 	"github.com/adh-partnership/api/pkg/gin/response"
 )
 
-// Get Specific Training Request
-// @Summary Get Specific Training Request
+// Get Specific Training Request [Feature Gated]
+// @Summary Get Specific Training Request [Feature Gated]
 // @Tags training
 // @Param id path string true "Training Session ID"
 // @Success 200 {object} dto.TrainingRequest
@@ -40,8 +40,8 @@ func getTrainingRequest(c *gin.Context) {
 	response.Respond(c, http.StatusOK, dto.ConvertTrainingRequestToDTO(request))
 }
 
-// Get Training Requests
-// @Summary Get Training Sessions
+// Get Training Requests [Feature Gated]
+// @Summary Get Training Sessions [Feature Gated]
 // @Tags training
 // @Param cid query string false "Filter by CID"
 // @Param status query string false "Filter by Status"
@@ -71,8 +71,8 @@ func getTrainingRequests(c *gin.Context) {
 	response.Respond(c, http.StatusOK, dto.ConvertTrainingRequestsToDTO(requests))
 }
 
-// Create new training session request for user
-// @Summary Create new training session request for user
+// Create new training session request for user [Feature Gated]
+// @Summary Create new training session request for user [Feature Gated]
 // @Tags training
 // @Param data body dto.TrainingRequestCreateRequest true "Training Session Request"
 // @Success 201 {object} dto.TrainingRequest
@@ -155,8 +155,8 @@ func postTrainingRequest(c *gin.Context) {
 	response.Respond(c, http.StatusCreated, dto.ConvertTrainingRequestToDTO(req))
 }
 
-// Edit Training Session Request
-// @Summary Edit Training Session Request
+// Edit Training Session Request [Feature Gated]
+// @Summary Edit Training Session Request [Feature Gated]
 // @Tags training
 // @Param id path string true "Training Session Request ID"
 // @Param data body dto.TrainingRequestEditRequest true "Training Session Request"
@@ -304,8 +304,8 @@ func patchTrainingRequest(c *gin.Context) {
 	response.Respond(c, http.StatusOK, dto.ConvertTrainingRequestToDTO(req))
 }
 
-// Add a slot to a request
-// @Summary Add a slot to a request
+// Add a slot to a request [Feature Gated]
+// @Summary Add a slot to a request [Feature Gated]
 // @Tags training
 // @Param id path string true "Training Session Request ID"
 // @Param data body dto.TrainingRequestSlot true "Training Session Request Slot"
@@ -359,8 +359,8 @@ func postTrainingRequestSlot(c *gin.Context) {
 	response.Respond(c, http.StatusOK, trd)
 }
 
-// Delete a slot from a request
-// @Summary Delete a slot from a request
+// Delete a slot from a request [Feature Gated]
+// @Summary Delete a slot from a request [Feature Gated]
 // @Tags training
 // @Param id path string true "Training Session Request ID"
 // @Param slot_id path string true "Training Session Request Slot ID"

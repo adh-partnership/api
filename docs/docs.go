@@ -1778,7 +1778,7 @@ const docTemplate = `{
                 "tags": [
                     "training"
                 ],
-                "summary": "Get Training Sessions",
+                "summary": "Get Training Sessions [Feature Gated]",
                 "parameters": [
                     {
                         "type": "string",
@@ -1820,7 +1820,7 @@ const docTemplate = `{
                 "tags": [
                     "training"
                 ],
-                "summary": "Get Specific Training Request",
+                "summary": "Get Specific Training Request [Feature Gated]",
                 "parameters": [
                     {
                         "type": "string",
@@ -1855,7 +1855,7 @@ const docTemplate = `{
                 "tags": [
                     "training"
                 ],
-                "summary": "Edit Training Session Request",
+                "summary": "Edit Training Session Request [Feature Gated]",
                 "parameters": [
                     {
                         "type": "string",
@@ -1919,7 +1919,7 @@ const docTemplate = `{
                 "tags": [
                     "training"
                 ],
-                "summary": "Add a slot to a request",
+                "summary": "Add a slot to a request [Feature Gated]",
                 "parameters": [
                     {
                         "type": "string",
@@ -1983,7 +1983,7 @@ const docTemplate = `{
                 "tags": [
                     "training"
                 ],
-                "summary": "Delete a slot from a request",
+                "summary": "Delete a slot from a request [Feature Gated]",
                 "parameters": [
                     {
                         "type": "string",
@@ -2045,7 +2045,7 @@ const docTemplate = `{
                 "tags": [
                     "training"
                 ],
-                "summary": "Create new training session request for user",
+                "summary": "Create new training session request for user [Feature Gated]",
                 "parameters": [
                     {
                         "description": "Training Session Request",
