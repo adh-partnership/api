@@ -1,3 +1,7 @@
+#!/bin/bash
+#
+# This script is meant to be part of the init-container to take the configuration from a config map,
+# apply some env variables to it, and place it for the application to read.
 #
 # Copyright ADH Partnership
 #
@@ -12,11 +16,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#!/bin/bash
-#
-# This script is meant to be part of the init-container to take the configuration from a config map,
-# apply some env variables to it, and place it for the application to read.
-#
 
 configmap_path=${CONFIGMAP_PATH:-"/tmp/config"}
 default_configmap=${DEFAULT_CONFIGMAP:-"../config.yaml.example"}
