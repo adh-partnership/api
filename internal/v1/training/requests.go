@@ -218,7 +218,9 @@ func patchTrainingRequest(c *gin.Context) {
 		}
 
 		if request.Status != "" && request.Status != req.Status {
-			if request.Status == constants.TrainingSessionStatusAccepted && req.Status == constants.TrainingSessionStatusOpen && config.Cfg.Facility.TrainingRequests.SendToDiscord {
+			if request.Status == constants.TrainingSessionStatusAccepted &&
+				req.Status == constants.TrainingSessionStatusOpen &&
+				config.Cfg.Facility.TrainingRequests.SendToDiscord {
 				go func(r *models.TrainingRequest) {
 					u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
 					_ = discord.NewMessage().
