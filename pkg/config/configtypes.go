@@ -106,6 +106,7 @@ type ConfigFacilityTraining struct {
 	Discord            ConfigFacilityTrainingDiscord `json:"discord"`
 	Positions          []string                      `json:"positions"`
 	MaxRequestsPerUser int                           `json:"max_requests_per_user"`
+	SendToDiscord      bool                          `json:"send_to_discord"`
 }
 
 type ConfigFacilityTrainingDiscord struct {
