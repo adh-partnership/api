@@ -1,4 +1,18 @@
 #!/bin/bash
+#
+# Copyright ADH Partnership
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 set -ex
 
@@ -38,7 +52,7 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-HUB=${HUB:-docker.io/denartcc}
+HUB=${HUB:-adhp}
 IMAGE=${IMAGE:-api}
 TAG=${TAG:-latest}
 
@@ -48,10 +62,10 @@ fi
 
 pushd $dir/..
 
-make test
+make --no-print-directory -e -f Makefile.core.mk test
 go get -v ./...
-make docs
-make build
+make --no-print-directory -e -f Makefile.core.mk docs
+make --no-print-directory -e -f Makefile.core.mk build
 docker build . -t $HUB$IMAGE:$TAG
 
 if [[ ! -z "$PUSH" ]]; then
