@@ -57,6 +57,8 @@ facility:
     - PUB
     - RAP
     - RCA
+  training_requests:
+    enabled: false
 session:
   cookie:
     name: "zdv_session"

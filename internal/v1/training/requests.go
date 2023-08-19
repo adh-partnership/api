@@ -148,25 +148,27 @@ func postTrainingRequest(c *gin.Context) {
 		}
 	}
 
-	go func(r *models.TrainingRequest) {
-		u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
-		_ = discord.NewMessage().
-			SetContent("New Training Request has been submitted").
-			AddEmbed(
-				discord.NewEmbed().
-					AddField(
-						discord.NewField().SetName("Controller").SetValue(
-							fmt.Sprintf("%s %s (%d/%s)", r.Student.FirstName, r.Student.LastName, r.Student.CID, u.Rating.Short),
-						).SetInline(false),
-					).
-					AddField(
-						discord.NewField().SetName("Position").SetValue(r.Position).SetInline(true),
-					).
-					AddField(
-						discord.NewField().SetName("Notes").SetValue(r.Notes).SetInline(false),
-					).SetURL(fmt.Sprintf("%s/training/sessions/%s", config.Cfg.Facility.FrontendURL, r.ID)),
-			).Send(config.Cfg.Facility.TrainingRequests.Discord.Scheduled)
-	}(req)
+	if config.Cfg.Facility.TrainingRequests.SendToDiscord {
+		go func(r *models.TrainingRequest) {
+			u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
+			_ = discord.NewMessage().
+				SetContent("New Training Request has been submitted").
+				AddEmbed(
+					discord.NewEmbed().
+						AddField(
+							discord.NewField().SetName("Controller").SetValue(
+								fmt.Sprintf("%s %s (%d/%s)", r.Student.FirstName, r.Student.LastName, r.Student.CID, u.Rating.Short),
+							).SetInline(false),
+						).
+						AddField(
+							discord.NewField().SetName("Position").SetValue(r.Position).SetInline(true),
+						).
+						AddField(
+							discord.NewField().SetName("Notes").SetValue(r.Notes).SetInline(false),
+						).SetURL(fmt.Sprintf("%s/training/sessions/%s", config.Cfg.Facility.FrontendURL, r.ID)),
+				).Send(config.Cfg.Facility.TrainingRequests.Discord.Scheduled)
+		}(req)
+	}
 
 	response.Respond(c, http.StatusCreated, dto.ConvertTrainingRequestToDTO(req))
 }
@@ -232,7 +234,9 @@ func patchTrainingRequest(c *gin.Context) {
 		}
 
 		if request.Status != "" && request.Status != req.Status {
-			if request.Status == constants.TrainingSessionStatusAccepted && req.Status == constants.TrainingSessionStatusOpen {
+			if request.Status == constants.TrainingSessionStatusAccepted &&
+				req.Status == constants.TrainingSessionStatusOpen &&
+				config.Cfg.Facility.TrainingRequests.SendToDiscord {
 				go func(r *models.TrainingRequest) {
 					u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
 					_ = discord.NewMessage().
@@ -266,29 +270,31 @@ func patchTrainingRequest(c *gin.Context) {
 		if request.Status == constants.TrainingSessionStatusCancelled && req.Status == constants.TrainingSessionStatusAccepted {
 			req.Start = nil
 			req.End = nil
-			go func(r *models.TrainingRequest) {
-				u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
-				_ = discord.NewMessage().
-					SetContent("Scheduled Training Session set to Cancelled").
-					AddEmbed(
-						discord.NewEmbed().
-							SetColor(discord.GetColor("ff", "00", "00")).
-							AddField(
-								discord.NewField().SetName("Controller").SetValue(
-									fmt.Sprintf("%s %s (%d/%s)", r.Student.FirstName, r.Student.LastName, r.Student.CID, u.Rating.Short),
-								).SetInline(false),
-							).
-							AddField(
-								discord.NewField().SetName("Position").SetValue(r.Position).SetInline(true),
-							).
-							AddField(
-								discord.NewField().SetName("Scheduled At").SetValue(r.Start.Format(time.RFC1123)).SetInline(false),
-							).
-							AddField(
-								discord.NewField().SetName("Notes").SetValue(r.Notes).SetInline(false),
-							).SetURL(fmt.Sprintf("%s/training/sessions/%s", config.Cfg.Facility.FrontendURL, r.ID)),
-					).Send(config.Cfg.Facility.TrainingRequests.Discord.TrainingStaff)
-			}(req)
+			if config.Cfg.Facility.TrainingRequests.SendToDiscord {
+				go func(r *models.TrainingRequest) {
+					u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
+					_ = discord.NewMessage().
+						SetContent("Scheduled Training Session set to Cancelled").
+						AddEmbed(
+							discord.NewEmbed().
+								SetColor(discord.GetColor("ff", "00", "00")).
+								AddField(
+									discord.NewField().SetName("Controller").SetValue(
+										fmt.Sprintf("%s %s (%d/%s)", r.Student.FirstName, r.Student.LastName, r.Student.CID, u.Rating.Short),
+									).SetInline(false),
+								).
+								AddField(
+									discord.NewField().SetName("Position").SetValue(r.Position).SetInline(true),
+								).
+								AddField(
+									discord.NewField().SetName("Scheduled At").SetValue(r.Start.Format(time.RFC1123)).SetInline(false),
+								).
+								AddField(
+									discord.NewField().SetName("Notes").SetValue(r.Notes).SetInline(false),
+								).SetURL(fmt.Sprintf("%s/training/sessions/%s", config.Cfg.Facility.FrontendURL, r.ID)),
+						).Send(config.Cfg.Facility.TrainingRequests.Discord.TrainingStaff)
+				}(req)
+			}
 		}
 
 		req.Status = request.Status
