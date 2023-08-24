@@ -194,7 +194,49 @@ func postReoccurringAvailability(c *gin.Context) {
 		return
 	}
 
-	// TODO ...
+	user := c.MustGet("x-user").(*models.User)
+	if !auth.InGroup(user, "training") {
+		response.RespondError(c, http.StatusForbidden, "Forbidden")
+	}
+
+	if !models.IsValidPosition(request.Position) {
+		response.RespondError(c, http.StatusBadRequest, "Invalid Training Position")
+		return
+	}
+
+	/*
+		Instead of selecting slots manually, this endpoint follows a selected schedule
+		and creates sessions extending outward to 52 weeks. As each session can (and likely
+		will) be claimed by a different student (or none), a `models.TrainingRequest` and
+		paired `models.TrainingRequestSlot` DB rows are created for each of these.
+	*/
+
+	for i := 0; i < 52; i++ {
+		for _, weekday := range request.Schedule {
+			req := &models.TrainingRequest{
+				Position:     request.Position,
+				Notes:        request.Notes,
+				Status:       constants.TrainingSessionStatusOpen,
+				Instructor:   user,
+				InstructorID: user.CID,
+			}
+			if err := database.DB.Create(req).Error; err != nil {
+				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+				return
+			}
+			s := &models.TrainingRequestSlot{
+				TrainingRequestID: req.ID,
+				Start:             nil, // TODO
+				End:               nil, // TODO
+			}
+			if err := database.DB.Create(s).Error; err != nil {
+				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+				return
+			}
+		}
+	}
+
+	response.Respond(c, http.StatusCreated, nil)
 }
 
 // Edit Training Session Request [Feature Gated]

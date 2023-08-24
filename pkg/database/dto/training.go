@@ -37,7 +37,14 @@ type TrainingRequestCreateRequest struct {
 }
 
 type TrainingReoccurringSessionCreateRequest struct {
-	Slots []string `json:"slots"`
+	Position string                     `json:"position"`
+	Notes    string                     `json:"notes"`
+	Schedule []*TrainingReoccurringSlot `json:"schedule"`
+}
+
+type TrainingReoccurringSlot struct {
+	DayOfWeek string `json:"day_of_week"`
+	Time      string `json:"time"`
 }
 
 type TrainingRequestEditRequest struct {

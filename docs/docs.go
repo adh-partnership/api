@@ -3282,11 +3282,28 @@ const docTemplate = `{
         "dto.TrainingReoccurringSessionCreateRequest": {
             "type": "object",
             "properties": {
-                "slots": {
+                "notes": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "schedule": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/dto.TrainingReoccurringSlot"
                     }
+                }
+            }
+        },
+        "dto.TrainingReoccurringSlot": {
+            "type": "object",
+            "properties": {
+                "day_of_week": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
                 }
             }
         },
