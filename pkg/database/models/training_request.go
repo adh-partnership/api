@@ -34,7 +34,7 @@ type TrainingRequest struct {
 	Status          string                 `json:"status" gorm:"not null"`
 	Notes           string                 `json:"notes"`
 	Instructor      *User                  `json:"instructor" gorm:"foreignKey:InstructorID"`
-	InstructorID    *uint                  `json:"-" gorm:"default:null"`
+	InstructorID    uint                   `json:"-" gorm:"default:null"`
 	InstructorNotes string                 `json:"instructor_notes"`
 	Slots           []*TrainingRequestSlot `json:"slots" gorm:"foreignKey:TrainingRequestID"`
 	Start           *time.Time             `json:"start" gorm:"default:null"`
@@ -49,6 +49,7 @@ func (t *TrainingRequest) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func IsValidPosition(pos string) bool {
+	// not configuring any positions allows all
 	if len(config.Cfg.Facility.TrainingRequests.Positions) == 0 {
 		return true
 	}

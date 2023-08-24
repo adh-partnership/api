@@ -36,6 +36,10 @@ type TrainingRequestCreateRequest struct {
 	Slots    []*TrainingRequestSlot `json:"slots"`
 }
 
+type TrainingReoccurringSessionCreateRequest struct {
+	Slots []string `json:"slots"`
+}
+
 type TrainingRequestEditRequest struct {
 	Position        string `json:"position"`
 	Notes           string `json:"notes"`

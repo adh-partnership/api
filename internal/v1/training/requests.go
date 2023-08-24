@@ -71,9 +71,7 @@ func getTrainingRequests(c *gin.Context) {
 	// Only training staff should be able to see all training requests
 	// So lock the filter to their CID unless in the training group,
 	// where we can then respect the value of the cid query param
-	if auth.InGroup(user, "training") {
-		filter.CID = fmt.Sprint(user.CID)
-	} else {
+	if !auth.InGroup(user, "training") {
 		filter.CID = c.Query("cid")
 	}
 	filter.Status = c.Query("status")
@@ -96,7 +94,7 @@ func getTrainingRequests(c *gin.Context) {
 // @Failure 401 {object} response.R
 // @Failure 403 {object} response.R
 // @Failure 500 {object} response.R
-// @Router /v1/training/sessions [POST]
+// @Router /v1/training/requests [POST]
 func postTrainingRequest(c *gin.Context) {
 	var request dto.TrainingRequestCreateRequest
 	if err := c.ShouldBind(&request); err != nil {
@@ -107,11 +105,17 @@ func postTrainingRequest(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
 	req := &models.TrainingRequest{
-		Student:   user,
-		StudentID: user.CID,
-		Position:  request.Position,
-		Notes:     request.Notes,
-		Status:    constants.TrainingSessionStatusOpen,
+		Position: request.Position,
+		Notes:    request.Notes,
+		Status:   constants.TrainingSessionStatusOpen,
+	}
+
+	if config.Cfg.Facility.TrainingRequests.StudentStarts {
+		req.Student = user
+		req.StudentID = user.CID
+	} else {
+		req.Instructor = user
+		req.InstructorID = user.CID
 	}
 
 	// Check if Position is valid
@@ -171,6 +175,26 @@ func postTrainingRequest(c *gin.Context) {
 	}
 
 	response.Respond(c, http.StatusCreated, dto.ConvertTrainingRequestToDTO(req))
+}
+
+// Create new reoccurring training session availability for instructor [Feature Gated]
+// @Summary Create new reoccurring training session availability for instructor [Feature Gated]
+// @Tags training
+// @Param data body dto.TrainingReoccurringSessionCreateRequest true "Training Session Schedule"
+// @Success 201 {object} response.R
+// @Failure 400 {object} response.R
+// @Failure 401 {object} response.R
+// @Failure 403 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/training/requests/reoccurring [POST]
+func postReoccurringAvailability(c *gin.Context) {
+	var request dto.TrainingReoccurringSessionCreateRequest
+	if err := c.ShouldBind(&request); err != nil {
+		response.RespondError(c, http.StatusBadRequest, "Bad Request")
+		return
+	}
+
+	// TODO ...
 }
 
 // Edit Training Session Request [Feature Gated]
@@ -235,28 +259,31 @@ func patchTrainingRequest(c *gin.Context) {
 
 		if request.Status != "" && request.Status != req.Status {
 			if request.Status == constants.TrainingSessionStatusAccepted &&
-				req.Status == constants.TrainingSessionStatusOpen &&
-				config.Cfg.Facility.TrainingRequests.SendToDiscord {
-				go func(r *models.TrainingRequest) {
-					u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
-					_ = discord.NewMessage().
-						SetContent("Training Scheduled!").
-						AddEmbed(
-							discord.NewEmbed().
-								SetColor(discord.GetColor("00", "00", "ff")).
-								AddField(
-									discord.NewField().SetName("Controller").SetValue(
-										fmt.Sprintf("%s %s (%d/%s)", r.Student.FirstName, r.Student.LastName, r.Student.CID, u.Rating.Short),
-									).SetInline(false),
-								).
-								AddField(
-									discord.NewField().SetName("Position").SetValue(r.Position).SetInline(true),
-								).
-								AddField(
-									discord.NewField().SetName("Scheduled At").SetValue(r.Start.Format(time.RFC1123)).SetInline(false),
-								),
-						).Send(config.Cfg.Facility.TrainingRequests.Discord.TrainingStaff)
-				}(req)
+				req.Status == constants.TrainingSessionStatusOpen {
+				if config.Cfg.Facility.TrainingRequests.SendToDiscord {
+					go func(r *models.TrainingRequest) {
+						u, _ := database.FindUserByCID(fmt.Sprint(r.Student.CID))
+						_ = discord.NewMessage().
+							SetContent("Training Scheduled!").
+							AddEmbed(
+								discord.NewEmbed().
+									SetColor(discord.GetColor("00", "00", "ff")).
+									AddField(
+										discord.NewField().SetName("Controller").SetValue(
+											fmt.Sprintf("%s %s (%d/%s)", r.Student.FirstName, r.Student.LastName, r.Student.CID, u.Rating.Short),
+										).SetInline(false),
+									).
+									AddField(
+										discord.NewField().SetName("Position").SetValue(r.Position).SetInline(true),
+									).
+									AddField(
+										discord.NewField().SetName("Scheduled At").SetValue(r.Start.Format(time.RFC1123)).SetInline(false),
+									),
+							).Send(config.Cfg.Facility.TrainingRequests.Discord.TrainingStaff)
+					}(req)
+				} else {
+					// TODO send email?
+				}
 			}
 			req.Status = request.Status
 		}
@@ -294,6 +321,8 @@ func patchTrainingRequest(c *gin.Context) {
 								).SetURL(fmt.Sprintf("%s/training/sessions/%s", config.Cfg.Facility.FrontendURL, r.ID)),
 						).Send(config.Cfg.Facility.TrainingRequests.Discord.TrainingStaff)
 				}(req)
+			} else {
+				// TODO send email?
 			}
 		}
 
@@ -308,14 +337,14 @@ func patchTrainingRequest(c *gin.Context) {
 		req.Notes = request.Notes
 	}
 
-	if req.InstructorID != &request.Instructor {
+	if req.InstructorID != request.Instructor {
 		ins, err := database.FindUserByCID(fmt.Sprint(request.Instructor))
 		if err != nil {
 			response.RespondError(c, http.StatusBadRequest, "Invalid Instructor ID")
 			return
 		}
 		req.Instructor = ins
-		req.InstructorID = &request.Instructor
+		req.InstructorID = request.Instructor
 	}
 
 	if err := database.DB.Save(req).Error; err != nil {
@@ -450,13 +479,13 @@ func areSlotsValid(slots []*dto.TrainingRequestSlot) bool {
 
 	/* Rules for valid slots:
 	 *
-	 * - The earliest slot must be at least 24 hours from now
+	 * - The earliest slot must be at least 24 hours from now (if done by a student)
 	 * - The latest slot cannot start more than 14 days from the earliest slot
 	 * - No single slot can be longer than 24 hours
 	 * - No single slot can be less than 1 hour long
 	 */
 	for _, slot := range slots {
-		if slot.Start.Before(time.Now().Add(time.Hour * 24)) {
+		if config.Cfg.Facility.TrainingRequests.StudentStarts && slot.Start.Before(time.Now().Add(time.Hour*24)) {
 			validSlots = false
 			break
 		}

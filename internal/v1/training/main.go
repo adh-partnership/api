@@ -36,6 +36,7 @@ func Routes(r *gin.RouterGroup) {
 		r.GET("/requests", auth.NotGuest, getTrainingRequests)
 		r.GET("/requests/:id", auth.NotGuest, getTrainingRequest)
 		r.POST("/requests", auth.NotGuest, postTrainingRequest)
+		r.POST("/requests/reoccurring", auth.NotGuest, postReoccurringAvailability)
 		r.PATCH("/requests/:id", auth.NotGuest, patchTrainingRequest)
 		r.POST("/requests/:id/slots", auth.NotGuest, postTrainingRequestSlot)
 		r.DELETE("/requests/:id/slots/:slot_id", auth.NotGuest, deleteTrainingRequestSlot)
