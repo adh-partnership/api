@@ -114,6 +114,7 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 		&models.VisitorApplication{},
 		&models.TrainingRequest{},
 		&models.TrainingRequestSlot{},
+		&models.TrainingAllowed{},
 	)
 	if err != nil {
 		log.Errorf("Failed to run migrations: %v", err)

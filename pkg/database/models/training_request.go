@@ -29,7 +29,7 @@ import (
 type TrainingRequest struct {
 	ID              uuid.UUID              `json:"id" gorm:"primary_key;type:char(36);not null;unique_index"`
 	Student         *User                  `json:"student" gorm:"foreignKey:StudentID"`
-	StudentID       uint                   `json:"-" gorm:"not null"`
+	StudentID       uint                   `json:"-" gorm:"default:null"`
 	Position        string                 `json:"position" gorm:"not null"`
 	Status          string                 `json:"status" gorm:"not null"`
 	Notes           string                 `json:"notes"`
@@ -49,6 +49,10 @@ func (t *TrainingRequest) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func IsValidPosition(pos string) bool {
+	if len(config.Cfg.Facility.TrainingRequests.Positions) == 0 {
+		return true
+	}
+
 	for _, v := range config.Cfg.Facility.TrainingRequests.Positions {
 		if v == pos {
 			return true

@@ -119,10 +119,11 @@ type ConfigFacility struct {
 
 type ConfigFacilityTraining struct {
 	Enabled            bool                          `json:"enabled"`
+	StudentStarts      bool                          `json:"student_starts"`
+	SendToDiscord      bool                          `json:"send_to_discord"`
 	Discord            ConfigFacilityTrainingDiscord `json:"discord"`
 	Positions          []string                      `json:"positions"`
 	MaxRequestsPerUser int                           `json:"max_requests_per_user"`
-	SendToDiscord      bool                          `json:"send_to_discord"`
 }
 
 type ConfigFacilityTrainingDiscord struct {

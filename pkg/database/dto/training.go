@@ -70,12 +70,15 @@ type TrainingRequestSlot struct {
 func ConvertTrainingRequestToDTO(t *models.TrainingRequest) *TrainingRequest {
 	ret := &TrainingRequest{
 		ID:        t.ID.String(),
-		Student:   ConvUserToUserResponse(t.Student),
 		Position:  t.Position,
 		Status:    t.Status,
 		Notes:     t.Notes,
 		CreatedAt: t.CreatedAt,
 		UpdatedAt: t.UpdatedAt,
+	}
+
+	if t.Student != nil {
+		ret.Student = ConvUserToUserResponse(t.Student)
 	}
 
 	if t.Instructor != nil {
