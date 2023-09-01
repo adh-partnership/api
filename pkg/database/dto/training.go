@@ -43,7 +43,7 @@ type TrainingReoccurringSessionCreateRequest struct {
 }
 
 type TrainingReoccurringSlot struct {
-	DayOfWeek string `json:"day_of_week"`
+	DayOfWeek uint   `json:"day_of_week"`
 	Time      string `json:"time"`
 }
 

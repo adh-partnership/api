@@ -206,13 +206,19 @@ func postReoccurringAvailability(c *gin.Context) {
 
 	/*
 		Instead of selecting slots manually, this endpoint follows a selected schedule
-		and creates sessions extending outward to 52 weeks. As each session can (and likely
+		and creates sessions extending outward to ~6 months. As each session can (and likely
 		will) be claimed by a different student (or none), a `models.TrainingRequest` and
 		paired `models.TrainingRequestSlot` DB rows are created for each of these.
 	*/
 
-	for i := 0; i < 52; i++ {
-		for _, weekday := range request.Schedule {
+	daysInSixMonths := 7 * 30 * 6 // ish
+	now := time.Now()
+
+	for i := 0; i < daysInSixMonths; i++ {
+		for _, slot := range request.Schedule {
+			if now.Weekday() != time.Weekday(slot.DayOfWeek) {
+				continue
+			}
 			req := &models.TrainingRequest{
 				Position:     request.Position,
 				Notes:        request.Notes,
@@ -224,9 +230,16 @@ func postReoccurringAvailability(c *gin.Context) {
 				response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
+			//										   2006-01-02T15:04:05Z07:00
+			start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+			// start, err := time.Parse(time.RFC3339, fmt.Sprintf("")) // TODO
+			// if err != nil {
+			// 	response.RespondError(c, http.StatusBadRequest, "Invalid Start Time")
+			// 	return
+			// }
 			s := &models.TrainingRequestSlot{
 				TrainingRequestID: req.ID,
-				Start:             nil, // TODO
+				Start:             &start,
 				End:               nil, // TODO
 			}
 			if err := database.DB.Create(s).Error; err != nil {
@@ -234,9 +247,10 @@ func postReoccurringAvailability(c *gin.Context) {
 				return
 			}
 		}
+		now = now.Add(time.Hour * 24)
 	}
 
-	response.Respond(c, http.StatusCreated, nil)
+	response.RespondBlank(c, http.StatusCreated)
 }
 
 // Edit Training Session Request [Feature Gated]
