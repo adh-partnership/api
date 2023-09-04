@@ -10,4 +10,12 @@ default:
 shell:
 	@$(RUN) /bin/bash
 
+.PHONY: docker
+docker:
+	@bash scripts/docker_build.sh
+
+.PHONY: docker-push
+docker-push:
+	@bash scripts/docker_build.sh --push
+
 .PHONY: default shell

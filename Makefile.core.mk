@@ -30,14 +30,6 @@ init:
 build:
 	@LDFLAGS=${RELEASE_LDFLAGS} scripts/go_build.sh out/ ${BINARIES}
 
-.PHONY: docker
-docker:
-	@bash scripts/docker_build.sh
-
-.PHONY: docker-push
-docker-push:
-	@bash scripts/docker_build.sh --push
-
 .PHONY: test
 test:
 	@go test -v ./...
