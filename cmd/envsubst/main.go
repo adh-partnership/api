@@ -22,7 +22,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/Masterminds/sprig/v3"
+	"github.com/adh-partnership/sprig/v3"
 )
 
 func main() {
