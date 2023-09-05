@@ -60,6 +60,7 @@ func requestStaffing(c *gin.Context) {
 			AddField(discord.NewField().SetName("ArrivalAirport").SetValue(dto.ArrivalAirport)).
 			AddField(discord.NewField().SetName("Pilots").SetValue(strconv.Itoa(dto.Pilots))).
 			AddField(discord.NewField().SetName("Contact").SetValue(dto.ContactInfo)).
+			AddField(discord.NewField().SetName("Organization").SetValue(dto.Organization)).
 			AddField(discord.NewField().SetName("Banner").SetValue(dto.BannerUrl)).
 			AddField(discord.NewField().SetName("Comments").SetValue(dto.Comments)),
 		).Send("staffing_request")
