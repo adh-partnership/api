@@ -54,10 +54,13 @@ func requestStaffing(c *gin.Context) {
 		SetContent("New staffing request").
 		AddEmbed(discord.NewEmbed().
 			AddField(discord.NewField().SetName("Requester").SetValue(fmt.Sprintf("%s %s (%d)", user.FirstName, user.LastName, user.CID))).
-			AddField(discord.NewField().SetName("Date").SetValue(dto.Date)).
+			AddField(discord.NewField().SetName("Start Date").SetValue(dto.StartDate)).
+			AddField(discord.NewField().SetName("End Date").SetValue(dto.EndDate)).
 			AddField(discord.NewField().SetName("DepartureAirport").SetValue(dto.DepartureAirport)).
 			AddField(discord.NewField().SetName("ArrivalAirport").SetValue(dto.ArrivalAirport)).
 			AddField(discord.NewField().SetName("Pilots").SetValue(strconv.Itoa(dto.Pilots))).
+			AddField(discord.NewField().SetName("Contact").SetValue(dto.ContactInfo)).
+			AddField(discord.NewField().SetName("Banner").SetValue(dto.BannerUrl)).
 			AddField(discord.NewField().SetName("Comments").SetValue(dto.Comments)),
 		).Send("staffing_request")
 	if err != nil {
