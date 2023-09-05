@@ -24,6 +24,6 @@ type StaffingRequest struct {
 	Pilots           int    `json:"pilots" binding:"required"`
 	ContactInfo      string `json:"contactInfo" binding:"required"`
 	Organization     string `json:"organization"`
-	BannerUrl        string `json:"bannerUrl"`
+	BannerURL        string `json:"bannerUrl"`
 	Comments         string `json:"comments"`
 }
