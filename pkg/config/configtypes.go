@@ -62,7 +62,8 @@ type ConfigEmail struct {
 }
 
 type ConfigFeatures struct {
-	StaffingRequest bool `json:"staffing_request"`
+	StaffingRequest  bool `json:"staffing_request"`
+	ControllerOnline bool `json:"controller_online"`
 }
 
 type ConfigSession struct {
