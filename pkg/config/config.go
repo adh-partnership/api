@@ -31,7 +31,8 @@ var Cfg *Config
 // We may extend this later with other defaults
 var defaultConfig = &Config{
 	Features: ConfigFeatures{
-		StaffingRequest: false,
+		StaffingRequest:  false,
+		ControllerOnline: true,
 	},
 }
 

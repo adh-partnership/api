@@ -29,6 +29,7 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"gorm.io/gorm"
 
+	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/database/models/constants"
@@ -162,19 +163,21 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 					return
 				}
 
-				_ = discord.NewMessage().
-					AddEmbed(
-						discord.NewEmbed().SetTitle(fmt.Sprintf("%s is now online!", controller.Callsign)).SetColor(
-							discord.GetColor("00", "00", "ff"),
-						).
-							SetDescription(fmt.Sprintf(
-								"%s %s (%s) is now online as %s",
-								user.FirstName,
-								user.LastName,
-								user.OperatingInitials,
-								controller.Callsign,
-							)),
-					).Send("online")
+				if config.Cfg.Features.ControllerOnline {
+					_ = discord.NewMessage().
+						AddEmbed(
+							discord.NewEmbed().SetTitle(fmt.Sprintf("%s is now online!", controller.Callsign)).SetColor(
+								discord.GetColor("00", "00", "ff"),
+							).
+								SetDescription(fmt.Sprintf(
+									"%s %s (%s) is now online as %s",
+									user.FirstName,
+									user.LastName,
+									user.OperatingInitials,
+									controller.Callsign,
+								)),
+						).Send("online")
+				}
 			}(controller)
 		}
 
