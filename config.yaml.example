@@ -59,14 +59,6 @@ facility:
     - RCA
   training_requests:
     enabled: false
-    student_starts: true
-    send_to_discord: true
-    discord:
-      training_staff: ""
-      scheduled: ""
-      show_all_scheduled: false
-    positions: []
-    max_requests_per_user: 2
 session:
   cookie:
     name: "zdv_session"

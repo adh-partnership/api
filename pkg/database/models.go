@@ -275,44 +275,26 @@ func FindAirportChartsByID(id string) ([]*models.AirportChart, error) {
 	return charts, nil
 }
 
-func FindTrainingSessionRequestByID(id string) (*models.TrainingRequest, error) {
-	request := &models.TrainingRequest{}
-	if err := DB.Preload("Student.Rating").Preload("Instructor.Rating").Preload(clause.Associations).First(request, "id = ?", id).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
+func FindOrCreateTeacherTrainingRating(teacherId uint) (*models.TeacherTrainingRating, error) {
+	rating := &models.TeacherTrainingRating{}
+	if err := DB.Preload(clause.Associations).FirstOrCreate(&rating, models.TeacherTrainingRating{TeacherID: teacherId}).Error; err != nil {
 		return nil, err
 	}
-
-	return request, nil
+	return rating, nil
 }
 
-func FindTrainingSessionRequests() ([]*models.TrainingRequest, error) {
-	var requests []*models.TrainingRequest
-	if err := DB.Preload("Student.Rating").Preload("Instructor.Rating").Preload(clause.Associations).Find(&requests).Error; err != nil {
+func FindTrainingSchedules() ([]*models.TrainingSchedule, error) {
+	var schedules []*models.TrainingSchedule
+	if err := DB.Preload(clause.Associations).Find(&schedules).Error; err != nil {
 		return nil, err
 	}
-
-	return requests, nil
+	return schedules, nil
 }
 
-type TrainingSessionRequestFilter struct {
-	CID    string
-	Status string
-}
-
-func FindTrainingSessionRequestWithFilter(f *TrainingSessionRequestFilter) ([]*models.TrainingRequest, error) {
-	var requests []*models.TrainingRequest
-	tx := DB.Preload("Student.Rating").Preload("Instructor.Rating").Preload(clause.Associations)
-	if f.CID != "" {
-		tx = tx.Where("student_id = ?", atou(f.CID))
-	}
-	if f.Status != "" {
-		tx = tx.Where("status = ?", f.Status)
-	}
-	if err := tx.Find(&requests).Error; err != nil {
+func FindTrainingSessions() ([]*models.TrainingSession, error) {
+	var sessions []*models.TrainingSession
+	if err := DB.Preload(clause.Associations).Find(&sessions).Error; err != nil {
 		return nil, err
 	}
-
-	return requests, nil
+	return sessions, nil
 }
