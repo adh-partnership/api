@@ -30,7 +30,7 @@ type TrainingNoteRequest struct {
 	SessionDate time.Time `json:"session_date"`
 }
 
-type TeacherTrainingRating struct {
+type ZdvTeacherTrainingRating struct {
 	ID            string `json:"id"`
 	MinorGround   bool   `json:"minor_ground"`
 	MajorGround   bool   `json:"major_ground"`
@@ -41,8 +41,8 @@ type TeacherTrainingRating struct {
 	Center        bool   `json:"center"`
 }
 
-func ConvertTeacherTrainingRatingToDTO(t *models.TeacherTrainingRating) *TeacherTrainingRating {
-	return &TeacherTrainingRating{
+func ConvertTeacherTrainingRatingToDTO(t *models.ZdvTeacherTrainingRating) *ZdvTeacherTrainingRating {
+	return &ZdvTeacherTrainingRating{
 		ID:            t.ID.String(),
 		MinorGround:   t.MinorGround,
 		MajorGround:   t.MajorGround,
@@ -54,15 +54,15 @@ func ConvertTeacherTrainingRatingToDTO(t *models.TeacherTrainingRating) *Teacher
 	}
 }
 
-type TrainingSchedule struct {
+type ZdvTrainingSchedule struct {
 	ID        string        `json:"id"`
 	Teacher   *UserResponse `json:"teacher"`
 	DayOfWeek uint          `json:"day_of_week"`
 	TimeOfDay uint          `json:"time_of_day"`
 }
 
-func ConvertTrainingScheduleToDTO(t *models.TrainingSchedule) *TrainingSchedule {
-	return &TrainingSchedule{
+func ConvertTrainingScheduleToDTO(t *models.ZdvTrainingSchedule) *ZdvTrainingSchedule {
+	return &ZdvTrainingSchedule{
 		ID:        t.ID.String(),
 		Teacher:   ConvUserToUserResponse(t.Teacher),
 		DayOfWeek: t.DayOfWeek,
@@ -70,8 +70,8 @@ func ConvertTrainingScheduleToDTO(t *models.TrainingSchedule) *TrainingSchedule 
 	}
 }
 
-func ConvertTrainingSchedulesToDTO(t []*models.TrainingSchedule) []*TrainingSchedule {
-	var res []*TrainingSchedule
+func ConvertTrainingSchedulesToDTO(t []*models.ZdvTrainingSchedule) []*ZdvTrainingSchedule {
+	var res []*ZdvTrainingSchedule
 	for _, v := range t {
 		res = append(res, ConvertTrainingScheduleToDTO(v))
 	}
@@ -86,7 +86,7 @@ type TrainingSession struct {
 	End     time.Time     `json:"end"`
 }
 
-func ConvertTrainingSessionToDTO(t *models.TrainingSession) *TrainingSession {
+func ConvertTrainingSessionToDTO(t *models.ZdvTrainingSession) *TrainingSession {
 	return &TrainingSession{
 		ID:      t.ID.String(),
 		Teacher: ConvUserToUserResponse(t.Teacher),
@@ -96,7 +96,7 @@ func ConvertTrainingSessionToDTO(t *models.TrainingSession) *TrainingSession {
 	}
 }
 
-func ConvertTrainingSessionsToDTO(t []*models.TrainingSession) []*TrainingSession {
+func ConvertTrainingSessionsToDTO(t []*models.ZdvTrainingSession) []*TrainingSession {
 	var res []*TrainingSession
 	for _, v := range t {
 		res = append(res, ConvertTrainingSessionToDTO(v))

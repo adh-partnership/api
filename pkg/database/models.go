@@ -275,24 +275,24 @@ func FindAirportChartsByID(id string) ([]*models.AirportChart, error) {
 	return charts, nil
 }
 
-func FindOrCreateTeacherTrainingRating(teacherId uint) (*models.TeacherTrainingRating, error) {
-	rating := &models.TeacherTrainingRating{}
-	if err := DB.Preload(clause.Associations).FirstOrCreate(&rating, models.TeacherTrainingRating{TeacherID: teacherId}).Error; err != nil {
+func FindOrCreateTeacherTrainingRating(teacherId uint) (*models.ZdvTeacherTrainingRating, error) {
+	rating := &models.ZdvTeacherTrainingRating{}
+	if err := DB.Preload(clause.Associations).FirstOrCreate(&rating, models.ZdvTeacherTrainingRating{TeacherID: teacherId}).Error; err != nil {
 		return nil, err
 	}
 	return rating, nil
 }
 
-func FindTrainingSchedules() ([]*models.TrainingSchedule, error) {
-	var schedules []*models.TrainingSchedule
+func FindTrainingSchedules() ([]*models.ZdvTrainingSchedule, error) {
+	var schedules []*models.ZdvTrainingSchedule
 	if err := DB.Preload(clause.Associations).Find(&schedules).Error; err != nil {
 		return nil, err
 	}
 	return schedules, nil
 }
 
-func FindTrainingSessions() ([]*models.TrainingSession, error) {
-	var sessions []*models.TrainingSession
+func FindTrainingSessions() ([]*models.ZdvTrainingSession, error) {
+	var sessions []*models.ZdvTrainingSession
 	if err := DB.Preload(clause.Associations).Find(&sessions).Error; err != nil {
 		return nil, err
 	}

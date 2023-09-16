@@ -33,13 +33,13 @@ func Routes(r *gin.RouterGroup) {
 	r.DELETE("/:cid/:id", auth.NotGuest, auth.InGroup("training"), deleteTraining)
 
 	if config.Cfg.Facility.TrainingRequests.Enabled {
-		r.GET("/requests/schedules", auth.NotGuest, getTrainingSchedules)
-		r.POST("/requests/schedules", auth.NotGuest, auth.InGroup("training"), postTrainingSchedule)
-		r.PUT("/requests/schedules/:id", auth.NotGuest, auth.InGroup("training"), putTrainingSchedule)
-		r.GET("/requests/sessions", auth.NotGuest, getTrainingSessions)
-		r.POST("/requests/sessions", auth.NotGuest, postTrainingSession)
-		r.PUT("/requests/sessions/:id", auth.NotGuest, putTrainingSession)
-		r.GET("/requests/ratings/:id", auth.NotGuest, auth.HasRole("ta"), getTeacherTrainingRating)
-		r.PUT("/requests/ratings/:id", auth.NotGuest, auth.HasRole("ta"), putTeacherTrainingRating)
+		r.GET("/zdv/requests/schedules", auth.NotGuest, getTrainingSchedules)
+		r.POST("/zdv/requests/schedules", auth.NotGuest, auth.InGroup("training"), postTrainingSchedule)
+		r.PUT("/zdv/requests/schedules/:id", auth.NotGuest, auth.InGroup("training"), putTrainingSchedule)
+		r.GET("/zdv/requests/sessions", auth.NotGuest, getTrainingSessions)
+		r.POST("/zdv/requests/sessions", auth.NotGuest, postTrainingSession)
+		r.PUT("/zdv/requests/sessions/:id", auth.NotGuest, putTrainingSession)
+		r.GET("/zdv/requests/ratings/:id", auth.NotGuest, auth.HasRole("ta"), getTeacherTrainingRating)
+		r.PUT("/zdv/requests/ratings/:id", auth.NotGuest, auth.HasRole("ta"), putTeacherTrainingRating)
 	}
 }

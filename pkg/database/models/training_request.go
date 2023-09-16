@@ -25,7 +25,7 @@ import (
 
 // Teachers are limited to what they can train others on. Senior facility staff
 // are responsible for keeping this up to date.
-type TeacherTrainingRating struct {
+type ZdvTeacherTrainingRating struct {
 	ID            uuid.UUID `json:"id" gorm:"primary_key;type:char(36);not null;unique_index"`
 	Teacher       *User     `json:"Teacher" gorm:"foreignKey:TeacherID"`
 	TeacherID     uint      `json:"-" gorm:"not null"`
@@ -40,13 +40,17 @@ type TeacherTrainingRating struct {
 	UpdatedAt     time.Time `json:"updated_at" gorm:"not null"`
 }
 
-func (t *TeacherTrainingRating) BeforeCreate(tx *gorm.DB) (err error) {
+func (ZdvTeacherTrainingRating) TableName() string {
+	return "zdv_teacher_training_rating"
+}
+
+func (t *ZdvTeacherTrainingRating) BeforeCreate(tx *gorm.DB) (err error) {
 	t.ID = uuid.New()
 	t.CreatedAt = time.Now().UTC()
 	return nil
 }
 
-func (t *TeacherTrainingRating) BeforeSafe(tx *gorm.DB) (err error) {
+func (t *ZdvTeacherTrainingRating) BeforeSafe(tx *gorm.DB) (err error) {
 	t.UpdatedAt = time.Now().UTC()
 	return nil
 }
@@ -56,7 +60,7 @@ func (t *TeacherTrainingRating) BeforeSafe(tx *gorm.DB) (err error) {
 //
 // When a student selects a session that's part of a schedule, a
 // "TrainingSession" model is created on the fly.
-type TrainingSchedule struct {
+type ZdvTrainingSchedule struct {
 	ID        uuid.UUID `json:"id" gorm:"primary_key;type:char(36);not null;unique_index"`
 	Teacher   *User     `json:"Teacher" gorm:"foreignKey:TeacherID"`
 	TeacherID uint      `json:"-" gorm:"not null"`
@@ -66,13 +70,17 @@ type TrainingSchedule struct {
 	UpdatedAt time.Time `json:"updated_at" gorm:"not null"`
 }
 
-func (t *TrainingSchedule) BeforeCreate(tx *gorm.DB) (err error) {
+func (ZdvTrainingSchedule) TableName() string {
+	return "zdv_training_schedule"
+}
+
+func (t *ZdvTrainingSchedule) BeforeCreate(tx *gorm.DB) (err error) {
 	t.ID = uuid.New()
 	t.CreatedAt = time.Now().UTC()
 	return nil
 }
 
-func (t *TrainingSchedule) BeforeSafe(tx *gorm.DB) (err error) {
+func (t *ZdvTrainingSchedule) BeforeSafe(tx *gorm.DB) (err error) {
 	t.UpdatedAt = time.Now().UTC()
 	return nil
 }
@@ -80,7 +88,7 @@ func (t *TrainingSchedule) BeforeSafe(tx *gorm.DB) (err error) {
 // Teachers can also create one-off sessions on the calendar.
 //
 // When a session is claimed by a student, their information is attached to the record.
-type TrainingSession struct {
+type ZdvTrainingSession struct {
 	ID        uuid.UUID `json:"id" gorm:"primary_key;type:char(36);not null;unique_index"`
 	Teacher   *User     `json:"Teacher" gorm:"foreignKey:TeacherID"`
 	TeacherID uint      `json:"-" gorm:"not null"`
@@ -92,13 +100,17 @@ type TrainingSession struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (t *TrainingSession) BeforeCreate(tx *gorm.DB) (err error) {
+func (ZdvTrainingSession) TableName() string {
+	return "zdv_training_session"
+}
+
+func (t *ZdvTrainingSession) BeforeCreate(tx *gorm.DB) (err error) {
 	t.ID = uuid.New()
 	t.CreatedAt = time.Now().UTC()
 	return nil
 }
 
-func (t *TrainingSession) BeforeSafe(tx *gorm.DB) (err error) {
+func (t *ZdvTrainingSession) BeforeSafe(tx *gorm.DB) (err error) {
 	t.UpdatedAt = time.Now().UTC()
 	return nil
 }
