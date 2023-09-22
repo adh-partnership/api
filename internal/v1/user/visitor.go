@@ -34,6 +34,7 @@ import (
 	"github.com/adh-partnership/api/pkg/discord"
 	"github.com/adh-partnership/api/pkg/email"
 	"github.com/adh-partnership/api/pkg/gin/response"
+	"github.com/adh-partnership/api/pkg/network/global"
 	"github.com/adh-partnership/api/pkg/network/vatsim"
 	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
@@ -70,17 +71,18 @@ func getVisitor(c *gin.Context) {
 func postVisitor(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
-	if user.Region == "" || user.Division == "" || user.Subdivision == "" {
-		region, division, subdivision, err := vatsim.GetLocation(fmt.Sprint(user.CID))
+	// VATSIM seems to randomly have " " as a subdivision???
+	if user.Region == "" || user.Division == "" || user.Subdivision == "" || user.Subdivision == " " {
+		location, err := global.GetLocation(fmt.Sprint(user.CID))
 		if err != nil {
 			log.Errorf("Error getting location: %s", err)
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
 
-		user.Region = region
-		user.Division = division
-		user.Subdivision = subdivision
+		user.Region = location.Region
+		user.Division = location.Division
+		user.Subdivision = location.Subdivision
 
 		if err := database.DB.Save(&user).Error; err != nil {
 			log.Errorf("Error saving user: %s", err)
@@ -106,7 +108,9 @@ func postVisitor(c *gin.Context) {
 		return
 	}
 
-	if app != nil && err == nil {
+	if app != nil {
+		log.Infof("Visitor application already exists for %d", user.CID)
+		log.Infof("Application=%+v", app)
 		response.RespondError(c, http.StatusConflict, "Already applied")
 		return
 	}
