@@ -72,6 +72,12 @@ type EventSignupResponse struct {
 	User    *UserResponse `json:"user"`
 }
 
+type EventStatsRequest struct {
+	CID     uint `json:"cid"`
+	Tardies uint `json:"tardies"`
+	NoShows uint `json:"no_shows"`
+}
+
 func PatchEventRequest(base *models.Event, patch EventRequest) *models.Event {
 	if patch.Title != "" {
 		base.Title = patch.Title

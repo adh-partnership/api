@@ -98,6 +98,15 @@ definitions:
       user:
         $ref: '#/definitions/dto.UserResponse'
     type: object
+  dto.EventStatsRequest:
+    properties:
+      cid:
+        type: integer
+      no_shows:
+        type: integer
+      tardies:
+        type: integer
+    type: object
   dto.EventsResponse:
     properties:
       banner:
@@ -251,19 +260,29 @@ definitions:
     properties:
       arrivalAirport:
         type: string
+      bannerUrl:
+        type: string
       comments:
         type: string
-      date:
+      contactInfo:
         type: string
       departureAirport:
         type: string
+      endDate:
+        type: string
+      organization:
+        type: string
       pilots:
         type: integer
+      startDate:
+        type: string
     required:
     - arrivalAirport
-    - date
+    - contactInfo
     - departureAirport
+    - endDate
     - pilots
+    - startDate
     type: object
   dto.StorageRequest:
     properties:
@@ -920,7 +939,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1423,6 +1442,63 @@ paths:
       summary: Create/Edit User Signup for Event
       tags:
       - Events
+  /v1/events/user/{id}/stats:
+    get:
+      description: Get event tracking stats for a user
+      parameters:
+      - description: CID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.EventsResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get event tracking stats
+      tags:
+      - Events
+    put:
+      description: Update event tracking stats for a user
+      parameters:
+      - description: CID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Stats data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EventStatsRequest'
+      responses:
+        "201":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.R'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Update event tracking stats
+      tags:
+      - Events
   /v1/feedback:
     get:
       description: Get Individual pilot feedback
@@ -1527,7 +1603,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error
@@ -1548,7 +1624,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_v1_overflight.Flightsv1'
+              $ref: '#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1'
             type: array
         "500":
           description: Internal Server Error

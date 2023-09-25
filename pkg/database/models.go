@@ -85,6 +85,14 @@ func GetEvent(id string) (*models.Event, error) {
 	return event, nil
 }
 
+func GetEventTracking(cid uint) (*models.EventTracking, error) {
+	data := &models.EventTracking{}
+	if err := DB.Where(models.EventTracking{CID: cid}).First(data).Error; err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func FindRole(name string) (*models.Role, error) {
 	role := &models.Role{}
 	if err := DB.Where(models.Role{Name: name}).First(role).Error; err != nil {

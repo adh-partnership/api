@@ -39,4 +39,7 @@ func Routes(r *gin.RouterGroup) {
 
 	r.POST("/:id/signup", auth.NotGuest, postEventSignup)
 	r.DELETE("/:id/signup", auth.NotGuest, deleteEventSignup)
+
+	r.GET("/user/:id/stats", auth.NotGuest, getEventTracking)
+	r.PUT("/user/:id/stats", auth.NotGuest, auth.HasRole("ec"), updateEventTracking)
 }

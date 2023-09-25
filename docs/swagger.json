@@ -36,7 +36,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -338,6 +338,92 @@
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/dto.EventRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/events/user/{id}/stats": {
+            "get": {
+                "description": "Get event tracking stats for a user",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get event tracking stats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.EventsResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update event tracking stats for a user",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Update event tracking stats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Stats data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.EventStatsRequest"
                         }
                     }
                 ],
@@ -951,7 +1037,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -984,7 +1070,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_v1_overflight.Flightsv1"
+                                "$ref": "#/definitions/github.com_adh-partnership_api_internal_v1_overflight.Flightsv1"
                             }
                         }
                     },
@@ -2940,6 +3026,20 @@
                 }
             }
         },
+        "dto.EventStatsRequest": {
+            "type": "object",
+            "properties": {
+                "cid": {
+                    "type": "integer"
+                },
+                "no_shows": {
+                    "type": "integer"
+                },
+                "tardies": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.EventsResponse": {
             "type": "object",
             "properties": {
@@ -3167,25 +3267,39 @@
             "type": "object",
             "required": [
                 "arrivalAirport",
-                "date",
+                "contactInfo",
                 "departureAirport",
-                "pilots"
+                "endDate",
+                "pilots",
+                "startDate"
             ],
             "properties": {
                 "arrivalAirport": {
                     "type": "string"
                 },
+                "bannerUrl": {
+                    "type": "string"
+                },
                 "comments": {
                     "type": "string"
                 },
-                "date": {
+                "contactInfo": {
                     "type": "string"
                 },
                 "departureAirport": {
                     "type": "string"
                 },
+                "endDate": {
+                    "type": "string"
+                },
+                "organization": {
+                    "type": "string"
+                },
                 "pilots": {
                     "type": "integer"
+                },
+                "startDate": {
+                    "type": "string"
                 }
             }
         },

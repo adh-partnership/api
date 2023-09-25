@@ -83,6 +83,7 @@ func newBootstrapCommand() *cli.Command {
 					&models.EventPosition{},
 					&models.Event{},
 					&models.EventSignup{},
+					&models.EventTracking{},
 					&models.Feedback{},
 					&models.Flights{},
 					&models.OAuthClient{},
