@@ -41,7 +41,7 @@ type METAR struct {
 	WindDirection      int            `xml:"wind_dir_degrees"`
 	WindSpeed          int            `xml:"wind_speed_kt"`
 	WindGust           int            `xml:"wind_gust_kt"`
-	Visibility         float64        `xml:"visibility_statute_mi"`
+	Visibility         string         `xml:"visibility_statute_mi"`
 	Altimeter          float64        `xml:"altim_in_hg"`
 	SeaLevelPressure   float64        `xml:"sea_level_pressure_mb"`
 	WxString           string         `xml:"wx_string"`
@@ -60,15 +60,12 @@ func GetMetar(station string) (*METAR, error) {
 	u := url.URL{
 		Scheme: "https",
 		Host:   "aviationweather.gov",
-		Path:   "adds/dataserver_current/httpparam",
+		Path:   "api/data/metar",
 	}
 	q := u.Query()
-	q.Set("dataSource", "metars")
-	q.Set("requestType", "retrieve")
 	q.Set("format", "xml")
-	q.Set("hoursBeforeNow", "1")
-	q.Set("stationString", station)
-	q.Set("mostRecent", "true")
+	q.Set("hours", "1")
+	q.Set("ids", station)
 	u.RawQuery = q.Encode()
 
 	response, err := http.Get(u.String())
