@@ -32,27 +32,27 @@ import (
 	"github.com/adh-partnership/api/pkg/utils"
 )
 
-var log = logger.Logger.WithField("component", "middleware/auth")
-var tokenHeader = regexp.MustCompile(`^Token\s+(.+)$`)
+var (
+	log         = logger.Logger.WithField("component", "middleware/auth")
+	tokenHeader = regexp.MustCompile(`^Token\s+(.+)$`)
+)
 
 func Auth(c *gin.Context) {
 	// Check for an Authorization header
 	authHeader := c.GetHeader("Authorization")
-	xApiToken := c.GetHeader("X-Api-Token")
+	xAPIToken := c.GetHeader("X-Api-Token")
 
-	if authHeader != "" || xApiToken != "" {
+	if authHeader != "" || xAPIToken != "" {
 		var apikey *models.APIKeys
 		var err error
 		// We have an API Key
-		if xApiToken != "" {
-			log.Debugf("X-Api-Token: %s", xApiToken)
-			apikey, err = database.FindAPIKey(xApiToken)
-		} else {
-			if tokenHeader.MatchString(authHeader) {
-				token := tokenHeader.FindStringSubmatch(authHeader)[1]
-				log.Debugf("Authorization Token: %s", token)
-				apikey, err = database.FindAPIKey(token)
-			}
+		if xAPIToken != "" {
+			log.Debugf("X-Api-Token: %s", xAPIToken)
+			apikey, err = database.FindAPIKey(xAPIToken)
+		} else if tokenHeader.MatchString(authHeader) {
+			token := tokenHeader.FindStringSubmatch(authHeader)[1]
+			log.Debugf("Authorization Token: %s", token)
+			apikey, err = database.FindAPIKey(token)
 		}
 
 		if err == gorm.ErrRecordNotFound {
