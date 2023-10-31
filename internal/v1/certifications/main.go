@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package training
+package certifications
 
 import (
 	"github.com/gin-gonic/gin"
@@ -23,11 +23,11 @@ import (
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
-var log = logger.Logger.WithField("component", "training")
+var log = logger.Logger.WithField("component", "certifications")
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("/:cid", auth.NotGuest, getTraining)
-	r.POST("/:cid", auth.NotGuest, auth.InGroup("training"), postTraining)
-	r.PUT("/:cid/:id", auth.NotGuest, auth.InGroup("training"), putTraining)
-	r.DELETE("/:cid/:id", auth.NotGuest, auth.InGroup("training"), deleteTraining)
+	r.GET("/", getCertifications)
+	r.POST("/", auth.NotGuest, auth.InGroup("admin"), postCertifications)
+	r.DELETE("/:name", auth.NotGuest, auth.InGroup("admin"), deleteCertifications)
+	r.PUT("/:name", auth.NotGuest, auth.InGroup("admin"), putCertifications)
 }

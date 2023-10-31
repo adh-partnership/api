@@ -64,8 +64,6 @@ func getUser(c *gin.Context) {
 // Patch User Information
 // @Summary Patch User Information
 // @Tags user
-// @Accept json
-// @Produce json
 // @Param user body dto.UserResponse true "User"
 // @Param cid path string true "CID"
 // @Success 200 {object} dto.UserResponse
@@ -112,42 +110,7 @@ func patchUser(c *gin.Context) {
 		return
 	}
 
-	if req.Certifications.Ground != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
-	if req.Certifications.MajorGround != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
-	if req.Certifications.Local != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
-	if req.Certifications.MajorLocal != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
-	if req.Certifications.Approach != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
-	if req.Certifications.MajorApproach != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
-	if req.Certifications.Enroute != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
-		response.RespondError(c, http.StatusForbidden, "Forbidden")
-		return
-	}
-
-	if req.Certifications.Oceanic != "" && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
+	if req.Certifications != nil && !auth.InGroup(user, "admin") && !auth.InGroup(user, "training") {
 		response.RespondError(c, http.StatusForbidden, "Forbidden")
 		return
 	}
