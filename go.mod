@@ -1,6 +1,6 @@
 module github.com/adh-partnership/api
 
-go 1.20
+go 1.21
 
 replace github.com/imdario/mergo v1.0.0 => dario.cat/mergo v1.0.0
 
@@ -9,12 +9,12 @@ require (
 	github.com/Shopify/gomail v0.0.0-20220729171026-0784ece65e69
 	github.com/adh-partnership/sprig/v3 v3.2.4
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
-	github.com/aws/aws-sdk-go v1.46.1
+	github.com/aws/aws-sdk-go v1.46.7
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-co-op/gocron v1.35.2
+	github.com/go-co-op/gocron v1.35.3
 	github.com/go-playground/assert/v2 v2.2.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.7.1
@@ -32,22 +32,22 @@ require (
 	gorm.io/gorm v1.25.5
 	istio.io/pkg v0.0.0-20231012032344-12c123223b71
 	moul.io/http2curl v1.0.0
-	sigs.k8s.io/yaml v1.3.0
+	sigs.k8s.io/yaml v1.4.0
 )
 
 require (
 	cloud.google.com/go v0.110.9 // indirect
-	cloud.google.com/go/compute v1.23.1 // indirect
+	cloud.google.com/go/compute v1.23.2 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/logging v1.8.1 // indirect
-	cloud.google.com/go/longrunning v0.5.2 // indirect
+	cloud.google.com/go/longrunning v0.5.3 // indirect
 	github.com/bytedance/sonic v1.10.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
-	github.com/googleapis/enterprise-certificate-proxy v0.3.1 // indirect
+	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
@@ -62,13 +62,13 @@ require (
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/arch v0.5.0 // indirect
 	google.golang.org/api v0.148.0 // indirect
-	google.golang.org/genproto v0.0.0-20231016165738-49dd2c1f3d0b // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20231016165738-49dd2c1f3d0b // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20231016165738-49dd2c1f3d0b // indirect
+	google.golang.org/genproto v0.0.0-20231030173426-d783a09b4405 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20231030173426-d783a09b4405 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231030173426-d783a09b4405 // indirect
 	google.golang.org/grpc v1.59.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	k8s.io/klog/v2 v2.100.1 // indirect
+	k8s.io/klog/v2 v2.110.1 // indirect
 )
 
 require (
@@ -91,7 +91,7 @@ require (
 	github.com/go-playground/validator/v10 v10.15.5 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/uuid v1.3.1
+	github.com/google/uuid v1.4.0
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.1 // indirect
