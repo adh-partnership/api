@@ -16,8 +16,12 @@
 
 package models
 
+import "time"
+
 type APIKeys struct {
-	ID   int    `json:"id" example:"1"`
-	Key  string `json:"key" example:"1234567890"`
-	Role string `json:"role" example:"admin"`
+	ID        uint      `json:"id" example:"1"`
+	Key       string    `json:"key" example:"1234567890"`
+	Roles     string    `json:"role" example:"[\"atm\"]"`
+	CreatedAt time.Time `json:"created_at" example:"2020-01-01T00:00:00Z"`
+	UpdatedAt time.Time `json:"updated_at" example:"2020-01-01T00:00:00Z"`
 }

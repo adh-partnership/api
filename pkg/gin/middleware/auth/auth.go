@@ -18,9 +18,11 @@ package auth
 
 import (
 	"net/http"
+	"regexp"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"github.com/adh-partnership/api/pkg/auth"
 	"github.com/adh-partnership/api/pkg/database"
@@ -31,13 +33,80 @@ import (
 )
 
 var log = logger.Logger.WithField("component", "middleware/auth")
+var tokenHeader = regexp.MustCompile(`^Token\s+(.+)$`)
 
 func Auth(c *gin.Context) {
+	// Check for an Authorization header
+	authHeader := c.GetHeader("Authorization")
+	xApiToken := c.GetHeader("X-Api-Token")
+
+	if authHeader != "" || xApiToken != "" {
+		var apikey *models.APIKeys
+		var err error
+		// We have an API Key
+		if xApiToken != "" {
+			log.Debugf("X-Api-Token: %s", xApiToken)
+			apikey, err = database.FindAPIKey(xApiToken)
+		} else {
+			if tokenHeader.MatchString(authHeader) {
+				token := tokenHeader.FindStringSubmatch(authHeader)[1]
+				log.Debugf("Authorization Token: %s", token)
+				apikey, err = database.FindAPIKey(token)
+			}
+		}
+
+		if err == gorm.ErrRecordNotFound {
+			log.Debugf("API Key not found: %s", err)
+			response.RespondError(c, http.StatusUnauthorized, "Unauthorized")
+			c.Abort()
+			return
+		}
+
+		if err != nil {
+			log.Errorf("Error finding API Key: %s", err)
+			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+			c.Abort()
+			return
+		}
+
+		log.Debugf("API Key: %+v", apikey)
+		rating, err := database.FindRating(1)
+		if err != nil {
+			rating = &models.Rating{
+				ID:    1,
+				Short: "OBS",
+				Long:  "Observer",
+			}
+		}
+
+		user := &models.User{
+			CID:               1000,
+			FirstName:         "Automation",
+			LastName:          "User",
+			Email:             "",
+			OperatingInitials: "",
+			Status:            "active",
+			RatingID:          rating.ID,
+			Rating:            *rating,
+			DiscordID:         "",
+			RosterJoinDate:    &apikey.CreatedAt,
+			CreatedAt:         apikey.CreatedAt,
+			UpdatedAt:         apikey.CreatedAt,
+		}
+		c.Set("x-guest", false)
+		c.Set("x-user", user)
+		c.Set("x-auth-type", "apikey")
+		c.Set("x-cid", user.CID)
+		c.Next()
+		return
+	}
+
+	// @TODO Add JWT support here
+
 	session := sessions.Default(c)
 	cid := session.Get("cid")
 	log.Debugf("Cookie cid: %v", utils.DumpToJSON(cid))
 	if cid == nil {
-		log.Debug("In Auth as Guest")
 		c.Set("x-guest", true)
 		c.Next()
 		return
@@ -70,6 +139,10 @@ func NotGuest(c *gin.Context) {
 		return
 	}
 	c.Next()
+}
+
+func IsAPIKey(c *gin.Context) bool {
+	return c.GetString("x-auth-type") == "apikey"
 }
 
 func HasRole(roles ...string) gin.HandlerFunc {

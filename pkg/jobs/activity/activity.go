@@ -17,51 +17,45 @@
 package activity
 
 import (
-	"fmt"
-	"strings"
-	"time"
-
 	"github.com/go-co-op/gocron"
-	"gorm.io/gorm/clause"
 
-	"github.com/adh-partnership/api/pkg/config"
-	"github.com/adh-partnership/api/pkg/database"
-	"github.com/adh-partnership/api/pkg/database/models"
-	"github.com/adh-partnership/api/pkg/database/models/constants"
-	"github.com/adh-partnership/api/pkg/discord"
-	"github.com/adh-partnership/api/pkg/email"
 	"github.com/adh-partnership/api/pkg/logger"
 )
 
 var log = logger.Logger.WithField("component", "job/activity")
 
+// @TODO
 func ScheduleJobs(s *gocron.Scheduler) error {
-	_, err := s.Cron("0 1 * * *").SingletonMode().Do(handleWarning)
-	if err != nil {
-		return fmt.Errorf("failed to schedule inactivity job: %s", err)
-	}
-
-	months := "*"
-	if len(config.Cfg.Facility.Activity.Inactive.Months) != 0 {
-		var m []string
-		for _, month := range config.Cfg.Facility.Activity.Inactive.Months {
-			if month < 0 || month > 12 {
-				log.Warnf("Invalid month %d, skipping", month)
-				continue
-			}
-			m = append(m, fmt.Sprint(month))
+	/*
+		_, err := s.Cron("0 1 * * *").SingletonMode().Do(handleWarning)
+		if err != nil {
+			return fmt.Errorf("failed to schedule inactivity job: %s", err)
 		}
-		months = strings.Join(m, ",")
-	}
 
-	_, err = s.Cron(fmt.Sprintf("0 2 1 %s *", months)).SingletonMode().Do(handleInactive)
-	if err != nil {
-		return fmt.Errorf("failed to schedule inactive job: %s", err)
-	}
+		months := "*"
+		if len(config.Cfg.Facility.Activity.Inactive.Months) != 0 {
+			var m []string
+			for _, month := range config.Cfg.Facility.Activity.Inactive.Months {
+				if month < 0 || month > 12 {
+					log.Warnf("Invalid month %d, skipping", month)
+					continue
+				}
+				m = append(m, fmt.Sprint(month))
+			}
+			months = strings.Join(m, ",")
+		}
+
+		_, err = s.Cron(fmt.Sprintf("0 2 1 %s *", months)).SingletonMode().Do(handleInactive)
+		if err != nil {
+			return fmt.Errorf("failed to schedule inactive job: %s", err)
+		}
+	*/
+	log.Warnf("Due to changes in GCAP, Activity Jobs are not yet supported and will be reintroduced later down the line.")
 
 	return nil
 }
 
+/*
 func handleInactive() {
 	if !config.Cfg.Facility.Activity.Inactive.Enabled {
 		return
@@ -241,3 +235,4 @@ func EndOfMonth(t time.Time) time.Time {
 func DaysBefore(t time.Time, days int) time.Time {
 	return t.AddDate(0, 0, -days)
 }
+*/
