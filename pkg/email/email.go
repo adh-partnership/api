@@ -136,8 +136,12 @@ func Send(to, from, subject string, template string, data map[string]interface{}
 	m := gomail.NewMessage()
 	m.SetHeader("From", from)
 	m.SetHeader("To", strings.Split(to, ", ")...)
-	m.SetHeader("Cc", strings.Split(cc, ", ")...)
-	m.SetHeader("Bcc", strings.Split(bcc, ", ")...)
+	if cc != "" {
+		m.SetHeader("Cc", strings.Split(cc, ", ")...)
+	}
+	if bcc != "" {
+		m.SetHeader("Bcc", strings.Split(bcc, ", ")...)
+	}
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", body.String())
 
