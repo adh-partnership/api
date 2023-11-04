@@ -16,11 +16,19 @@
 
 package database
 
-import "github.com/adh-partnership/api/pkg/database/models"
+import (
+	"sync"
 
-var certCache []string = nil
+	"github.com/adh-partnership/api/pkg/database/models"
+)
+
+var (
+	certCache []string
+	mutex     = &sync.Mutex{}
+)
 
 func GetCertifications() []string {
+	mutex.Lock()
 	if certCache == nil {
 		certCache = make([]string, 0)
 		certs := []models.Certification{}
@@ -32,12 +40,15 @@ func GetCertifications() []string {
 			certCache = append(certCache, cert.Name)
 		}
 	}
+	mutex.Unlock()
 
 	return certCache
 }
 
 func InvalidateCertCache() {
+	mutex.Lock()
 	certCache = nil
+	mutex.Unlock()
 }
 
 func ValidCertification(key string) bool {

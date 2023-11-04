@@ -1,1 +1,11 @@
-<testsuites></testsuites>
+<testsuites>
+  <testsuite name="pkg/database/certifications.go" tests="1" errors="0" failures="1">
+    <testcase name="revive" classname="pkg/database/certifications.go:26:23">
+      <failure message="pkg/database/certifications.go:26:23: var-declaration: should drop = nil from declaration of var certCache; it is the zero value" type="warning"><![CDATA[warning: var-declaration: should drop = nil from declaration of var certCache; it is the zero value
+Category: revive
+File: pkg/database/certifications.go
+Line: 26
+Details: 	certCache []string = nil]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
