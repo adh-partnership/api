@@ -17,6 +17,7 @@
 package auth
 
 import (
+	"encoding/json"
 	"net/http"
 	"regexp"
 
@@ -34,7 +35,7 @@ import (
 
 var (
 	log         = logger.Logger.WithField("component", "middleware/auth")
-	tokenHeader = regexp.MustCompile(`^Token\s+(.+)$`)
+	tokenHeader = regexp.MustCompile(`^[tT]oken\s+(.+)$`)
 )
 
 func Auth(c *gin.Context) {
@@ -79,6 +80,19 @@ func Auth(c *gin.Context) {
 			}
 		}
 
+		// Setup roles for API Key
+		roles := []*models.Role{}
+		rawroles := []string{}
+		err = json.Unmarshal([]byte(apikey.Roles), &rawroles)
+		if err != nil {
+			log.Infof("Roles for API Key %s are invalid: %s", apikey.Key, err)
+		}
+		for _, r := range rawroles {
+			roles = append(roles, &models.Role{
+				Name: r,
+			})
+		}
+
 		user := &models.User{
 			CID:               1000,
 			FirstName:         "Automation",
@@ -89,6 +103,7 @@ func Auth(c *gin.Context) {
 			RatingID:          rating.ID,
 			Rating:            *rating,
 			DiscordID:         "",
+			Roles:             roles,
 			RosterJoinDate:    &apikey.CreatedAt,
 			CreatedAt:         apikey.CreatedAt,
 			UpdatedAt:         apikey.CreatedAt,
