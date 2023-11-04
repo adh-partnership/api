@@ -27,11 +27,10 @@ type User struct {
 	Email             string `json:"email" gorm:"type:varchar(128)" example:"wm@denartcc.org"`
 	OperatingInitials string `json:"operating_initials" gorm:"type:varchar(2)" example:"DH"`
 	// Must be one of: none, active, inactive, loa
-	ControllerType       string           `json:"controllerType" gorm:"type:varchar(10)" example:"home"`
-	Certifications       []*Certification `json:"certifications" gorm:"many2many:user_certifications"`
-	ExemptedFromActivity bool             `json:"exemptedFromActivity" gorm:"default:false" example:"false"`
-	RatingID             int              `json:"-"`
-	Rating               Rating           `json:"rating"`
+	ControllerType       string `json:"controllerType" gorm:"type:varchar(10)" example:"home"`
+	ExemptedFromActivity bool   `json:"exemptedFromActivity" gorm:"default:false" example:"false"`
+	RatingID             int    `json:"-"`
+	Rating               Rating `json:"rating"`
 	// Must be one of: none, active, inactive, loa
 	Status    string  `json:"status" gorm:"type:varchar(10)" example:"active"`
 	Roles     []*Role `json:"roles" gorm:"many2many:user_roles"`
