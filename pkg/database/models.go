@@ -329,9 +329,6 @@ func FindTrainingSessionRequestWithFilter(f *TrainingSessionRequestFilter) ([]*m
 func FindAPIKey(key string) (*models.APIKeys, error) {
 	apikey := &models.APIKeys{}
 	if err := DB.Where(models.APIKeys{Key: key}).First(apikey).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
 		return nil, err
 	}
 
