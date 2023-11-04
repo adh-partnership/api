@@ -334,12 +334,3 @@ func FindAPIKey(key string) (*models.APIKeys, error) {
 
 	return apikey, nil
 }
-
-func ValidCertification(key string) (bool, error) {
-	cert := &models.Certification{}
-	if err := DB.Where(models.Certification{Name: key}).First(cert).Error; err != nil {
-		return false, err
-	}
-
-	return true, nil
-}

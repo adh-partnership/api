@@ -31,30 +31,15 @@ type CertificationDTO struct {
 	Name string `json:"name"`
 }
 
-type CertificationResponseDTO struct {
-	Certificiations []string `json:"certifications"`
-}
-
 // Get certification types
 // @Summary Get certification types
 // @Description Get certification types
 // @Tags certifications
-// @Success 200 {object} CertificationResponseDTO
+// @Success 200 {object} []string
 // @Failure 500 {object} response.R
 // @Router /v1/certifications [get]
 func getCertifications(c *gin.Context) {
-	var certifications []models.Certification
-	if err := database.DB.Find(&certifications).Error; err != nil {
-		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-		return
-	}
-
-	var certificationNames []string
-	for _, certification := range certifications {
-		certificationNames = append(certificationNames, certification.Name)
-	}
-
-	response.Respond(c, http.StatusOK, CertificationResponseDTO{Certificiations: certificationNames})
+	response.Respond(c, http.StatusOK, database.GetCertifications())
 }
 
 // Create a new certification type
@@ -69,6 +54,7 @@ func getCertifications(c *gin.Context) {
 // @Router /v1/certifications [post]
 func postCertifications(c *gin.Context) {
 	var certificationDTO CertificationDTO
+
 	if err := c.ShouldBind(&certificationDTO); err != nil {
 		response.RespondError(c, http.StatusBadRequest, "Bad Request")
 		return
@@ -84,6 +70,8 @@ func postCertifications(c *gin.Context) {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+
+	database.InvalidateCertCache()
 
 	response.Respond(c, http.StatusNoContent, nil)
 }
@@ -144,6 +132,8 @@ func putCertifications(c *gin.Context) {
 		return
 	}
 
+	database.InvalidateCertCache()
+
 	response.Respond(c, http.StatusNoContent, nil)
 }
 
@@ -187,6 +177,8 @@ func deleteCertifications(c *gin.Context) {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+
+	database.InvalidateCertCache()
 
 	response.Respond(c, http.StatusNoContent, nil)
 }

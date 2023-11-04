@@ -109,13 +109,9 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 	}
 
 	// Fill in other certifications with "none"
-	mainCerts := []models.Certification{}
-	if err := database.DB.Model(&models.Certification{}).Find(&mainCerts).Error; err != nil {
-		return nil
-	}
-	for _, c := range mainCerts {
-		if _, ok := certs[c.Name]; !ok {
-			certs[c.Name] = "none"
+	for _, c := range database.GetCertifications() {
+		if _, ok := certs[c]; !ok {
+			certs[c] = "none"
 		}
 	}
 
@@ -190,7 +186,7 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 			errs = append(errs, err.Error())
 		} else {
 			for certName, certValue := range userResponse.Certifications {
-				if ok, _ := database.ValidCertification(certName); !ok {
+				if !database.ValidCertification(certName) {
 					errs = append(errs, ErrInvalidCertification)
 					continue
 				}
