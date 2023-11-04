@@ -22,44 +22,44 @@ import (
 )
 
 type UserResponse struct {
-	CID                  uint                          `json:"cid" yaml:"cid" xml:"cid"`
-	FirstName            string                        `json:"first_name" yaml:"first_name" xml:"first_name"`
-	LastName             string                        `json:"last_name" yaml:"last_name" xml:"last_name"`
-	OperatingInitials    string                        `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
-	ControllerType       string                        `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
-	Certifications       []*UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
-	Rating               string                        `json:"rating" yaml:"rating" xml:"rating"`
-	Status               string                        `json:"status" yaml:"status" xml:"status"`
-	Roles                []string                      `json:"roles" yaml:"roles" xml:"roles"`
-	Region               string                        `json:"region" yaml:"region" xml:"region"`
-	Division             string                        `json:"division" yaml:"division" xml:"division"`
-	Subdivision          string                        `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
-	DiscordID            string                        `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
-	RosterJoinDate       string                        `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
-	ExemptedFromActivity *bool                         `json:"exempted_from_activity" yaml:"exempted_from_activity" xml:"exempted_from_activity"`
-	CreatedAt            string                        `json:"created_at" yaml:"created_at" xml:"created_at"`
-	UpdatedAt            string                        `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
+	CID                  uint              `json:"cid" yaml:"cid" xml:"cid"`
+	FirstName            string            `json:"first_name" yaml:"first_name" xml:"first_name"`
+	LastName             string            `json:"last_name" yaml:"last_name" xml:"last_name"`
+	OperatingInitials    string            `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
+	ControllerType       string            `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
+	Certifications       map[string]string `json:"certifications" yaml:"certifications" xml:"certifications"`
+	Rating               string            `json:"rating" yaml:"rating" xml:"rating"`
+	Status               string            `json:"status" yaml:"status" xml:"status"`
+	Roles                []string          `json:"roles" yaml:"roles" xml:"roles"`
+	Region               string            `json:"region" yaml:"region" xml:"region"`
+	Division             string            `json:"division" yaml:"division" xml:"division"`
+	Subdivision          string            `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
+	DiscordID            string            `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
+	RosterJoinDate       string            `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
+	ExemptedFromActivity *bool             `json:"exempted_from_activity" yaml:"exempted_from_activity" xml:"exempted_from_activity"`
+	CreatedAt            string            `json:"created_at" yaml:"created_at" xml:"created_at"`
+	UpdatedAt            string            `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
 
 type UserResponseAdmin struct {
-	CID                  uint                          `json:"cid" yaml:"cid" xml:"cid"`
-	FirstName            string                        `json:"first_name" yaml:"first_name" xml:"first_name"`
-	LastName             string                        `json:"last_name" yaml:"last_name" xml:"last_name"`
-	OperatingInitials    string                        `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
-	ControllerType       string                        `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
-	Certifications       []*UserResponseCertifications `json:"certifications" yaml:"certifications" xml:"certifications"`
-	RemovalReason        string                        `json:"removal_reason" yaml:"removal_reason" xml:"removal_reason"`
-	Rating               string                        `json:"rating" yaml:"rating" xml:"rating"`
-	Status               string                        `json:"status" yaml:"status" xml:"status"`
-	Roles                []string                      `json:"roles" yaml:"roles" xml:"roles"`
-	Region               string                        `json:"region" yaml:"region" xml:"region"`
-	Division             string                        `json:"division" yaml:"division" xml:"division"`
-	Subdivision          string                        `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
-	DiscordID            string                        `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
-	ExemptedFromActivity *bool                         `json:"exempted_from_activity" yaml:"exempted_from_activity" xml:"exempted_from_activity"`
-	RosterJoinDate       string                        `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
-	CreatedAt            string                        `json:"created_at" yaml:"created_at" xml:"created_at"`
-	UpdatedAt            string                        `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
+	CID                  uint              `json:"cid" yaml:"cid" xml:"cid"`
+	FirstName            string            `json:"first_name" yaml:"first_name" xml:"first_name"`
+	LastName             string            `json:"last_name" yaml:"last_name" xml:"last_name"`
+	OperatingInitials    string            `json:"operating_initials" yaml:"operating_initials" xml:"operating_initials"`
+	ControllerType       string            `json:"controller_type" yaml:"controller_type" xml:"controller_type"`
+	Certifications       map[string]string `json:"certifications" yaml:"certifications" xml:"certifications"`
+	RemovalReason        string            `json:"removal_reason" yaml:"removal_reason" xml:"removal_reason"`
+	Rating               string            `json:"rating" yaml:"rating" xml:"rating"`
+	Status               string            `json:"status" yaml:"status" xml:"status"`
+	Roles                []string          `json:"roles" yaml:"roles" xml:"roles"`
+	Region               string            `json:"region" yaml:"region" xml:"region"`
+	Division             string            `json:"division" yaml:"division" xml:"division"`
+	Subdivision          string            `json:"subdivision" yaml:"subdivision" xml:"subdivision"`
+	DiscordID            string            `json:"discord_id" yaml:"discord_id" xml:"discord_id"`
+	ExemptedFromActivity *bool             `json:"exempted_from_activity" yaml:"exempted_from_activity" xml:"exempted_from_activity"`
+	RosterJoinDate       string            `json:"roster_join_date" yaml:"roster_join_date" xml:"roster_join_date"`
+	CreatedAt            string            `json:"created_at" yaml:"created_at" xml:"created_at"`
+	UpdatedAt            string            `json:"updated_at" yaml:"updated_at" xml:"updated_at"`
 }
 
 type UserResponseCertifications struct {
@@ -101,13 +101,21 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 	}
 
 	userCerts, err := database.FindUserCertifications(user)
-	certs := []*UserResponseCertifications{}
+	certs := map[string]string{}
 	if err == nil {
 		for _, cert := range userCerts {
-			certs = append(certs, &UserResponseCertifications{
-				Name:  cert.Name,
-				Value: cert.Value,
-			})
+			certs[cert.Name] = cert.Value
+		}
+	}
+
+	// Fill in other certifications with "none"
+	mainCerts := []models.Certification{}
+	if err := database.DB.Model(&models.Certification{}).Find(&mainCerts).Error; err != nil {
+		return nil
+	}
+	for _, c := range mainCerts {
+		if _, ok := certs[c.Name]; !ok {
+			certs[c.Name] = "none"
 		}
 	}
 
@@ -181,16 +189,21 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 		if err != nil {
 			errs = append(errs, err.Error())
 		} else {
-			for _, uc := range userResponse.Certifications {
+			for certName, certValue := range userResponse.Certifications {
+				if ok, _ := database.ValidCertification(certName); !ok {
+					errs = append(errs, ErrInvalidCertification)
+					continue
+				}
+
 				found := false
-				if _, ok := models.CertificationOptions[uc.Value]; !ok {
+				if _, ok := models.CertificationOptions[certValue]; !ok {
 					errs = append(errs, ErrInvalidCertification)
 					continue
 				}
 
 				for _, cert := range userCerts {
-					if cert.Name == uc.Name {
-						cert.Value = uc.Value
+					if cert.Name == certName {
+						cert.Value = certValue
 						if err := database.DB.Save(cert).Error; err != nil {
 							errs = append(errs, err.Error())
 						}
@@ -201,8 +214,8 @@ func PatchUserFromUserResponse(user *models.User, userResponse UserResponseAdmin
 				if !found {
 					if err := database.DB.Create(&models.UserCertification{
 						CID:   user.CID,
-						Name:  uc.Name,
-						Value: uc.Value,
+						Name:  certName,
+						Value: certValue,
 					}).Error; err != nil {
 						errs = append(errs, err.Error())
 					}

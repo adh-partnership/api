@@ -84,6 +84,8 @@ func postCertifications(c *gin.Context) {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+
+	response.Respond(c, http.StatusNoContent, nil)
 }
 
 // Update a certification type
