@@ -28,7 +28,10 @@ import (
 )
 
 type CertificationDTO struct {
-	Name string `json:"name"`
+	Name        string `json:"name"`
+	DisplayName string `json:"displayName"`
+	Order       uint   `json:"order"`
+	Hidden      bool   `json:"hidden"`
 }
 
 // Get certification types
@@ -65,7 +68,12 @@ func postCertifications(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Create(&models.Certification{Name: certificationDTO.Name}).Error; err != nil {
+	if err := database.DB.Create(&models.Certification{
+		DisplayName: certificationDTO.DisplayName,
+		Name:        certificationDTO.Name,
+		Order:       certificationDTO.Order,
+		Hidden:      certificationDTO.Hidden,
+	}).Error; err != nil {
 		log.Errorf("Failed to create certification: %+v", err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
@@ -112,6 +120,9 @@ func putCertifications(c *gin.Context) {
 	}
 
 	cert.Name = certificationDTO.Name
+	cert.DisplayName = certificationDTO.DisplayName
+	cert.Order = certificationDTO.Order
+	cert.Hidden = certificationDTO.Hidden
 
 	err := database.DB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(cert).Error; err != nil {
