@@ -104,7 +104,8 @@ func putCertifications(c *gin.Context) {
 	}
 
 	// If changing names and the new name is already in use, return a conflict
-	if c.Param("name") != certificationDTO.Name && database.DB.Where(models.Certification{Name: certificationDTO.Name}).First(&models.Certification{}).Error == nil {
+	if c.Param("name") != certificationDTO.Name &&
+		database.DB.Where(models.Certification{Name: certificationDTO.Name}).First(&models.Certification{}).Error == nil {
 		response.RespondError(c, http.StatusConflict, "Certification name already in use")
 		return
 	}

@@ -1,0 +1,11 @@
+<testsuites>
+  <testsuite name="internal/v1/certifications/certifications.go" tests="1" errors="0" failures="1">
+    <testcase name="lll" classname="internal/v1/certifications/certifications.go:107">
+      <failure message="internal/v1/certifications/certifications.go:107: line is 162 characters" type=""><![CDATA[: line is 162 characters
+Category: lll
+File: internal/v1/certifications/certifications.go
+Line: 107
+Details: 	if c.Param("name") != certificationDTO.Name && database.DB.Where(models.Certification{Name: certificationDTO.Name}).First(&models.Certification{}).Error == nil {]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
