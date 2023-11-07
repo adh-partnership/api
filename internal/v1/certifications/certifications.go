@@ -29,7 +29,7 @@ import (
 
 type CertificationDTO struct {
 	Name        string `json:"name"`
-	DisplayName string `json:"displayName"`
+	DisplayName string `json:"display_name"`
 	Order       uint   `json:"order"`
 	Hidden      bool   `json:"hidden"`
 }
@@ -103,7 +103,8 @@ func putCertifications(c *gin.Context) {
 		return
 	}
 
-	if database.DB.Where(models.Certification{Name: certificationDTO.Name}).First(&models.Certification{}).Error == nil {
+	// If changing names and the new name is already in use, return a conflict
+	if c.Param("name") != certificationDTO.Name && database.DB.Where(models.Certification{Name: certificationDTO.Name}).First(&models.Certification{}).Error == nil {
 		response.RespondError(c, http.StatusConflict, "Certification name already in use")
 		return
 	}
