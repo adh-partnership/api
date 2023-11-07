@@ -28,6 +28,7 @@ import (
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/logger"
 	"github.com/adh-partnership/api/pkg/utils"
+	"github.com/adh-partnership/api/pkg/weather"
 )
 
 var log = logger.Logger.WithField("component", "weather")
@@ -93,13 +94,13 @@ func getMetar(c *gin.Context) {
 		return
 	}
 
-	airport, err := database.FindAirportByID(icao)
+	wx, err := weather.GetWeather(icao)
 	if err != nil {
 		response.RespondError(c, http.StatusNotFound, "Not Found")
 		return
 	}
 
-	response.Respond(c, http.StatusOK, airport.METAR)
+	response.Respond(c, http.StatusOK, wx.METAR)
 }
 
 // Get TAF Data
@@ -119,11 +120,11 @@ func getTaf(c *gin.Context) {
 		return
 	}
 
-	airport, err := database.FindAirportByID(icao)
+	wx, err := weather.GetWeather(icao)
 	if err != nil {
 		response.RespondError(c, http.StatusNotFound, "Not Found")
 		return
 	}
 
-	response.Respond(c, http.StatusOK, airport.TAF)
+	response.Respond(c, http.StatusOK, wx.TAF)
 }

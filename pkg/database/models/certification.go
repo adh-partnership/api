@@ -19,8 +19,11 @@ package models
 import "time"
 
 type Certification struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	DisplayName string `json:"display_name"`
+	Order       uint   `json:"order"`
+	Hidden      bool   `json:"hidden"`
 }
 
 type UserCertification struct {

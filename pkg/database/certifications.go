@@ -23,38 +23,40 @@ import (
 )
 
 var (
-	certCache []string
-	mutex     = &sync.Mutex{}
+	certCache []models.Certification
+	mutex     = &sync.RWMutex{}
 )
 
-func GetCertifications() []string {
-	mutex.Lock()
+func GetCertifications() []models.Certification {
 	if certCache == nil {
-		certCache = make([]string, 0)
+		mutex.Lock()
+		certCache = make([]models.Certification, 0)
 		certs := []models.Certification{}
 		if err := DB.Model(&models.Certification{}).Find(&certs).Error; err != nil {
 			log.Errorf("Error getting certifications: %v", err)
 			return nil
 		}
-		for _, cert := range certs {
-			certCache = append(certCache, cert.Name)
-		}
+		certCache = certs
+		log.Infof("Populated certifications cache with %d entries: %+v", len(certCache), certCache)
+		mutex.Unlock()
 	}
-	mutex.Unlock()
 
+	mutex.RLock()
+	defer mutex.RUnlock()
 	return certCache
 }
 
 func InvalidateCertCache() {
 	mutex.Lock()
 	certCache = nil
+	log.Infof("Certifications cache invalidated")
 	mutex.Unlock()
 }
 
 func ValidCertification(key string) bool {
 	certifications := GetCertifications()
 	for _, cert := range certifications {
-		if cert == key {
+		if cert.Name == key {
 			return true
 		}
 	}

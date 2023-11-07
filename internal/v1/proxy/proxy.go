@@ -62,7 +62,7 @@ func getMetar(c *gin.Context) {
 
 // Proxy TAF Data
 // @Summary [Deprecated] Proxy TAF Data
-// @Description Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/taf/:icao)
+// @Description Proxy TAF Data. Deprecated. Use our job fetched data where possible (/v1/weather/taf/:icao)
 // @Tags Proxy
 // @Param icao path string true "ICAO"
 // @Success 200 {object} string

@@ -42,6 +42,7 @@ import (
 	"github.com/adh-partnership/api/pkg/metrics"
 	"github.com/adh-partnership/api/pkg/oauth"
 	"github.com/adh-partnership/api/pkg/storage"
+	"github.com/adh-partnership/api/pkg/weather"
 )
 
 type ServerStruct struct {
@@ -138,6 +139,12 @@ func NewServer(o *ServerOpts) (*ServerStruct, error) {
 	if cfg.Storage.BaseURL != "" {
 		log.Infof(" - Setting BaseURL to %s", cfg.Storage.BaseURL)
 		v1storage.SetBase(cfg.Storage.BaseURL)
+	}
+
+	log.Info("Building weather cache")
+	err = weather.UpdateWeatherCache()
+	if err != nil {
+		log.Warnf("Failed to update weather cache: %s", err.Error())
 	}
 
 	log.Info("Building gin engine")

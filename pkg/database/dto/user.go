@@ -110,8 +110,8 @@ func ConvUserToUserResponse(user *models.User) *UserResponse {
 
 	// Fill in other certifications with "none"
 	for _, c := range database.GetCertifications() {
-		if _, ok := certs[c]; !ok {
-			certs[c] = "none"
+		if _, ok := certs[c.Name]; !ok {
+			certs[c.Name] = "none"
 		}
 	}
 
