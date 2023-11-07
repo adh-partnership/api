@@ -52,16 +52,22 @@ func handleWeather() {
 	}
 
 	for _, airport := range airports {
-		wx, err := weather.GetWeather(airport.ICAO)
-		if err != nil {
-			log.Errorf("Failed to get weather for %s: %s", airport.ICAO, err)
-			continue
-		}
-		airport.METAR = wx.METAR
-		airport.TAF = wx.TAF
-		if err := database.DB.Save(&airport).Error; err != nil {
-			log.Errorf("Failed to save airport %s: %s", airport.ICAO, err)
-			continue
+		if airport.HasMETAR || airport.HasTAF {
+			wx, err := weather.GetWeather(airport.ICAO)
+			if err != nil {
+				log.Errorf("Failed to get weather for %s: %s", airport.ICAO, err)
+				continue
+			}
+			if airport.HasMETAR {
+				airport.METAR = wx.METAR
+			}
+			if airport.HasTAF {
+				airport.TAF = wx.TAF
+			}
+			if err := database.DB.Save(&airport).Error; err != nil {
+				log.Errorf("Failed to save airport %s: %s", airport.ICAO, err)
+				continue
+			}
 		}
 	}
 }

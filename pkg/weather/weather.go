@@ -124,7 +124,6 @@ func processMetars() (*response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to ungzip metars: %s", err)
 	}
-	log.Infof("Downloaded %d bytes of METAR data: %s", len(metarsRaw), string(metarsRaw))
 
 	resp := response{}
 	if err := xml.NewDecoder(bytes.NewReader(metarsRaw)).Decode(&resp); err != nil {
@@ -144,7 +143,6 @@ func processTafs() (*response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to ungzip tafs: %s", err)
 	}
-	log.Infof("Downloaded %d bytes of TAF data: %s", len(tafsRaw), string(tafsRaw))
 
 	resp := response{}
 	if err := xml.NewDecoder(bytes.NewReader(tafsRaw)).Decode(&resp); err != nil {
