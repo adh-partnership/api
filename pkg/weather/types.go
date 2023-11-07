@@ -27,11 +27,11 @@ type response struct {
 }
 
 type METAR struct {
-	StationId string `xml:"station_id"`
+	StationID string `xml:"station_id"`
 	RawText   string `xml:"raw_text"`
 }
 
 type TAF struct {
-	StationId string `xml:"station_id"`
+	StationID string `xml:"station_id"`
 	RawText   string `xml:"raw_text"`
 }

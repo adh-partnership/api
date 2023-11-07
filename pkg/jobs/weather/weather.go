@@ -39,7 +39,11 @@ func ScheduleJobs(s *gocron.Scheduler) error {
 }
 
 func handleWeather() {
-	weather.UpdateWeatherCache()
+	err := weather.UpdateWeatherCache()
+	if err != nil {
+		log.Errorf("Failed to update weather cache: %s", err)
+		return
+	}
 
 	airports := []models.Airport{}
 	if err := database.DB.Find(&airports).Error; err != nil {

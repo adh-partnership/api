@@ -62,10 +62,10 @@ func UpdateWeatherCache() error {
 		return fmt.Errorf("failed to process metars: %s", err)
 	}
 	for _, metar := range metars.METARs {
-		if _, ok := newCache[metar.StationId]; !ok {
-			newCache[metar.StationId] = &Weather{}
+		if _, ok := newCache[metar.StationID]; !ok {
+			newCache[metar.StationID] = &Weather{}
 		}
-		newCache[metar.StationId].METAR = metar.RawText
+		newCache[metar.StationID].METAR = metar.RawText
 	}
 
 	tafs, err := processTafs()
@@ -73,10 +73,10 @@ func UpdateWeatherCache() error {
 		return fmt.Errorf("failed to process tafs: %s", err)
 	}
 	for _, taf := range tafs.TAFs {
-		if _, ok := newCache[taf.StationId]; !ok {
-			newCache[taf.StationId] = &Weather{}
+		if _, ok := newCache[taf.StationID]; !ok {
+			newCache[taf.StationID] = &Weather{}
 		}
-		newCache[taf.StationId].TAF = taf.RawText
+		newCache[taf.StationID].TAF = taf.RawText
 	}
 
 	log.Infof("Updating weather cache with, %d weather stations, %d METARs and %d TAFs", len(newCache), len(metars.METARs), len(tafs.TAFs))

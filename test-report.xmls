@@ -1,11 +1,27 @@
 <testsuites>
-  <testsuite name="pkg/database/certifications.go" tests="1" errors="0" failures="1">
-    <testcase name="revive" classname="pkg/database/certifications.go:26:23">
-      <failure message="pkg/database/certifications.go:26:23: var-declaration: should drop = nil from declaration of var certCache; it is the zero value" type="warning"><![CDATA[warning: var-declaration: should drop = nil from declaration of var certCache; it is the zero value
+  <testsuite name="pkg/jobs/weather/weather.go" tests="1" errors="0" failures="1">
+    <testcase name="errcheck" classname="pkg/jobs/weather/weather.go:42:28">
+      <failure message="pkg/jobs/weather/weather.go:42:28: Error return value of `weather.UpdateWeatherCache` is not checked" type=""><![CDATA[: Error return value of `weather.UpdateWeatherCache` is not checked
+Category: errcheck
+File: pkg/jobs/weather/weather.go
+Line: 42
+Details: 	weather.UpdateWeatherCache()]]></failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="pkg/weather/types.go" tests="2" errors="0" failures="2">
+    <testcase name="revive" classname="pkg/weather/types.go:30:2">
+      <failure message="pkg/weather/types.go:30:2: var-naming: struct field StationId should be StationID" type="warning"><![CDATA[warning: var-naming: struct field StationId should be StationID
 Category: revive
-File: pkg/database/certifications.go
-Line: 26
-Details: 	certCache []string = nil]]></failure>
+File: pkg/weather/types.go
+Line: 30
+Details: 	StationId string `xml:"station_id"`]]></failure>
+    </testcase>
+    <testcase name="revive" classname="pkg/weather/types.go:35:2">
+      <failure message="pkg/weather/types.go:35:2: var-naming: struct field StationId should be StationID" type="warning"><![CDATA[warning: var-naming: struct field StationId should be StationID
+Category: revive
+File: pkg/weather/types.go
+Line: 35
+Details: 	StationId string `xml:"station_id"`]]></failure>
     </testcase>
   </testsuite>
 </testsuites>
