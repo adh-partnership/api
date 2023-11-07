@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	addsMetarsCache = "https://aviationweather.gov/data/cache/metars.cache.csv.gz"
+	addsMetarsCache = "https://aviationweather.gov/data/cache/metars.cache.xml.gz"
 	addsTafsCache   = "https://aviationweather.gov/data/cache/tafs.cache.xml.gz"
 )
 

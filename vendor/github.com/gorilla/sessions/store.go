@@ -6,9 +6,11 @@ package sessions
 
 import (
 	"encoding/base32"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/gorilla/securecookie"
@@ -199,8 +201,6 @@ func (s *FilesystemStore) New(r *http.Request, name string) (*Session, error) {
 	return session, err
 }
 
-var base32RawStdEncoding = base32.StdEncoding.WithPadding(base32.NoPadding)
-
 // Save adds a single session to the response.
 //
 // If the Options.MaxAge of the session is <= 0 then the session file will be
@@ -211,7 +211,7 @@ func (s *FilesystemStore) Save(r *http.Request, w http.ResponseWriter,
 	session *Session) error {
 	// Delete if max-age is <= 0
 	if session.Options.MaxAge <= 0 {
-		if err := s.erase(session); err != nil && !os.IsNotExist(err) {
+		if err := s.erase(session); err != nil {
 			return err
 		}
 		http.SetCookie(w, NewCookie(session.Name(), "", session.Options))
@@ -221,8 +221,9 @@ func (s *FilesystemStore) Save(r *http.Request, w http.ResponseWriter,
 	if session.ID == "" {
 		// Because the ID is used in the filename, encode it to
 		// use alphanumeric characters only.
-		session.ID = base32RawStdEncoding.EncodeToString(
-			securecookie.GenerateRandomKey(32))
+		session.ID = strings.TrimRight(
+			base32.StdEncoding.EncodeToString(
+				securecookie.GenerateRandomKey(32)), "=")
 	}
 	if err := s.save(session); err != nil {
 		return err
@@ -260,7 +261,7 @@ func (s *FilesystemStore) save(session *Session) error {
 	filename := filepath.Join(s.path, "session_"+session.ID)
 	fileMutex.Lock()
 	defer fileMutex.Unlock()
-	return os.WriteFile(filename, []byte(encoded), 0600)
+	return ioutil.WriteFile(filename, []byte(encoded), 0600)
 }
 
 // load reads a file and decodes its content into session.Values.
@@ -268,7 +269,7 @@ func (s *FilesystemStore) load(session *Session) error {
 	filename := filepath.Join(s.path, "session_"+session.ID)
 	fileMutex.RLock()
 	defer fileMutex.RUnlock()
-	fdata, err := os.ReadFile(filepath.Clean(filename))
+	fdata, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
 	}
