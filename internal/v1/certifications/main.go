@@ -26,8 +26,8 @@ import (
 var log = logger.Logger.WithField("component", "certifications")
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("/", getCertifications)
-	r.POST("/", auth.NotGuest, auth.InGroup("admin"), postCertifications)
+	r.GET("", getCertifications)
+	r.POST("", auth.NotGuest, auth.InGroup("admin"), postCertifications)
 	r.DELETE("/:name", auth.NotGuest, auth.InGroup("admin"), deleteCertifications)
 	r.PUT("/:name", auth.NotGuest, auth.InGroup("admin"), putCertifications)
 }

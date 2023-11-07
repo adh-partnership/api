@@ -43,6 +43,7 @@ func GetCertifications() []models.Certification {
 
 	mutex.RLock()
 	defer mutex.RUnlock()
+
 	return certCache
 }
 
