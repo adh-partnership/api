@@ -251,19 +251,29 @@ definitions:
     properties:
       arrivalAirport:
         type: string
+      bannerUrl:
+        type: string
       comments:
         type: string
-      date:
+      contactInfo:
         type: string
       departureAirport:
         type: string
+      endDate:
+        type: string
+      organization:
+        type: string
       pilots:
         type: integer
+      startDate:
+        type: string
     required:
     - arrivalAirport
-    - date
+    - contactInfo
     - departureAirport
+    - endDate
     - pilots
+    - startDate
     type: object
   dto.StorageRequest:
     properties:
@@ -287,76 +297,12 @@ definitions:
       type:
         type: string
     type: object
-  dto.TrainingRequest:
-    properties:
-      created_at:
-        type: string
-      end:
-        type: string
-      id:
-        type: string
-      instructor:
-        $ref: '#/definitions/dto.UserResponse'
-      instructor_notes:
-        type: string
-      notes:
-        type: string
-      position:
-        type: string
-      slots:
-        items:
-          $ref: '#/definitions/dto.TrainingRequestSlot'
-        type: array
-      start:
-        type: string
-      status:
-        type: string
-      student:
-        $ref: '#/definitions/dto.UserResponse'
-      updated_at:
-        type: string
-    type: object
-  dto.TrainingRequestCreateRequest:
-    properties:
-      notes:
-        type: string
-      position:
-        type: string
-      slots:
-        items:
-          $ref: '#/definitions/dto.TrainingRequestSlot'
-        type: array
-    type: object
-  dto.TrainingRequestEditRequest:
-    properties:
-      end:
-        type: string
-      instructor:
-        type: integer
-      instructor_notes:
-        type: string
-      notes:
-        type: string
-      position:
-        type: string
-      start:
-        type: string
-      status:
-        type: string
-    type: object
-  dto.TrainingRequestSlot:
-    properties:
-      end:
-        type: string
-      id:
-        type: string
-      start:
-        type: string
-    type: object
   dto.UserResponse:
     properties:
       certifications:
-        $ref: '#/definitions/dto.UserResponseCertifications'
+        additionalProperties:
+          $ref: '#/definitions/dto.UserResponseCertifications'
+        type: object
       cid:
         type: integer
       controller_type:
@@ -394,22 +340,25 @@ definitions:
     type: object
   dto.UserResponseCertifications:
     properties:
-      approach:
+      display_name:
         type: string
-      enroute:
+      hidden:
+        type: boolean
+      order:
+        type: integer
+      value:
         type: string
-      ground:
+    type: object
+  github.com_adh-partnership_api_internal_v1_certifications.CertificationDTO:
+    properties:
+      display_name:
         type: string
-      local:
+      hidden:
+        type: boolean
+      name:
         type: string
-      major_approach:
-        type: string
-      major_ground:
-        type: string
-      major_local:
-        type: string
-      oceanic:
-        type: string
+      order:
+        type: integer
     type: object
   github.com_adh-partnership_api_internal_v1_overflight.Flightsv1:
     properties:
@@ -452,6 +401,17 @@ definitions:
       type:
         example: C208
         type: string
+    type: object
+  internal_v1_certifications.CertificationDTO:
+    properties:
+      display_name:
+        type: string
+      hidden:
+        type: boolean
+      name:
+        type: string
+      order:
+        type: integer
     type: object
   internal_v1_overflight.Flightsv1:
     properties:
@@ -786,10 +746,6 @@ definitions:
     type: object
   models.User:
     properties:
-      appCertification:
-        description: 'Must be one of : none, training, solo, certified, cantrain'
-        example: certified
-        type: string
       cid:
         example: 876594
         type: integer
@@ -799,10 +755,6 @@ definitions:
         type: string
       created_at:
         example: "2020-01-01T00:00:00Z"
-        type: string
-      ctrCertification:
-        description: 'Must be one of : none, training, solo, certified, cantrain'
-        example: none
         type: string
       discord_id:
         example: "123456789012345678"
@@ -819,32 +771,8 @@ definitions:
       first_name:
         example: Daniel
         type: string
-      gndCertification:
-        description: 'Must be one of : none, training, solo, certified, cantrain'
-        example: certified
-        type: string
       last_name:
         example: Hawton
-        type: string
-      lclCertification:
-        description: 'Must be one of : none, training, solo, certified, cantrain'
-        example: certified
-        type: string
-      majgndCertification:
-        description: 'Must be one of : none, training, solo, certified, cantrain'
-        example: certified
-        type: string
-      majorappCertification:
-        description: 'Must be one of : none, training, solo, certified, cantrain'
-        example: certified
-        type: string
-      majorlclCertification:
-        description: 'Must be one of : none, training, solo, certified, cantrain'
-        example: certified
-        type: string
-      oceanicCertification:
-        description: 'Must be one of : none, training, certified, cantrain'
-        example: none
         type: string
       operating_initials:
         example: DH
@@ -1089,6 +1017,139 @@ paths:
       summary: Get Authorization Groups
       tags:
       - Auth
+  /v1/certifications:
+    get:
+      description: Get certification types
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Get certification types
+      tags:
+      - certifications
+    post:
+      description: Create a new certification type
+      parameters:
+      - description: Certification type data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_v1_certifications.CertificationDTO'
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "409":
+          description: Conflict - certification name already in use
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Create a new certification type
+      tags:
+      - certifications
+  /v1/certifications/{name}:
+    delete:
+      description: Delete a certification type
+      parameters:
+      - description: Certification name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Delete a certification type
+      tags:
+      - certifications
+    put:
+      description: Update a certification type
+      parameters:
+      - description: Current certification name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Certification type data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_v1_certifications.CertificationDTO'
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.R'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Update a certification type
+      tags:
+      - certifications
+  /v1/certifications/bulk-order:
+    patch:
+      description: Bulk Reorder Certifications
+      parameters:
+      - description: Array of certification IDs in order
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.R'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: Bulk Reorder Certifications
+      tags:
+      - certifications
   /v1/events:
     get:
       description: Get Upcoming Events
@@ -1589,8 +1650,8 @@ paths:
       - Proxy
   /v1/proxy/taf/{icao}:
     get:
-      description: Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle
-        this, so use our job fetched data where possible (/v1/weather/taf/:icao)
+      description: Proxy TAF Data. Deprecated. Use our job fetched data where possible
+        (/v1/weather/taf/:icao)
       parameters:
       - description: ICAO
         in: path
@@ -2064,214 +2125,6 @@ paths:
       summary: Update Training Record
       tags:
       - training
-  /v1/training/requests:
-    get:
-      parameters:
-      - description: Filter by CID
-        in: query
-        name: cid
-        type: string
-      - description: Filter by Status
-        in: query
-        name: status
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              items:
-                $ref: '#/definitions/dto.TrainingRequest'
-              type: array
-            type: array
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Training Sessions [Feature Gated]
-      tags:
-      - training
-  /v1/training/requests/{id}:
-    get:
-      parameters:
-      - description: Training Session ID
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.TrainingRequest'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Get Specific Training Request [Feature Gated]
-      tags:
-      - training
-    patch:
-      parameters:
-      - description: Training Session Request ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Training Session Request
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.TrainingRequestEditRequest'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.TrainingRequest'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Edit Training Session Request [Feature Gated]
-      tags:
-      - training
-  /v1/training/requests/{id}/slots:
-    post:
-      parameters:
-      - description: Training Session Request ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Training Session Request Slot
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.TrainingRequestSlot'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.TrainingRequest'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Add a slot to a request [Feature Gated]
-      tags:
-      - training
-  /v1/training/requests/{id}/slots/{slot_id}:
-    delete:
-      parameters:
-      - description: Training Session Request ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Training Session Request Slot ID
-        in: path
-        name: slot_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.TrainingRequest'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Delete a slot from a request [Feature Gated]
-      tags:
-      - training
-  /v1/training/sessions:
-    post:
-      parameters:
-      - description: Training Session Request
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.TrainingRequestCreateRequest'
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/dto.TrainingRequest'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.R'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.R'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.R'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.R'
-      summary: Create new training session request for user [Feature Gated]
-      tags:
-      - training
   /v1/user/:cid:
     get:
       parameters:
@@ -2297,8 +2150,6 @@ paths:
       tags:
       - user
     patch:
-      consumes:
-      - application/json
       parameters:
       - description: User
         in: body
@@ -2311,8 +2162,6 @@ paths:
         name: cid
         required: true
         type: string
-      produces:
-      - application/json
       responses:
         "200":
           description: OK

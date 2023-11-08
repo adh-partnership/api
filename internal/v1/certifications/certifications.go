@@ -88,7 +88,7 @@ func postCertifications(c *gin.Context) {
 // @Summary Bulk Reorder Certifications
 // @Description Bulk Reorder Certifications
 // @Tags certifications
-// @Param body body int[] true "Array of certification IDs in order"
+// @Param body body []int true "Array of certification IDs in order"
 // @Success 204
 // @Failure 401 {object} response.R
 // @Failure 500 {object} response.R

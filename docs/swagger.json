@@ -291,6 +291,208 @@
                 }
             }
         },
+        "/v1/certifications": {
+            "get": {
+                "description": "Get certification types",
+                "tags": [
+                    "certifications"
+                ],
+                "summary": "Get certification types",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new certification type",
+                "tags": [
+                    "certifications"
+                ],
+                "summary": "Create a new certification type",
+                "parameters": [
+                    {
+                        "description": "Certification type data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_v1_certifications.CertificationDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - certification name already in use",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/certifications/bulk-order": {
+            "patch": {
+                "description": "Bulk Reorder Certifications",
+                "tags": [
+                    "certifications"
+                ],
+                "summary": "Bulk Reorder Certifications",
+                "parameters": [
+                    {
+                        "description": "Array of certification IDs in order",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/certifications/{name}": {
+            "put": {
+                "description": "Update a certification type",
+                "tags": [
+                    "certifications"
+                ],
+                "summary": "Update a certification type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Current certification name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Certification type data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_v1_certifications.CertificationDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a certification type",
+                "tags": [
+                    "certifications"
+                ],
+                "summary": "Delete a certification type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Certification name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.R"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/events": {
             "get": {
                 "description": "Get Upcoming Events",
@@ -1043,7 +1245,7 @@
         },
         "/v1/proxy/taf/{icao}": {
             "get": {
-                "description": "Proxy TAF Data. Deprecated. VATSIM's Cloudflare front may throttle this, so use our job fetched data where possible (/v1/weather/taf/:icao)",
+                "description": "Proxy TAF Data. Deprecated. Use our job fetched data where possible (/v1/weather/taf/:icao)",
                 "tags": [
                     "Proxy"
                 ],
@@ -1766,324 +1968,6 @@
                 }
             }
         },
-        "/v1/training/requests": {
-            "get": {
-                "tags": [
-                    "training"
-                ],
-                "summary": "Get Training Sessions [Feature Gated]",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Filter by CID",
-                        "name": "cid",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by Status",
-                        "name": "status",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/dto.TrainingRequest"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/training/requests/{id}": {
-            "get": {
-                "tags": [
-                    "training"
-                ],
-                "summary": "Get Specific Training Request [Feature Gated]",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Training Session ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequest"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "training"
-                ],
-                "summary": "Edit Training Session Request [Feature Gated]",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Training Session Request ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Training Session Request",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequestEditRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequest"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/training/requests/{id}/slots": {
-            "post": {
-                "tags": [
-                    "training"
-                ],
-                "summary": "Add a slot to a request [Feature Gated]",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Training Session Request ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Training Session Request Slot",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequestSlot"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequest"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/training/requests/{id}/slots/{slot_id}": {
-            "delete": {
-                "tags": [
-                    "training"
-                ],
-                "summary": "Delete a slot from a request [Feature Gated]",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Training Session Request ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Training Session Request Slot ID",
-                        "name": "slot_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequest"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/training/sessions": {
-            "post": {
-                "tags": [
-                    "training"
-                ],
-                "summary": "Create new training session request for user [Feature Gated]",
-                "parameters": [
-                    {
-                        "description": "Training Session Request",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequestCreateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrainingRequest"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.R"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/user/:cid": {
             "get": {
                 "tags": [
@@ -2120,12 +2004,6 @@
                 }
             },
             "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "user"
                 ],
@@ -3167,25 +3045,39 @@
             "type": "object",
             "required": [
                 "arrivalAirport",
-                "date",
+                "contactInfo",
                 "departureAirport",
-                "pilots"
+                "endDate",
+                "pilots",
+                "startDate"
             ],
             "properties": {
                 "arrivalAirport": {
                     "type": "string"
                 },
+                "bannerUrl": {
+                    "type": "string"
+                },
                 "comments": {
                     "type": "string"
                 },
-                "date": {
+                "contactInfo": {
                     "type": "string"
                 },
                 "departureAirport": {
                     "type": "string"
                 },
+                "endDate": {
+                    "type": "string"
+                },
+                "organization": {
+                    "type": "string"
+                },
                 "pilots": {
                     "type": "integer"
+                },
+                "startDate": {
+                    "type": "string"
                 }
             }
         },
@@ -3223,112 +3115,14 @@
                 }
             }
         },
-        "dto.TrainingRequest": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "end": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "instructor": {
-                    "$ref": "#/definitions/dto.UserResponse"
-                },
-                "instructor_notes": {
-                    "type": "string"
-                },
-                "notes": {
-                    "type": "string"
-                },
-                "position": {
-                    "type": "string"
-                },
-                "slots": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.TrainingRequestSlot"
-                    }
-                },
-                "start": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "student": {
-                    "$ref": "#/definitions/dto.UserResponse"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.TrainingRequestCreateRequest": {
-            "type": "object",
-            "properties": {
-                "notes": {
-                    "type": "string"
-                },
-                "position": {
-                    "type": "string"
-                },
-                "slots": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.TrainingRequestSlot"
-                    }
-                }
-            }
-        },
-        "dto.TrainingRequestEditRequest": {
-            "type": "object",
-            "properties": {
-                "end": {
-                    "type": "string"
-                },
-                "instructor": {
-                    "type": "integer"
-                },
-                "instructor_notes": {
-                    "type": "string"
-                },
-                "notes": {
-                    "type": "string"
-                },
-                "position": {
-                    "type": "string"
-                },
-                "start": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.TrainingRequestSlot": {
-            "type": "object",
-            "properties": {
-                "end": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "start": {
-                    "type": "string"
-                }
-            }
-        },
         "dto.UserResponse": {
             "type": "object",
             "properties": {
                 "certifications": {
-                    "$ref": "#/definitions/dto.UserResponseCertifications"
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/dto.UserResponseCertifications"
+                    }
                 },
                 "cid": {
                     "type": "integer"
@@ -3386,29 +3180,34 @@
         "dto.UserResponseCertifications": {
             "type": "object",
             "properties": {
-                "approach": {
+                "display_name": {
                     "type": "string"
                 },
-                "enroute": {
+                "hidden": {
+                    "type": "boolean"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_adh-partnership_api_internal_v1_certifications.CertificationDTO": {
+            "type": "object",
+            "properties": {
+                "display_name": {
                     "type": "string"
                 },
-                "ground": {
+                "hidden": {
+                    "type": "boolean"
+                },
+                "name": {
                     "type": "string"
                 },
-                "local": {
-                    "type": "string"
-                },
-                "major_approach": {
-                    "type": "string"
-                },
-                "major_ground": {
-                    "type": "string"
-                },
-                "major_local": {
-                    "type": "string"
-                },
-                "oceanic": {
-                    "type": "string"
+                "order": {
+                    "type": "integer"
                 }
             }
         },
@@ -3466,6 +3265,23 @@
                 "type": {
                     "type": "string",
                     "example": "C208"
+                }
+            }
+        },
+        "internal_v1_certifications.CertificationDTO": {
+            "type": "object",
+            "properties": {
+                "display_name": {
+                    "type": "string"
+                },
+                "hidden": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
                 }
             }
         },
@@ -3940,11 +3756,6 @@
         "models.User": {
             "type": "object",
             "properties": {
-                "appCertification": {
-                    "description": "Must be one of : none, training, solo, certified, cantrain",
-                    "type": "string",
-                    "example": "certified"
-                },
                 "cid": {
                     "type": "integer",
                     "example": 876594
@@ -3957,11 +3768,6 @@
                 "created_at": {
                     "type": "string",
                     "example": "2020-01-01T00:00:00Z"
-                },
-                "ctrCertification": {
-                    "description": "Must be one of : none, training, solo, certified, cantrain",
-                    "type": "string",
-                    "example": "none"
                 },
                 "discord_id": {
                     "type": "string",
@@ -3983,39 +3789,9 @@
                     "type": "string",
                     "example": "Daniel"
                 },
-                "gndCertification": {
-                    "description": "Must be one of : none, training, solo, certified, cantrain",
-                    "type": "string",
-                    "example": "certified"
-                },
                 "last_name": {
                     "type": "string",
                     "example": "Hawton"
-                },
-                "lclCertification": {
-                    "description": "Must be one of : none, training, solo, certified, cantrain",
-                    "type": "string",
-                    "example": "certified"
-                },
-                "majgndCertification": {
-                    "description": "Must be one of : none, training, solo, certified, cantrain",
-                    "type": "string",
-                    "example": "certified"
-                },
-                "majorappCertification": {
-                    "description": "Must be one of : none, training, solo, certified, cantrain",
-                    "type": "string",
-                    "example": "certified"
-                },
-                "majorlclCertification": {
-                    "description": "Must be one of : none, training, solo, certified, cantrain",
-                    "type": "string",
-                    "example": "certified"
-                },
-                "oceanicCertification": {
-                    "description": "Must be one of : none, training, certified, cantrain",
-                    "type": "string",
-                    "example": "none"
                 },
                 "operating_initials": {
                     "type": "string",
