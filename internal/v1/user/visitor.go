@@ -91,7 +91,7 @@ func postVisitor(c *gin.Context) {
 		}
 	}
 
-	if user.Status != constants.ControllerStatusNone {
+	if user.ControllerType != constants.ControllerTypeNone {
 		response.RespondError(c, http.StatusConflict, "You are already a controller")
 		return
 	}
@@ -102,7 +102,7 @@ func postVisitor(c *gin.Context) {
 	}
 
 	app, err := database.FindVisitorApplicationByCID(fmt.Sprint(user.CID))
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Errorf("Error getting visitor application: %s", err)
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 		return
