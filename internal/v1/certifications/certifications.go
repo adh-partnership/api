@@ -84,6 +84,44 @@ func postCertifications(c *gin.Context) {
 	response.Respond(c, http.StatusNoContent, nil)
 }
 
+// Bulk Reorder Certifications
+// @Summary Bulk Reorder Certifications
+// @Description Bulk Reorder Certifications
+// @Tags certifications
+// @Param body body int[] true "Array of certification IDs in order"
+// @Success 204
+// @Failure 401 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/certifications/bulk-order [patch]
+func patchBulkOrder(c *gin.Context) {
+	var certifications []int
+
+	if err := c.ShouldBind(&certifications); err != nil {
+		response.RespondError(c, http.StatusBadRequest, "Bad Request")
+		return
+	}
+
+	err := database.DB.Transaction(func(tx *gorm.DB) error {
+		for i, certID := range certifications {
+			if err := tx.Model(&models.Certification{}).Where(&models.Certification{
+				ID: uint(certID),
+			}).Update("order", i).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Errorf("Failed to reorder certifications: %+v", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	database.InvalidateCertCache()
+
+	response.Respond(c, http.StatusNoContent, nil)
+}
+
 // Update a certification type
 // @Summary Update a certification type
 // @Description Update a certification type
