@@ -90,6 +90,15 @@ func UpdateRoster() error {
 		return err
 	}
 
+	// Cleanup statuses for users with controller type of none
+	if err := database.DB.Model(&models.User{}).Where(models.User{ControllerType: constants.ControllerTypeNone}).
+		Updates(models.User{
+			Status: constants.ControllerStatusNone,
+		}).Error; err != nil {
+		log.Errorf("Error cleaning up statuses: %s", err)
+		return err
+	}
+
 	return nil
 }
 

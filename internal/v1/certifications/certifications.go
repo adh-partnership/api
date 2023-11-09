@@ -68,6 +68,17 @@ func postCertifications(c *gin.Context) {
 		return
 	}
 
+	// If no order is specified, set it to the max order + 1
+	if certificationDTO.Order == 0 {
+		var maxOrder uint
+		certs := database.GetCertifications()
+		for _, cert := range certs {
+			if cert.Order > maxOrder {
+				maxOrder = cert.Order + 1
+			}
+		}
+	}
+
 	if err := database.DB.Create(&models.Certification{
 		DisplayName: certificationDTO.DisplayName,
 		Name:        certificationDTO.Name,
