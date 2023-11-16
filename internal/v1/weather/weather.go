@@ -21,13 +21,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	idsWeather "github.com/vpaza/ids/pkg/weather"
 
 	"github.com/adh-partnership/api/pkg/database"
 	"github.com/adh-partnership/api/pkg/database/models"
 	"github.com/adh-partnership/api/pkg/gin/response"
 	"github.com/adh-partnership/api/pkg/logger"
-	"github.com/adh-partnership/api/pkg/utils"
 	"github.com/adh-partnership/api/pkg/weather"
 )
 
@@ -50,20 +48,24 @@ func populate(c *gin.Context) {
 				continue
 			}
 
-			metar, err := idsWeather.GetMetar(airport.ICAO)
+			weather, err := weather.GetWeather(airport.ICAO)
 			if err != nil {
 				continue
 			}
 
-			airport.HasMETAR = true
-			airport.METAR = metar.RawText
-			body, err := utils.GetAirportTAF(airport.ICAO)
-			if err != nil {
-				continue
+			metar := ""
+			if weather != nil && weather.METAR != "" {
+				metar = weather.METAR
+			}
+			taf := ""
+			if weather != nil && weather.TAF != "" {
+				taf = weather.TAF
 			}
 
-			airport.HasTAF = true
-			airport.TAF = string(body)
+			airport.HasMETAR = weather != nil && metar != ""
+			airport.METAR = metar
+			airport.HasTAF = weather != nil && taf != ""
+			airport.TAF = taf
 
 			if err := database.DB.Save(&airport).Error; err != nil {
 				log.Errorf("Failed to save airport %s: %s", airport.ICAO, err.Error())

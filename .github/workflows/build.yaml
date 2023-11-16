@@ -81,8 +81,39 @@ jobs:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PRIVATE_KEY_PASSWORD }}
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}      
 ###########################################################################################################
-  deploy-kzdv:
-    name: Update KZDV GitOps Repo
+  deploy:
+    name: Update ${{ matrix.name }} GitOps Repo
+
+    strategy:
+      matrix:
+        facility: [zdv, zan, hcf, zlc, zfw]
+        include:
+        - facility: hcf
+          name: HCF
+          secret: ADH_PIPELINE_PAT
+          repo: vphzh/gitops
+          api: denartcc/api
+        - facility: zan
+          name: PAZA
+          secret: ADH_PIPELINE_PAT
+          repo: vpaza/gitops
+          api: denartcc/api
+        - facility: zdv
+          name: KZDV
+          secret: GH_PIPELINE_PAT
+          repo: kzdv/gitops
+          api: denartcc/api
+        - facility: zfw
+          name: KZFW
+          secret: ADH_PIPELINE_PAT
+          repo: kzfw/gitops
+          api: adhp/api
+        - facility: zlc
+          name: KZLC
+          secret: KZLC_GITOPS_TOKEN 
+          repo: kzlc/gitops
+          api: zlcartcc/api
+
     runs-on: ubuntu-latest
     needs: build
     if : ${{ github.event_name == 'push' && contains(fromJson('["refs/heads/dev", "refs/heads/main"]'), github.ref) }}
@@ -99,11 +130,11 @@ jobs:
           branch="${GITHUB_REF#refs/heads/}"
         fi
         echo "branch=${branch}" >> $GITHUB_ENV
-    - name: Checkout KZDV Gitops Repo
+    - name: Checkout ${{ matrix.name }} Gitops Repo
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GH_PIPELINE_PAT }}
-        repository: 'kzdv/gitops'
+        token: ${{ secrets[matrix.secret] }}
+        repository: ${{ matrix.repo }}
         path: gitops
     - name: Configure git
       run: |-
