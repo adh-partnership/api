@@ -33,8 +33,8 @@ var log = logger.Logger.WithField("component", "weather")
 
 func populate(c *gin.Context) {
 	go func() {
-		apts := []models.Airport{}
-		if err := database.DB.Distinct("icao").Find(&apts).Error; err != nil {
+		apts := []*models.Airport{}
+		if err := database.DB.Find(&apts).Error; err != nil {
 			log.Errorf("Failed to get airports: %s", err.Error())
 			return
 		}
