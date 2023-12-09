@@ -280,6 +280,11 @@ func isEligibleVisiting(user *models.User) bool {
 		return false
 	}
 
+	// Is user apart of VATUSA and in the ZAE subdivision? If so, they are not eligible
+	if user.Region == "AMAS" && user.Division == "USA" && user.Subdivision == "ZAE" {
+		return false
+	}
+
 	ratechange, err := vatsim.GetDateOfRatingChange(fmt.Sprint(user.CID))
 	if err != nil {
 		log.Errorf("Error getting date of rating change: %s", err)
