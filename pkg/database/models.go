@@ -57,7 +57,7 @@ func RemoveRoleFromUser(user *models.User, role *models.Role) error {
 func GetEvents(limit int) ([]*models.Event, error) {
 	var events []*models.Event
 
-	c := DB.Preload(clause.Associations).Where("start_date > ?", time.Now()).Order("start_date asc")
+	c := DB.Preload(clause.Associations).Where("end_date > ?", time.Now()).Order("start_date asc")
 	if limit > 0 {
 		c = c.Limit(limit)
 	}
