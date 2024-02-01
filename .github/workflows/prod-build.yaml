@@ -12,7 +12,7 @@ jobs:
         fetch-depth: 0
         ref: dev
     - name: Open Pull Request to main
-      uses: peter-evans/create-pull-request@v5
+      uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GH_PIPELINE_PAT }}
         title: "Produce New Prod Build"
