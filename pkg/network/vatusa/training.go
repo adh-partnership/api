@@ -24,7 +24,7 @@ import (
 )
 
 func SubmitTrainingNote(studentcid, instructorcid, position string, sessiondate time.Time, duration, notes, location string) (int, int, error) {
-	status, body, err := handleJSON("POST", "/user/"+studentcid+"/training/record", map[string]string{
+	status, body, err := handleJSON("POST", "/v2/user/"+studentcid+"/training/record", map[string]string{
 		"instructor_id": instructorcid,
 		"session_date":  sessiondate.Format("2006-01-02 00:00"),
 		"position":      position,
@@ -54,7 +54,7 @@ func SubmitTrainingNote(studentcid, instructorcid, position string, sessiondate 
 }
 
 func EditTrainingNote(id, studentcid, instructorcid, position string, sessiondate time.Time, duration, notes, location string) (int, error) {
-	status, _, err := handleJSON("PUT", "/training/record/"+id, map[string]string{
+	status, _, err := handleJSON("PUT", "/v2/training/record/"+id, map[string]string{
 		"instructor_id": instructorcid,
 		"session_date":  sessiondate.Format("2006-01-02 00:00"),
 		"position":      position,
@@ -73,7 +73,7 @@ func EditTrainingNote(id, studentcid, instructorcid, position string, sessiondat
 }
 
 func DeleteTrainingNote(id string) (int, error) {
-	status, _, err := handleJSON("DELETE", "/training/record/"+id, nil)
+	status, _, err := handleJSON("DELETE", "/v2/training/record/"+id, nil)
 
 	if err != nil || status > 299 {
 		log.Errorf("Error deleting training note (%s): %s", id, err)

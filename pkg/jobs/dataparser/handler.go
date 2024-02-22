@@ -113,7 +113,7 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 			continue
 		}
 
-		allowedSuffixes := []string{"_RMP", "_DEL", "_GND", "_TWR", "_APP", "_DEP", "_CTR", "_RDO", "_FSS", "_TMU", "_FMP"}
+		allowedSuffixes := []string{"_RMP", "_DEL", "_GND", "_TWR", "_APP", "_DEP", "_CTR", "_RDO", "_FSS", "_OCA", "_TMU", "_FMP"}
 		isAllowed := false
 		for _, suffix := range allowedSuffixes {
 			if strings.HasSuffix(controller.Callsign, suffix) {
@@ -147,7 +147,7 @@ func parseATC(atcDone chan bool, controllers []*vatsim.VATSIMController) {
 					log.Errorf("Error finding user with CID %d: %v", controller.CID, err)
 					return
 				}
-				if user == nil || user.ControllerType == constants.ControllerStatusNone {
+				if (user == nil || user.ControllerType == constants.ControllerStatusNone) && !config.Cfg.Features.IgnoreUnknownController {
 					_ = discord.NewMessage().AddEmbed(
 						discord.NewEmbed().SetTitle("Not active controller is on position").SetColor(
 							discord.GetColor("ff", "00", "00"),

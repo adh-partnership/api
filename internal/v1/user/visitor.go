@@ -39,6 +39,26 @@ import (
 	"github.com/adh-partnership/api/pkg/network/vatusa"
 )
 
+type VisitingEligibility struct {
+	Eligible bool `json:"eligible"`
+}
+
+// Get visiting eligibility
+// @Summary Get visiting eligibility
+// @Description Get visiting eligibility
+// @Tags user
+// @Success 200 {object} VisitingEligibility
+// @Failure 401 {object} response.R
+// @Failure 500 {object} response.R
+// @Router /v1/user/visitor/eligible [get]
+func getVisitorEligibility(c *gin.Context) {
+	user := c.MustGet("x-user").(*models.User)
+
+	response.Respond(c, http.StatusOK, &VisitingEligibility{
+		Eligible: user.ControllerType == constants.ControllerTypeNone && isEligibleVisiting(user),
+	})
+}
+
 // Get visiting applications
 // @Summary Get visiting applications
 // @Description Get visiting applications
@@ -71,21 +91,36 @@ func getVisitor(c *gin.Context) {
 func postVisitor(c *gin.Context) {
 	user := c.MustGet("x-user").(*models.User)
 
-	// VATSIM seems to randomly have " " as a subdivision???
-	if user.Region == "" || user.Division == "" || user.Subdivision == "" || user.Subdivision == " " {
-		location, err := global.GetLocation(fmt.Sprint(user.CID))
-		if err != nil {
-			log.Errorf("Error getting location: %s", err)
-			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
-			return
-		}
+	location, err := global.GetLocation(fmt.Sprint(user.CID))
+	changed := false
+	if err != nil {
+		log.Errorf("Error getting location: %s", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
 
+	if location.Subdivision != user.Subdivision || location.Division != user.Division || location.Region != user.Region {
 		user.Region = location.Region
 		user.Division = location.Division
 		user.Subdivision = location.Subdivision
+		changed = true
+	}
 
+	rating, err := vatsim.GetRating(fmt.Sprint(user.CID))
+	if err != nil {
+		log.Errorf("Error getting rating: %s", err)
+		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	if user.RatingID != rating {
+		user.RatingID = rating
+		changed = true
+	}
+
+	if changed {
 		if err := database.DB.Save(&user).Error; err != nil {
-			log.Errorf("Error saving user: %s", err)
+			log.Errorf("Error updating user location and rating: %s", err)
 			response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
@@ -189,14 +224,9 @@ func putVisitor(c *gin.Context) {
 		return
 	}
 
-	/*
-		@TODO We need to add a reason for denials to the UI
-
-		if act.Action == "deny" && act.Reason == "" {
-			response.RespondError(c, http.StatusNotAcceptable, "Reason required for denials")
-			return
-		}
-	*/
+	if act.Action == "deny" && act.Reason == "" {
+		act.Reason = "No reason provided"
+	}
 
 	switch act.Action {
 	case "accept":
@@ -276,7 +306,8 @@ func isEligibleVisiting(user *models.User) bool {
 		return false
 	}
 
-	if rating, _ := database.FindRatingByShort(config.Cfg.Facility.Visiting.MinRating); user.Rating.ID < rating.ID {
+	// This is now hardcoded as it is defined by the division's T
+	if rating, _ := database.FindRatingByShort("S3"); user.Rating.ID < rating.ID {
 		return false
 	}
 
@@ -293,21 +324,17 @@ func isEligibleVisiting(user *models.User) bool {
 
 	// Check that ratechange is more than 90 days ago
 	// VATSIM API apparently returns nil if it was a long time ago... so we can assume this check is true
+	// VATUSA only knows about controllers whose rating is changed by VATUSA, so we enforce this by also checking VATSIM
 	if ratechange != nil && ratechange.After(time.Now().AddDate(0, 0, -90)) {
 		return false
 	}
 
 	// Check VATUSA eligibility
-	eligible, home, err := vatusa.IsTransferEligible(fmt.Sprint(user.CID), true)
+	eligible, _, err := vatusa.IsVisitorEligible(fmt.Sprint(user.CID))
 	if err != nil {
 		log.Errorf("Error checking VATUSA eligibility: %s", err)
 		return false
 	}
 
-	// They aren't eligible and they aren't home controller
-	if !eligible && !home {
-		return false
-	}
-
-	return true
+	return eligible
 }

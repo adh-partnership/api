@@ -62,8 +62,9 @@ type ConfigEmail struct {
 }
 
 type ConfigFeatures struct {
-	StaffingRequest  bool `json:"staffing_request"`
-	ControllerOnline bool `json:"controller_online"`
+	StaffingRequest         bool `json:"staffing_request"`
+	ControllerOnline        bool `json:"controller_online"`
+	IgnoreUnknownController bool `json:"ignore_unknown_controller"`
 }
 
 type ConfigSession struct {
@@ -138,10 +139,9 @@ type ConfigFacilityStats struct {
 }
 
 type ConfigFacilityVisiting struct {
-	MinRating    string `json:"min_rating"`
-	SendWelcome  bool   `json:"send_welcome"`
-	SendRemoval  bool   `json:"send_removal"`
-	SendRejected bool   `json:"send_rejected"`
+	SendWelcome  bool `json:"send_welcome"`
+	SendRemoval  bool `json:"send_removal"`
+	SendRejected bool `json:"send_rejected"`
 }
 
 type ConfigFacilityActivity struct {

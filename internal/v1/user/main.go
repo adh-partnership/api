@@ -41,6 +41,7 @@ func Routes(r *gin.RouterGroup) {
 	r.GET("/visitor", auth.NotGuest, getVisitor)
 	r.POST("/visitor", auth.NotGuest, postVisitor)
 	r.PUT("/visitor/:id", auth.NotGuest, auth.InGroup("admin"), putVisitor)
+	r.GET("/visitor/eligible", auth.NotGuest, getVisitorEligibility)
 
 	r.GET("/all", getFullRoster)
 	r.GET("/roster", getRoster)

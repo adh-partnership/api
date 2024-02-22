@@ -26,11 +26,11 @@ import (
 	"strings"
 
 	"github.com/Shopify/gomail"
-	"istio.io/pkg/log"
 	"sigs.k8s.io/yaml"
 
 	"github.com/adh-partnership/api/pkg/config"
 	"github.com/adh-partnership/api/pkg/database"
+	"github.com/adh-partnership/api/pkg/logger"
 )
 
 var Templates = map[string]string{
@@ -40,6 +40,8 @@ var Templates = map[string]string{
 	"inactive_warning":  "inactive_warning",
 	"inactive":          "inactive",
 }
+
+var log = logger.Logger.WithField("component", "email")
 
 type Template struct {
 	Subject string   `json:"subject"`
