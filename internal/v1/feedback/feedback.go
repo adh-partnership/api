@@ -198,6 +198,12 @@ func patchFeedback(c *gin.Context) {
 		return
 	}
 
+	silentAccept := false
+	if dtoFeedback.Status == "approved_silent" {
+		dtoFeedback.Status = constants.FeedbackRatingGood
+		silentAccept = true
+	}
+
 	if dtoFeedback.Status != "" && !models.IsValidFeedbackStatus(dtoFeedback.Status) {
 		response.RespondError(c, http.StatusBadRequest, "Invalid status")
 		return
@@ -216,7 +222,7 @@ func patchFeedback(c *gin.Context) {
 	if dtoFeedback.Status != "" && feedback.Status != dtoFeedback.Status {
 		feedback.Status = dtoFeedback.Status
 		feedback.ContactEmail = ""
-		if shouldBroadcastFeedback(feedback) {
+		if shouldBroadcastFeedback(feedback, silentAccept) {
 			_ = discord.NewMessage().
 				SetContent("New feedback received!").
 				AddEmbed(
@@ -248,8 +254,8 @@ func patchFeedback(c *gin.Context) {
 }
 
 // shouldBroadcastFeedback returns true if the feedback should be broadcast to the public on approval
-func shouldBroadcastFeedback(feedback *models.Feedback) bool {
-	if feedback.Status != constants.FeedbackStatusApproved {
+func shouldBroadcastFeedback(feedback *models.Feedback, approved_silent bool) bool {
+	if approved_silent || feedback.Status != constants.FeedbackStatusApproved {
 		return false
 	}
 
