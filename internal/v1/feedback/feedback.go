@@ -254,8 +254,8 @@ func patchFeedback(c *gin.Context) {
 }
 
 // shouldBroadcastFeedback returns true if the feedback should be broadcast to the public on approval
-func shouldBroadcastFeedback(feedback *models.Feedback, approved_silent bool) bool {
-	if approved_silent || feedback.Status != constants.FeedbackStatusApproved {
+func shouldBroadcastFeedback(feedback *models.Feedback, approvedSilent bool) bool {
+	if approvedSilent || feedback.Status != constants.FeedbackStatusApproved {
 		return false
 	}
 
