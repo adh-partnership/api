@@ -1,10 +1,11 @@
 # sessions
 
-[![Run CI Lint](https://github.com/gin-contrib/sessions/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/gin-contrib/sessions/actions/workflows/lint.yml)
-[![Run Testing](https://github.com/gin-contrib/sessions/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/gin-contrib/sessions/actions/workflows/testing.yml)
+[![Run CI Lint](https://github.com/gin-contrib/sessions/actions/workflows/lint.yml/badge.svg)](https://github.com/gin-contrib/sessions/actions/workflows/lint.yml)
+[![Run Testing](https://github.com/gin-contrib/sessions/actions/workflows/testing.yml/badge.svg)](https://github.com/gin-contrib/sessions/actions/workflows/testing.yml)
 [![codecov](https://codecov.io/gh/gin-contrib/sessions/branch/master/graph/badge.svg)](https://codecov.io/gh/gin-contrib/sessions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gin-contrib/sessions)](https://goreportcard.com/report/github.com/gin-contrib/sessions)
 [![GoDoc](https://godoc.org/github.com/gin-contrib/sessions?status.svg)](https://godoc.org/github.com/gin-contrib/sessions)
+[![Join the chat at https://gitter.im/gin-gonic/gin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gin-gonic/gin)
 
 Gin middleware for session management with multi-backend support:
 
@@ -12,7 +13,7 @@ Gin middleware for session management with multi-backend support:
 - [Redis](#redis)
 - [memcached](#memcached)
 - [MongoDB](#mongodb)
-- [GORM](#gorm)
+- [GoRM](#gorm)
 - [memstore](#memstore)
 - [PostgreSQL](#postgresql)
 
@@ -250,7 +251,6 @@ func main() {
 ### MongoDB
 
 #### mgo
-
 ```go
 package main
 
@@ -291,8 +291,7 @@ func main() {
 ```
 
 #### mongo-driver
-
-```go
+```
 package main
 
 import (
@@ -372,8 +371,9 @@ func main() {
 }
 ```
 
-### GORM
+### GoRM
 
+[embedmd]:# (_example/gorm/main.go go)
 ```go
 package main
 
