@@ -111,7 +111,8 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 			user.Status = constants.ControllerStatusActive
 		}
 
-		if controller.Membership == "visit" {
+		switch controller.Membership {
+		case "visit":
 			user.ControllerType = constants.ControllerTypeVisitor
 			if controller.Facility != "ZZN" {
 				user.Region = "AMAS"
@@ -151,12 +152,12 @@ func UpdateControllerRoster(controllers []vatusa.VATUSAController, updateid stri
 					}
 				}
 			}
-		} else if controller.Membership == "home" {
+		case "home":
 			user.Region = "AMAS"
 			user.Division = "USA"
 			user.Subdivision = controller.Facility
 			user.ControllerType = constants.ControllerTypeHome
-		} else {
+		default:
 			// This shouldn't happen... but...
 			user.ControllerType = constants.ControllerTypeNone
 		}

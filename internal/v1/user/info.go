@@ -139,9 +139,10 @@ func patchUser(c *gin.Context) {
 		var status int
 		var err error
 
-		if oldUser.ControllerType == constants.ControllerTypeHome {
+		switch oldUser.ControllerType {
+		case constants.ControllerTypeHome:
 			status, err = vatusa.RemoveController(c.Param("cid"), user.CID, req.RemovalReason)
-		} else if oldUser.ControllerType == constants.ControllerTypeVisitor {
+		case constants.ControllerTypeVisitor:
 			status, err = vatusa.RemoveVisitingController(c.Param("cid"), user.CID, req.RemovalReason)
 			if config.Cfg.Facility.Visiting.SendRemoval {
 				go func(user *models.User) {
@@ -160,10 +161,12 @@ func patchUser(c *gin.Context) {
 					}
 				}(oldUser)
 			}
-		} else if req.ControllerType == constants.ControllerTypeVisitor {
-			status, err = vatusa.AddVisitingController(c.Param("cid"))
-		} else {
-			log.Errorf("Unknown controller type: %s", oldUser.ControllerType)
+		default:
+			if req.ControllerType == constants.ControllerTypeVisitor {
+				status, err = vatusa.AddVisitingController(c.Param("cid"))
+			} else {
+				log.Errorf("Unknown controller type: %s", oldUser.ControllerType)
+			}
 		}
 
 		if err != nil {

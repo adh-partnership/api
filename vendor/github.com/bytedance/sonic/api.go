@@ -23,6 +23,16 @@ import (
     `github.com/bytedance/sonic/internal/rt`
 )
 
+const (
+    // UseStdJSON indicates you are using fallback implementation (encoding/json)
+	UseStdJSON = iota
+    // UseSonicJSON indicates you are using real sonic implementation
+	UseSonicJSON
+)
+
+// APIKind is the kind of API, 0 is std json, 1 is sonic.
+const APIKind = apiKind
+
 // Config is a combination of sonic/encoder.Options and sonic/decoder.Options
 type Config struct {
     // EscapeHTML indicates encoder to escape all HTML characters 
@@ -77,10 +87,13 @@ type Config struct {
     
     // NoEncoderNewline indicates that the encoder should not add a newline after every message
     NoEncoderNewline bool
+
+    // Encode Infinity or Nan float into `null`, instead of returning an error.
+    EncodeNullForInfOrNan bool
 }
  
 var (
-    // ConfigDefault is the default config of APIs, aiming at efficiency and safty.
+    // ConfigDefault is the default config of APIs, aiming at efficiency and safety.
     ConfigDefault = Config{}.Froze()
  
     // ConfigStd is the standard config of APIs, aiming at being compatible with encoding/json.
@@ -118,7 +131,7 @@ type API interface {
     NewEncoder(writer io.Writer) Encoder
     // NewDecoder create a Decoder holding reader
     NewDecoder(reader io.Reader) Decoder
-    // Valid validates the JSON-encoded bytes and reportes if it is valid
+    // Valid validates the JSON-encoded bytes and reports if it is valid
     Valid(data []byte) bool
 }
 
@@ -157,6 +170,13 @@ func Marshal(val interface{}) ([]byte, error) {
     return ConfigDefault.Marshal(val)
 }
 
+// MarshalIndent is like Marshal but applies Indent to format the output.
+// Each JSON element in the output will begin on a new line beginning with prefix
+// followed by one or more copies of indent according to the indentation nesting.
+func MarshalIndent(v interface{}, prefix, indent string) ([]byte, error) {
+    return ConfigDefault.MarshalIndent(v, prefix, indent)
+}
+
 // MarshalString returns the JSON encoding string of v.
 func MarshalString(val interface{}) (string, error) {
     return ConfigDefault.MarshalToString(val)
@@ -184,9 +204,17 @@ func UnmarshalString(buf string, val interface{}) error {
 // 
 // Notice: It expects the src json is **Well-formed** and **Immutable** when calling,
 // otherwise it may return unexpected result. 
-// Considering memory safty, the returned JSON is **Copied** from the input
+// Considering memory safety, the returned JSON is **Copied** from the input
 func Get(src []byte, path ...interface{}) (ast.Node, error) {
     return GetCopyFromString(rt.Mem2Str(src), path...)
+}
+
+//GetWithOptions searches and locates the given path from src json,
+// with specific options of ast.Searcher
+func GetWithOptions(src []byte, opts ast.SearchOptions, path ...interface{}) (ast.Node, error) {
+    s := ast.NewSearcher(rt.Mem2Str(src))
+    s.SearchOptions = opts
+    return s.GetByPath(path...)
 }
 
 // GetFromString is same with Get except src is string.

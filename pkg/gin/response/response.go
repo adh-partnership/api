@@ -47,11 +47,12 @@ func RespondError(c *gin.Context, status int, message string) {
 
 func Respond(c *gin.Context, status int, data interface{}) {
 	// Use this to allow client to specify what format, but default to JSON
-	if c.GetHeader("Accept") == "text/x-yaml" || c.GetHeader("Accept") == "application/x-yaml" || c.GetHeader("Accept") == "application/yaml" {
+	switch c.GetHeader("Accept") {
+	case "text/x-yaml", "application/x-yaml", "application/yaml":
 		c.YAML(status, data)
-	} else if c.GetHeader("Accept") == "application/xml" {
+	case "application/xml":
 		c.XML(status, data)
-	} else {
+	default:
 		c.JSON(status, data)
 	}
 }
