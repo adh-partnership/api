@@ -26,7 +26,7 @@ import (
 )
 
 const (
-	baseURL = "https://api.vatusa.net/v2"
+	baseURL = "https://api.vatusa.net"
 )
 
 var log = logger.Logger.WithField("component", "network/vatusa")
