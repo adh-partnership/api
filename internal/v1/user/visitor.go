@@ -316,19 +316,6 @@ func isEligibleVisiting(user *models.User) bool {
 		return false
 	}
 
-	ratechange, err := vatsim.GetDateOfRatingChange(fmt.Sprint(user.CID))
-	if err != nil {
-		log.Errorf("Error getting date of rating change: %s", err)
-		return false
-	}
-
-	// Check that ratechange is more than 90 days ago
-	// VATSIM API apparently returns nil if it was a long time ago... so we can assume this check is true
-	// VATUSA only knows about controllers whose rating is changed by VATUSA, so we enforce this by also checking VATSIM
-	if ratechange != nil && ratechange.After(time.Now().AddDate(0, 0, -90)) {
-		return false
-	}
-
 	// Check VATUSA eligibility
 	eligible, _, err := vatusa.IsVisitorEligible(fmt.Sprint(user.CID))
 	if err != nil {
