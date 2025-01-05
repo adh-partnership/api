@@ -91,6 +91,11 @@ func getAirportATC(c *gin.Context) {
 		return
 	}
 
+	if airport == nil {
+		response.RespondError(c, http.StatusNotFound, "Airport Not Found")
+		return
+	}
+
 	atc, err := database.FindAirportATCByID(airport.ID)
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
@@ -120,6 +125,11 @@ func getAirportCharts(c *gin.Context) {
 		return
 	}
 
+	if airport == nil {
+		response.RespondError(c, http.StatusNotFound, "Airport Not Found")
+		return
+	}
+
 	charts, err := database.FindAirportChartsByID(airport.ID)
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
@@ -146,6 +156,11 @@ func getAirportWeather(c *gin.Context) {
 	airport, err := database.FindAirportByID(c.Param("id"))
 	if err != nil {
 		response.RespondError(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	if airport == nil {
+		response.RespondError(c, http.StatusNotFound, "Airport Not Found")
 		return
 	}
 
