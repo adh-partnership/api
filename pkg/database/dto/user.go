@@ -88,6 +88,7 @@ type FacilityStaffResponse struct {
 	Web        []*UserResponse `json:"web" yaml:"web" xml:"web"`
 	Instructor []*UserResponse `json:"instructor" yaml:"instructor" xml:"instructor"`
 	Mentor     []*UserResponse `json:"mentor" yaml:"mentor" xml:"mentor"`
+	MIT        []*UserResponse `json:"mit" yaml:"mit" xml: "mit"`
 }
 
 func ConvUserToUserResponse(user *models.User) *UserResponse {
@@ -305,6 +306,8 @@ func GetStaffResponse() (*FacilityStaffResponse, error) {
 			staff.Instructor = u
 		case "mtr":
 			staff.Mentor = u
+		case "mit":
+			staff.MIT = u
 		}
 	}
 
