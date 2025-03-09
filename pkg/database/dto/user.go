@@ -306,7 +306,9 @@ func GetStaffResponse() (*FacilityStaffResponse, error) {
 			staff.Instructor = u
 		case "mtr":
 			staff.Mentor = u
-		
+		case "mit":
+			staff.MIT = u
+		}
 	}
 
 	return staff, nil
