@@ -127,11 +127,13 @@ func postVisitor(c *gin.Context) {
 	}
 
 	if user.ControllerType != constants.ControllerTypeNone {
+		log.Infof("User %d not eligible to visit: is already a controller (type=%s)", user.CID, user.ControllerType)
 		response.RespondError(c, http.StatusConflict, "You are already a controller")
 		return
 	}
 
 	if !isEligibleVisiting(user) {
+		log.Infof("User %d not eligible to visit: %+v", user.CID, user)
 		response.RespondError(c, http.StatusNotAcceptable, "You are not eligible to apply for visiting")
 		return
 	}
@@ -303,16 +305,19 @@ func putVisitor(c *gin.Context) {
 // Check if user is eligible
 func isEligibleVisiting(user *models.User) bool {
 	if user.ControllerType != constants.ControllerTypeNone {
+		log.Infof("User %d not eligible to visit: is already a controller (type=%s)", user.CID, user.ControllerType)
 		return false
 	}
 
 	// This is now hardcoded as it is defined by the division's T
 	if rating, _ := database.FindRatingByShort("S3"); user.Rating.ID < rating.ID {
+		log.Infof("User %d not eligible to visit: rating is below S3 (rating=%d)", user.CID, user.Rating.ID)
 		return false
 	}
 
 	// Is user apart of VATUSA and in the ZAE subdivision? If so, they are not eligible
 	if user.Region == "AMAS" && user.Division == "USA" && user.Subdivision == "ZAE" {
+		log.Infof("User %d not eligible to visit: is in ZAE (region=%s, division=%s, subdivision=%s)", user.CID, user.Region, user.Division, user.Subdivision)
 		return false
 	}
 
@@ -327,16 +332,18 @@ func isEligibleVisiting(user *models.User) bool {
 		// VATSIM API apparently returns nil if it was a long time ago... so we can assume this check is true
 		// VATUSA only knows about controllers whose rating is changed by VATUSA, so we enforce this by also checking VATSIM
 		if ratechange != nil && ratechange.After(time.Now().AddDate(0, 0, -90)) {
+			log.Infof("User %d not eligible to visit: rating change was less than 90 days ago according to VATSIM (%s)", user.CID, ratechange)
 			return false
 		}
 	}
 
 	// Check VATUSA eligibility
-	eligible, _, err := vatusa.IsVisitorEligible(fmt.Sprint(user.CID))
+	eligible, data, err := vatusa.IsVisitorEligible(fmt.Sprint(user.CID))
 	if err != nil {
-		log.Errorf("Error checking VATUSA eligibility: %s", err)
+		log.Errorf("Error checking VATUSA eligibility: %s, data: %+v", err, data)
 		return false
 	}
 
+	log.Infof("User %d is eligible to visit according to VATUSA: %t", user.CID, eligible)
 	return eligible
 }

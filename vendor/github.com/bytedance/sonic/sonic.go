@@ -1,5 +1,5 @@
-//go:build (amd64 && go1.17 && !go1.24) || (arm64 && go1.20 && !go1.24)
-// +build amd64,go1.17,!go1.24 arm64,go1.20,!go1.24
+//go:build (amd64 && go1.17 && !go1.25) || (arm64 && go1.20 && !go1.25)
+// +build amd64,go1.17,!go1.25 arm64,go1.20,!go1.25
 
 /*
  * Copyright 2021 ByteDance Inc.
@@ -72,6 +72,9 @@ func (cfg Config) Froze() API {
     }
 
     // configure decoder options:
+    if cfg.NoValidateJSONSkip {
+        api.decoderOpts |= decoder.OptionNoValidateJSON
+    }
     if cfg.UseInt64 {
         api.decoderOpts |= decoder.OptionUseInt64
     }
