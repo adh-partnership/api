@@ -77,18 +77,18 @@ type VisitorResponse struct {
 }
 
 type FacilityStaffResponse struct {
-	ATM        []*UserResponse `json:"atm" yaml:"atm" xml:"atm"`
-	DATM       []*UserResponse `json:"datm" yaml:"datm" xml:"datm"`
-	TA         []*UserResponse `json:"ta" yaml:"ta" xml:"ta"`
-	EC         []*UserResponse `json:"ec" yaml:"ec" xml:"ec"`
-	FE         []*UserResponse `json:"fe" yaml:"fe" xml:"fe"`
-	WM         []*UserResponse `json:"wm" yaml:"wm" xml:"wm"`
-	Events     []*UserResponse `json:"events" yaml:"events" xml:"events"`
-	Facilities []*UserResponse `json:"facilities" yaml:"facilities" xml:"facilities"`
-	Web        []*UserResponse `json:"web" yaml:"web" xml:"web"`
-	Instructor []*UserResponse `json:"instructor" yaml:"instructor" xml:"instructor"`
-	Mentor     []*UserResponse `json:"mentor" yaml:"mentor" xml:"mentor"`
-	MIT        []*UserResponse `json:"mit" yaml:"mit" xml: "mit"`
+	ATM              []*UserResponse `json:"atm" yaml:"atm" xml:"atm"`
+	DATM             []*UserResponse `json:"datm" yaml:"datm" xml:"datm"`
+	TA               []*UserResponse `json:"ta" yaml:"ta" xml:"ta"`
+	EC               []*UserResponse `json:"ec" yaml:"ec" xml:"ec"`
+	FE               []*UserResponse `json:"fe" yaml:"fe" xml:"fe"`
+	WM               []*UserResponse `json:"wm" yaml:"wm" xml:"wm"`
+	Events           []*UserResponse `json:"events" yaml:"events" xml:"events"`
+	Facilities       []*UserResponse `json:"facilities" yaml:"facilities" xml:"facilities"`
+	Web              []*UserResponse `json:"web" yaml:"web" xml:"web"`
+	Instructor       []*UserResponse `json:"instructor" yaml:"instructor" xml:"instructor"`
+	Mentor           []*UserResponse `json:"mentor" yaml:"mentor" xml:"mentor"`
+	MentorInTraining []*UserResponse `json:"mit" yaml:"mit" xml: "mit"`
 }
 
 func ConvUserToUserResponse(user *models.User) *UserResponse {
@@ -307,7 +307,7 @@ func GetStaffResponse() (*FacilityStaffResponse, error) {
 		case "mtr":
 			staff.Mentor = u
 		case "mit":
-			staff.MIT = u
+			staff.MentorInTraining = u
 		}
 	}
 
