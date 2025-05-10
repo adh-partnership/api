@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"moul.io/http2curl"
 
 	"github.com/adh-partnership/api/pkg/logger"
@@ -42,9 +43,11 @@ func Handle(method, url, contenttype, body string) (int, []byte, error) {
 // HandleWithHeaders will make the request as presented in a structured and expected way. It adds appropriate headers, including
 // a user agent so our requests can be known to come from us.
 func HandleWithHeaders(method, url, contenttype, body string, headers map[string]string) (int, []byte, error) {
+	request_id, _ := uuid.NewV7()
+
 	r, err := http.NewRequest(method, url, strings.NewReader(body))
-	log.Debugf("Making request: %s %s", method, url)
-	log.Debugf("with Body: %s", body)
+	log.Infof("Request %s - Making request: %s %s", request_id, method, url)
+	log.Infof("Request %s - With Body: %s", request_id, body)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -56,7 +59,7 @@ func HandleWithHeaders(method, url, contenttype, body string, headers map[string
 	}
 
 	curl, _ := http2curl.GetCurlCommand(r)
-	log.Debugf("Request curl equivalent: %s", curl)
+	log.Debugf("Request %s - Request curl equivalent: %s", request_id, curl)
 
 	client := &http.Client{}
 	resp, err := client.Do(r)
@@ -73,8 +76,8 @@ func HandleWithHeaders(method, url, contenttype, body string, headers map[string
 		return 0, nil, err
 	}
 
-	log.Debugf("Response from %s %s: %d", method, url, resp.StatusCode)
-	log.Tracef("Response body: %s", string(contents))
+	log.Infof("Request %s - Response from %s %s: %d", request_id, method, url, resp.StatusCode)
+	log.Tracef("Request %s - Response body: %s", request_id, string(contents))
 
 	return resp.StatusCode, contents, nil
 }
