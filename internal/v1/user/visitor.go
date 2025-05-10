@@ -100,6 +100,7 @@ func postVisitor(c *gin.Context) {
 	}
 
 	if location.Subdivision != user.Subdivision || location.Division != user.Division || location.Region != user.Region {
+		log.Infof("User %d location changed: %s/%s/%s -> %s/%s/%s", user.CID, user.Region, user.Division, user.Subdivision, location.Region, location.Division, location.Subdivision)
 		user.Region = location.Region
 		user.Division = location.Division
 		user.Subdivision = location.Subdivision
