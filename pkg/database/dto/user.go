@@ -274,7 +274,7 @@ func GetUsersByRole(role string) ([]*UserResponse, error) {
 }
 
 func GetStaffResponse() (*FacilityStaffResponse, error) {
-	roles := []string{"atm", "datm", "ta", "ec", "fe", "wm", "events", "facilities", "web", "ins", "mtr"}
+	roles := []string{"atm", "datm", "ta", "ec", "fe", "wm", "events", "facilities", "web", "ins", "mtr","mit"}
 	staff := &FacilityStaffResponse{}
 
 	for _, role := range roles {
