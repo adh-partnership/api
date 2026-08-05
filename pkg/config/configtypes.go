@@ -50,6 +50,14 @@ type ConfigDatabase struct {
 	Database    string `json:"database"`
 	Automigrate bool   `json:"automigrate"`
 	CACert      string `json:"ca_cert"`
+
+	// MaxOpenConns and MaxIdleConns bound the connection pool. Zero means "use the
+	// package default" (see pkg/database), which is what every existing config does,
+	// so leaving these unset preserves current behaviour. Worth setting explicitly on
+	// a shared database server, where the per-facility pool competes with every other
+	// client for the server's max_connections.
+	MaxOpenConns int `json:"max_open_conns"`
+	MaxIdleConns int `json:"max_idle_conns"`
 }
 
 type ConfigEmail struct {

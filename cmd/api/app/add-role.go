@@ -59,13 +59,15 @@ func newAddRoleCommand() *cli.Command {
 
 			log.Info("Connecting to database")
 			err = database.Connect(database.DBOptions{
-				Host:     cfg.Database.Host,
-				Port:     cfg.Database.Port,
-				User:     cfg.Database.User,
-				Password: cfg.Database.Password,
-				Database: cfg.Database.Database,
-				Driver:   "mysql",
-				Logger:   logger.Logger,
+				Host:         cfg.Database.Host,
+				Port:         cfg.Database.Port,
+				User:         cfg.Database.User,
+				Password:     cfg.Database.Password,
+				Database:     cfg.Database.Database,
+				MaxOpenConns: cfg.Database.MaxOpenConns,
+				MaxIdleConns: cfg.Database.MaxIdleConns,
+				Driver:       "mysql",
+				Logger:       logger.Logger,
 			})
 			if err != nil {
 				return err

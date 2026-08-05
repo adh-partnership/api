@@ -9,6 +9,10 @@ database:
   database: {{.DB_DATABASE | default "zdv"}}
   automigrate: true
   ca_cert: {{.DB_CA_CERT | default ""}}
+  # Connection pool bounds. Omit or set to 0 to use the package defaults
+  # (50 open / 10 idle). Lower these when pointing at a shared database server.
+  max_open_conns: {{.DB_MAX_OPEN_CONNS | default "0"}}
+  max_idle_conns: {{.DB_MAX_IDLE_CONNS | default "0"}}
 discord:
   webhooks:
     online: "https://discordapp.com/api/webhooks/..."
