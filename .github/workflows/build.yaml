@@ -140,7 +140,7 @@ jobs:
         git config user.name "${{ secrets.GH_PIPELINE_USERNAME }}"
         git config user.email "wm@denartcc.org"
     - name: Setup Kustomize
-      uses: imranismail/setup-kustomize@v2
+      uses: imranismail/setup-kustomize@v3
       with:
         kustomize-version: "4.4.1"
     - name: Update dev overlay
